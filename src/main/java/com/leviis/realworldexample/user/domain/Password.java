@@ -14,7 +14,7 @@ public record Password(String value, String hashedPassword) {
         public PasswordBuilder() {}
 
         public PasswordBuilder setValue(final String value) {
-            if (value.length() < MIN_LENGTH) {
+            if (value != null && value.length() < MIN_LENGTH) {
                 throw new IllegalArgumentException("Password value must be at least 8 characters long");
             }
             this.value = value;
