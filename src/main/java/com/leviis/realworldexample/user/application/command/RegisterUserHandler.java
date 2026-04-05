@@ -31,19 +31,11 @@ public final class RegisterUserHandler implements RegisterUserUseCase {
         Email email = new Email(command.email());
         Password password = Password.builder().setValue(command.password()).build();
 
-        var foundUserByEmail = userQueryRepository.findByEmail(email);
-        if (foundUserByEmail.isPresent()) {
-            throw new IllegalStateException("Email is already registered");
-        }
-        var foundUserByUsername = userQueryRepository.findByUsername(command.username());
-        if (foundUserByUsername.isPresent()) {
-            throw new IllegalStateException("Username is already registered");
-        }
+        validateUserExists(command, email);
 
-        var hashedPassword = passwordService.hashPassword(password);
         var hashedPasswordInstance = Password.builder()
                 .setValue(command.password())
-                .setHashedPassword(hashedPassword)
+                .setHashedPassword(passwordService.hashPassword(password))
                 .build();
 
         var user = new User(email, command.username(), hashedPasswordInstance);
@@ -53,5 +45,16 @@ public final class RegisterUserHandler implements RegisterUserUseCase {
         createdUser.setToken(token);
 
         return createdUser;
+    }
+
+    private void validateUserExists(final RegisterUserCommand command, final Email email) {
+        var foundUserByEmail = userQueryRepository.findByEmail(email);
+        if (foundUserByEmail.isPresent()) {
+            throw new IllegalStateException("Email is already registered");
+        }
+        var foundUserByUsername = userQueryRepository.findByUsername(command.username());
+        if (foundUserByUsername.isPresent()) {
+            throw new IllegalStateException("Username is already registered");
+        }
     }
 }
