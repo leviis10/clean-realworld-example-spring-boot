@@ -3,6 +3,7 @@ package com.leviis.realworldexample.user.adapter.inbound.http;
 import com.leviis.realworldexample.user.adapter.inbound.http.dto.request.RegisterUserRequest;
 import com.leviis.realworldexample.user.adapter.inbound.http.dto.response.RegisterUserResponse;
 import com.leviis.realworldexample.user.application.port.inbound.RegisterUserUseCase;
+import com.leviis.realworldexample.utils.http.ResponseWrapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,8 +20,10 @@ public final class UserController {
     private final RegisterUserUseCase registerUserUseCase;
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterUserResponse> register(@Valid @RequestBody final RegisterUserRequest request) {
+    public ResponseEntity<ResponseWrapper<RegisterUserResponse>> register(
+            @Valid @RequestBody final RegisterUserRequest request) {
         var data = registerUserUseCase.execute(request.intoRegisterUserCommand());
-        return ResponseEntity.status(HttpStatus.CREATED).body(RegisterUserResponse.from(data));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ResponseWrapper<>("Success registering new user", RegisterUserResponse.from(data)));
     }
 }
