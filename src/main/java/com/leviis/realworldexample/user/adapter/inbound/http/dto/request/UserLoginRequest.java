@@ -1,8 +1,7 @@
 package com.leviis.realworldexample.user.adapter.inbound.http.dto.request;
 
-import com.leviis.realworldexample.user.application.command.RegisterUserCommand;
+import com.leviis.realworldexample.user.application.query.UserLoginQuery;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,19 +12,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Builder
-public final class RegisterUserRequest {
+public final class UserLoginRequest {
     private static final int PASSWORD_MIN_LENGTH = 8;
 
-    @Email(message = "Invalid email")
+    @Email(message = "Invalid email address")
     private String email;
 
     @Size(min = PASSWORD_MIN_LENGTH, message = "Password must be at least 8 characters long")
     private String password;
 
-    @NotBlank(message = "Username can't be blank!")
-    private String username;
-
-    public RegisterUserCommand intoRegisterUserCommand() {
-        return new RegisterUserCommand(this.email, this.password, this.username);
+    public UserLoginQuery intoUserLoginQuery() {
+        return new UserLoginQuery(this.email, this.password);
     }
 }

@@ -63,7 +63,8 @@ public final class UserEntity {
 
     public User intoDomain() {
         Email domainEmail = new Email(this.email);
-        Password domainPassword = Password.builder().setValue(this.password).build();
+        Password domainPassword =
+                Password.builder().setHashedPassword(this.password).build();
 
         return new User(domainEmail, this.username, this.bio, this.image, domainPassword);
     }

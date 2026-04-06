@@ -10,15 +10,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Builder
-public class RegisterUserResponse {
+public class UserResponse {
     private String email;
     private String token;
     private String username;
     private String bio;
     private String image;
 
-    public static RegisterUserResponse from(final User user) {
-        return RegisterUserResponse.builder()
+    public static UserResponse from(final User user) {
+        return UserResponse.builder()
                 .email(user.getEmail())
                 .token(user.getToken())
                 .username(user.getUsername())

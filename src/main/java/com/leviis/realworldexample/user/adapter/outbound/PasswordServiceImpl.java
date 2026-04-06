@@ -15,4 +15,9 @@ public final class PasswordServiceImpl implements PasswordService {
     public String hashPassword(final Password password) {
         return passwordEncoder.encode(password.value());
     }
+
+    @Override
+    public boolean compare(final String rawPassword, final String hashedPassword) {
+        return passwordEncoder.matches(rawPassword, hashedPassword);
+    }
 }
