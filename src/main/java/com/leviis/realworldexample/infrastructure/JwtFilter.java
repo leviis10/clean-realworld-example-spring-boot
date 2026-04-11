@@ -31,7 +31,7 @@ public final class JwtFilter extends OncePerRequestFilter {
         }
         var foundUser = tokenService.getUserFrom(token);
 
-        var userContext = UserContext.from(foundUser);
+        var userContext = UserContext.from(foundUser, token);
         var authToken = new UsernamePasswordAuthenticationToken(userContext, null, userContext.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authToken);
 

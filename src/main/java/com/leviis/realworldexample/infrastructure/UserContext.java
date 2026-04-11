@@ -21,9 +21,10 @@ public class UserContext implements UserDetails {
     private String bio;
     private String image;
     private String password;
+    private String token;
     private List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("USER"));
 
-    public static UserContext from(final User user) {
+    public static UserContext from(final User user, final String token) {
         return UserContext.builder()
                 .id(user.getId())
                 .email(user.getEmail())
@@ -31,6 +32,7 @@ public class UserContext implements UserDetails {
                 .bio(user.getBio())
                 .image(user.getImage())
                 .password(user.getPassword())
+                .token(token)
                 .build();
     }
 }
