@@ -21,7 +21,7 @@ public final class TokenServiceImpl implements TokenService {
     @Override
     public String generateToken(final User user) {
         return Jwts.builder()
-                .subject(user.getUsername())
+                .subject(user.getId().toString())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + Long.parseLong(expiration)))
                 .signWith(getSigningKey())

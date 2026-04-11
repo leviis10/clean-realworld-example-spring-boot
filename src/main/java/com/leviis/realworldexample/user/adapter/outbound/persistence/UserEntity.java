@@ -66,6 +66,6 @@ public final class UserEntity {
         Password domainPassword =
                 Password.builder().setHashedPassword(this.password).build();
 
-        return new User(domainEmail, this.username, this.bio, this.image, domainPassword);
+        return new User(this.id, domainEmail, this.username, this.bio, this.image, domainPassword);
     }
 }

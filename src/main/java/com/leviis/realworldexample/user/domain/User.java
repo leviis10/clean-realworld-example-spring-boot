@@ -1,6 +1,7 @@
 package com.leviis.realworldexample.user.domain;
 
 public final class User {
+    private Long id;
     private final Email email;
     private final String username;
     private String bio;
@@ -15,12 +16,22 @@ public final class User {
     }
 
     public User(
-            final Email email, final String username, final String bio, final String image, final Password password) {
+            final Long id,
+            final Email email,
+            final String username,
+            final String bio,
+            final String image,
+            final Password password) {
+        this.id = id;
         this.email = email;
         this.username = username;
         this.bio = bio;
         this.image = image;
         this.password = password;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getEmail() {
