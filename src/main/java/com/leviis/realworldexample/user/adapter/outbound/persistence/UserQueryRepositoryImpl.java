@@ -23,4 +23,10 @@ public final class UserQueryRepositoryImpl implements UserQueryRepository {
         var foundUser = jpaUserRepository.findByUsername(username);
         return foundUser.map(UserEntity::intoDomain);
     }
+
+    @Override
+    public Optional<User> findById(final Long id) {
+        var foundUser = jpaUserRepository.findById(id);
+        return foundUser.map(UserEntity::intoDomain);
+    }
 }

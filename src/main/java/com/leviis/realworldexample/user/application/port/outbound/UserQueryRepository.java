@@ -8,4 +8,6 @@ public interface UserQueryRepository {
     Optional<User> findByEmail(Email email);
 
     Optional<User> findByUsername(String username);
+
+    Optional<User> findById(Long id);
 }
