@@ -1,6 +1,6 @@
 package com.leviis.realworldexample.user.adapter;
 
-import com.leviis.realworldexample.user.application.command.RegisterUserHandler;
+import com.leviis.realworldexample.user.application.command.handler.RegisterUserHandler;
 import com.leviis.realworldexample.user.application.command.handler.UpdateUserHandler;
 import com.leviis.realworldexample.user.application.port.inbound.RegisterUserUseCase;
 import com.leviis.realworldexample.user.application.port.inbound.UpdateUserUseCase;
@@ -9,7 +9,7 @@ import com.leviis.realworldexample.user.application.port.outbound.PasswordServic
 import com.leviis.realworldexample.user.application.port.outbound.TokenService;
 import com.leviis.realworldexample.user.application.port.outbound.UserCommandRepository;
 import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepository;
-import com.leviis.realworldexample.user.application.query.UserLoginHandler;
+import com.leviis.realworldexample.user.application.query.handler.UserLoginHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

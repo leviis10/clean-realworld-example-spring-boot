@@ -1,5 +1,6 @@
-package com.leviis.realworldexample.user.application.command;
+package com.leviis.realworldexample.user.application.command.handler;
 
+import com.leviis.realworldexample.user.application.command.RegisterUserCommand;
 import com.leviis.realworldexample.user.application.port.inbound.RegisterUserUseCase;
 import com.leviis.realworldexample.user.application.port.outbound.PasswordService;
 import com.leviis.realworldexample.user.application.port.outbound.TokenService;
