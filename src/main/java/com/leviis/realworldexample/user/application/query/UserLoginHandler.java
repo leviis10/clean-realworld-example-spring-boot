@@ -29,7 +29,7 @@ public final class UserLoginHandler implements UserLoginUseCase {
                 .findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Unregistered email address"));
 
-        var isCorrectPassword = passwordService.compare(query.getPassword(), foundUser.getPassword());
+        var isCorrectPassword = passwordService.compare(query.getPassword(), foundUser.getHashedPassword());
         if (!isCorrectPassword) {
             throw new RuntimeException("Incorrect Password");
         }

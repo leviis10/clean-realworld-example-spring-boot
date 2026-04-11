@@ -1,7 +1,9 @@
 package com.leviis.realworldexample.user.adapter;
 
 import com.leviis.realworldexample.user.application.command.RegisterUserHandler;
+import com.leviis.realworldexample.user.application.command.handler.UpdateUserHandler;
 import com.leviis.realworldexample.user.application.port.inbound.RegisterUserUseCase;
+import com.leviis.realworldexample.user.application.port.inbound.UpdateUserUseCase;
 import com.leviis.realworldexample.user.application.port.inbound.UserLoginUseCase;
 import com.leviis.realworldexample.user.application.port.outbound.PasswordService;
 import com.leviis.realworldexample.user.application.port.outbound.TokenService;
@@ -28,5 +30,10 @@ public class AdapterConfig {
     @Bean
     public UserLoginUseCase userLoginUseCase() {
         return new UserLoginHandler(userQueryRepository, passwordService, tokenService);
+    }
+
+    @Bean
+    public UpdateUserUseCase updateUserUseCase() {
+        return new UpdateUserHandler(userCommandRepository, passwordService);
     }
 }

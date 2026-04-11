@@ -31,7 +31,7 @@ public class UserContext implements UserDetails {
                 .username(user.getUsername())
                 .bio(user.getBio())
                 .image(user.getImage())
-                .password(user.getPassword())
+                .password(user.getHashedPassword())
                 .token(token)
                 .build();
     }

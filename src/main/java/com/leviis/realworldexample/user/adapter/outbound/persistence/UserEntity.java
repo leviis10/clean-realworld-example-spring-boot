@@ -55,7 +55,7 @@ public final class UserEntity {
         return UserEntity.builder()
                 .email(user.getEmail())
                 .username(user.getUsername())
-                .password(user.getPassword())
+                .password(user.getHashedPassword())
                 .bio(user.getBio())
                 .image(user.getImage())
                 .build();

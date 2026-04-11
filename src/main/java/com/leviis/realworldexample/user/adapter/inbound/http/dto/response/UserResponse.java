@@ -19,9 +19,13 @@ public class UserResponse {
     private String image;
 
     public static UserResponse from(final User user) {
+        return from(user, user.getToken());
+    }
+
+    public static UserResponse from(final User user, final String token) {
         return UserResponse.builder()
                 .email(user.getEmail())
-                .token(user.getToken())
+                .token(token)
                 .username(user.getUsername())
                 .bio(user.getBio())
                 .image(user.getImage())

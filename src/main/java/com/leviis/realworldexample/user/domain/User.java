@@ -55,7 +55,11 @@ public final class User {
     }
 
     public String getPassword() {
-        return password.hashedPassword();
+        return password.getHashedPassword();
+    }
+
+    public String getHashedPassword() {
+        return password.getHashedPassword();
     }
 
     public void setToken(final String token) {

@@ -13,7 +13,7 @@ public final class PasswordServiceImpl implements PasswordService {
 
     @Override
     public String hashPassword(final Password password) {
-        return passwordEncoder.encode(password.value());
+        return passwordEncoder.encode(password.getValue());
     }
 
     @Override
