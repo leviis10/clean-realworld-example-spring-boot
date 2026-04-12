@@ -24,20 +24,16 @@ public final class UserLoginHandler implements UserLoginUseCase {
 
     @Override
     public User execute(final UserLoginQuery query) {
-        Email email = new Email(query.getEmail());
-
         var foundUser = userQueryRepository
-                .findByEmail(email)
+                .findByEmail(new Email(query.email()))
                 .orElseThrow(() -> new RuntimeException("Unregistered email address"));
 
-        var isCorrectPassword = passwordService.compare(query.getPassword(), foundUser.getHashedPassword());
+        var isCorrectPassword = passwordService.compare(query.password(), foundUser.password());
         if (!isCorrectPassword) {
             throw new RuntimeException("Incorrect Password");
         }
 
         var token = tokenService.generateToken(foundUser);
-        foundUser.setToken(token);
-
-        return foundUser;
+        return User.from(foundUser).setToken(token).build();
     }
 }

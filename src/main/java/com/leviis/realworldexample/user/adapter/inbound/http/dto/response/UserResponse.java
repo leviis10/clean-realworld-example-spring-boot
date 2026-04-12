@@ -19,16 +19,16 @@ public class UserResponse {
     private String image;
 
     public static UserResponse from(final User user) {
-        return from(user, user.getToken());
+        return from(user, user.token());
     }
 
     public static UserResponse from(final User user, final String token) {
         return UserResponse.builder()
-                .email(user.getEmail())
+                .email(user.email().value())
                 .token(token)
-                .username(user.getUsername())
-                .bio(user.getBio())
-                .image(user.getImage())
+                .username(user.username())
+                .bio(user.bio())
+                .image(user.image())
                 .build();
     }
 

@@ -1,60 +1,17 @@
 package com.leviis.realworldexample.user.application.command;
 
-import com.leviis.realworldexample.user.domain.Email;
-import com.leviis.realworldexample.user.domain.Password;
 import com.leviis.realworldexample.user.domain.User;
 
-public final class UpdateUserCommand {
-    private final Long id;
-    private final Email email;
-    private final String username;
-    private Password password;
-    private final String image;
-    private final String bio;
-
-    public UpdateUserCommand(
-            final Long id,
-            final Email email,
-            final String username,
-            final Password password,
-            final String image,
-            final String bio) {
-        this.id = id;
-        this.email = email;
-        this.username = username;
-        this.password = password;
-        this.image = image;
-        this.bio = bio;
-    }
-
-    public User intoUserDomain() {
-        return new User(this.id, this.email, this.username, this.bio, this.image, this.password);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getPassword() {
-        return password.getValue();
-    }
-
-    public void setHashedPassword(final String hashedPassword) {
-        this.password = Password.builder()
-                .setValue(this.password.getValue())
-                .setHashedPassword(hashedPassword)
-                .build();
-    }
-
+public record UpdateUserCommand(Long id, String email, String username, String password, String image, String bio) {
     public static UpdateUserCommandBuilder builder() {
         return new UpdateUserCommandBuilder();
     }
 
     public static final class UpdateUserCommandBuilder {
         private Long id;
-        private Email email;
+        private String email;
         private String username;
-        private Password password;
+        private String password;
         private String image;
         private String bio;
 
@@ -64,7 +21,7 @@ public final class UpdateUserCommand {
         }
 
         public UpdateUserCommandBuilder setEmail(final String email) {
-            this.email = new Email(email);
+            this.email = email;
             return this;
         }
 
@@ -74,7 +31,7 @@ public final class UpdateUserCommand {
         }
 
         public UpdateUserCommandBuilder setPassword(final String password) {
-            this.password = new Password(password);
+            this.password = password;
             return this;
         }
 
@@ -91,5 +48,20 @@ public final class UpdateUserCommand {
         public UpdateUserCommand build() {
             return new UpdateUserCommand(this.id, this.email, this.username, this.password, this.image, this.bio);
         }
+    }
+
+    public User intoUserDomain() {
+        return intoUserDomain(this.password);
+    }
+
+    public User intoUserDomain(final String hashedPassword) {
+        return User.builder()
+                .setId(this.id)
+                .setEmail(this.email)
+                .setUsername(this.username)
+                .setBio(this.bio)
+                .setImage(this.image)
+                .setPassword(hashedPassword)
+                .build();
     }
 }

@@ -33,32 +33,32 @@ public final class UserCommandRepositoryImpl implements UserCommandRepository {
     }
 
     private void updateBio(final UserEntity currentUser, final User updatedUser) {
-        if (updatedUser.getBio() != null) {
-            currentUser.setBio(updatedUser.getBio());
+        if (updatedUser.bio() != null) {
+            currentUser.setBio(updatedUser.bio());
         }
     }
 
     private void updateImage(final UserEntity currentUser, final User updatedUser) {
-        if (updatedUser.getImage() != null) {
-            currentUser.setImage(updatedUser.getImage());
+        if (updatedUser.image() != null) {
+            currentUser.setImage(updatedUser.image());
         }
     }
 
     private void updatePassword(final UserEntity currentUser, final User updatedUser) {
-        if (updatedUser.getPassword() != null) {
-            currentUser.setPassword(updatedUser.getPassword());
+        if (updatedUser.password() != null) {
+            currentUser.setPassword(updatedUser.password());
         }
     }
 
     private void updateUsername(final UserEntity currentUser, final User updatedUser) {
-        if (updatedUser.getUsername() != null) {
-            currentUser.setUsername(updatedUser.getUsername());
+        if (updatedUser.username() != null) {
+            currentUser.setUsername(updatedUser.username());
         }
     }
 
     private void updateEmail(final UserEntity currentUser, final User updatedUser) {
-        if (updatedUser.getEmail() != null) {
-            currentUser.setEmail(updatedUser.getEmail());
+        if (updatedUser.email() != null) {
+            currentUser.setEmail(updatedUser.email().value());
         }
     }
 }

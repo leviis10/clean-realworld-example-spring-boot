@@ -7,7 +7,7 @@ import com.leviis.realworldexample.user.application.port.outbound.TokenService;
 import com.leviis.realworldexample.user.application.port.outbound.UserCommandRepository;
 import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepository;
 import com.leviis.realworldexample.user.domain.Email;
-import com.leviis.realworldexample.user.domain.Password;
+import com.leviis.realworldexample.user.domain.RawPassword;
 import com.leviis.realworldexample.user.domain.User;
 
 public final class RegisterUserHandler implements RegisterUserUseCase {
@@ -30,22 +30,19 @@ public final class RegisterUserHandler implements RegisterUserUseCase {
     @Override
     public User execute(final RegisterUserCommand command) {
         Email email = new Email(command.email());
-        Password password = Password.builder().setValue(command.password()).build();
+        RawPassword rawPassword = new RawPassword(command.password());
 
         validateUserExists(command, email);
 
-        var hashedPasswordInstance = Password.builder()
-                .setValue(command.password())
-                .setHashedPassword(passwordService.hashPassword(password))
-                .build();
-
-        var user = new User(email, command.username(), hashedPasswordInstance);
-        var createdUser = userCommandRepository.save(user);
+        var hashedPassword = passwordService.hashPassword(rawPassword);
+        var createdUser = userCommandRepository.save(User.builder()
+                .setEmail(email)
+                .setUsername(command.username())
+                .setPassword(hashedPassword)
+                .build());
 
         var token = tokenService.generateToken(createdUser);
-        createdUser.setToken(token);
-
-        return createdUser;
+        return User.from(createdUser).setToken(token).build();
     }
 
     private void validateUserExists(final RegisterUserCommand command, final Email email) {

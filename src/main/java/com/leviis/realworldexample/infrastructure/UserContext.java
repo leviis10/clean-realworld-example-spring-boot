@@ -26,12 +26,12 @@ public class UserContext implements UserDetails {
 
     public static UserContext from(final User user, final String token) {
         return UserContext.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .username(user.getUsername())
-                .bio(user.getBio())
-                .image(user.getImage())
-                .password(user.getHashedPassword())
+                .id(user.id())
+                .email(user.email().value())
+                .username(user.username())
+                .bio(user.bio())
+                .image(user.image())
+                .password(user.password())
                 .token(token)
                 .build();
     }

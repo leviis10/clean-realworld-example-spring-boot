@@ -1,68 +1,72 @@
 package com.leviis.realworldexample.user.domain;
 
-public final class User {
-    private Long id;
-    private final Email email;
-    private final String username;
-    private String bio;
-    private String image;
-    private final Password password;
-    private String token;
-
-    public User(final Email email, final String username, final Password password) {
-        this.email = email;
-        this.username = username;
-        this.password = password;
+public record User(Long id, Email email, String username, String bio, String image, String password, String token) {
+    public static UserBuilder builder() {
+        return new UserBuilder();
     }
 
-    public User(
-            final Long id,
-            final Email email,
-            final String username,
-            final String bio,
-            final String image,
-            final Password password) {
-        this.id = id;
-        this.email = email;
-        this.username = username;
-        this.bio = bio;
-        this.image = image;
-        this.password = password;
+    public static UserBuilder from(final User user) {
+        return builder()
+                .setId(user.id)
+                .setEmail(user.email)
+                .setUsername(user.username)
+                .setBio(user.bio)
+                .setImage(user.image)
+                .setPassword(user.password)
+                .setToken(user.token);
     }
 
-    public Long getId() {
-        return id;
-    }
+    public static final class UserBuilder {
+        private Long id;
+        private Email email;
+        private String username;
+        private String bio;
+        private String image;
+        private String password;
+        private String token;
 
-    public String getEmail() {
-        return email.value();
-    }
+        public UserBuilder setId(final Long id) {
+            this.id = id;
+            return this;
+        }
 
-    public String getUsername() {
-        return username;
-    }
+        public UserBuilder setEmail(final Email email) {
+            this.email = email;
+            return this;
+        }
 
-    public String getBio() {
-        return bio;
-    }
+        public UserBuilder setEmail(final String email) {
+            this.email = new Email(email);
+            return this;
+        }
 
-    public String getImage() {
-        return image;
-    }
+        public UserBuilder setUsername(final String username) {
+            this.username = username;
+            return this;
+        }
 
-    public String getToken() {
-        return token;
-    }
+        public UserBuilder setBio(final String bio) {
+            this.bio = bio;
+            return this;
+        }
 
-    public String getPassword() {
-        return password.getHashedPassword();
-    }
+        public UserBuilder setImage(final String image) {
+            this.image = image;
+            return this;
+        }
 
-    public String getHashedPassword() {
-        return password.getHashedPassword();
-    }
+        public UserBuilder setPassword(final String password) {
+            this.password = password;
+            return this;
+        }
 
-    public void setToken(final String token) {
-        this.token = token;
+        public UserBuilder setToken(final String token) {
+            this.token = token;
+            return this;
+        }
+
+        public User build() {
+            return new User(this.id, this.email, this.username, this.bio, this.image, this.password, this.token);
+        }
     }
 }

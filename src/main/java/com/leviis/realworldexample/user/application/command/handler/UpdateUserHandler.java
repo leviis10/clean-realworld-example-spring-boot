@@ -4,7 +4,7 @@ import com.leviis.realworldexample.user.application.command.UpdateUserCommand;
 import com.leviis.realworldexample.user.application.port.inbound.UpdateUserUseCase;
 import com.leviis.realworldexample.user.application.port.outbound.PasswordService;
 import com.leviis.realworldexample.user.application.port.outbound.UserCommandRepository;
-import com.leviis.realworldexample.user.domain.Password;
+import com.leviis.realworldexample.user.domain.RawPassword;
 import com.leviis.realworldexample.user.domain.User;
 
 public final class UpdateUserHandler implements UpdateUserUseCase {
@@ -18,11 +18,15 @@ public final class UpdateUserHandler implements UpdateUserUseCase {
 
     @Override
     public User execute(final UpdateUserCommand command) {
-        if (command.getPassword() != null) {
-            var hashedPassword = passwordService.hashPassword(new Password(command.getPassword()));
-            command.setHashedPassword(hashedPassword);
+        return userCommandRepository.updateById(command.id(), getUpdatedUser(command));
+    }
+
+    private User getUpdatedUser(final UpdateUserCommand command) {
+        if (command.password() != null) {
+            var hashedPassword = passwordService.hashPassword(new RawPassword(command.password()));
+            return command.intoUserDomain(hashedPassword);
         }
 
-        return userCommandRepository.updateById(command.getId(), command.intoUserDomain());
+        return command.intoUserDomain();
     }
 }

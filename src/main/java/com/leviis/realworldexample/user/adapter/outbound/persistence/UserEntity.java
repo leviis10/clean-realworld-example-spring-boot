@@ -1,7 +1,5 @@
 package com.leviis.realworldexample.user.adapter.outbound.persistence;
 
-import com.leviis.realworldexample.user.domain.Email;
-import com.leviis.realworldexample.user.domain.Password;
 import com.leviis.realworldexample.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -53,19 +51,22 @@ public final class UserEntity {
 
     public static UserEntity from(final User user) {
         return UserEntity.builder()
-                .email(user.getEmail())
-                .username(user.getUsername())
-                .password(user.getHashedPassword())
-                .bio(user.getBio())
-                .image(user.getImage())
+                .email(user.email().value())
+                .username(user.username())
+                .password(user.password())
+                .bio(user.bio())
+                .image(user.image())
                 .build();
     }
 
     public User intoDomain() {
-        Email domainEmail = new Email(this.email);
-        Password domainPassword =
-                Password.builder().setHashedPassword(this.password).build();
-
-        return new User(this.id, domainEmail, this.username, this.bio, this.image, domainPassword);
+        return User.builder()
+                .setId(this.id)
+                .setEmail(this.email)
+                .setUsername(this.username)
+                .setBio(this.bio)
+                .setImage(this.image)
+                .setPassword(this.password)
+                .build();
     }
 }
