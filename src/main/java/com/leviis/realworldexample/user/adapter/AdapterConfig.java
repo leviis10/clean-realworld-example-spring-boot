@@ -2,11 +2,13 @@ package com.leviis.realworldexample.user.adapter;
 
 import com.leviis.realworldexample.user.application.command.handler.FollowUserHandler;
 import com.leviis.realworldexample.user.application.command.handler.RegisterUserHandler;
+import com.leviis.realworldexample.user.application.command.handler.UnfollowUserHandler;
 import com.leviis.realworldexample.user.application.command.handler.UpdateUserHandler;
 import com.leviis.realworldexample.user.application.port.inbound.FollowUserUseCase;
 import com.leviis.realworldexample.user.application.port.inbound.GetIsFollowingInformationUseCase;
 import com.leviis.realworldexample.user.application.port.inbound.GetUserProfileUseCase;
 import com.leviis.realworldexample.user.application.port.inbound.RegisterUserUseCase;
+import com.leviis.realworldexample.user.application.port.inbound.UnfollowUserUseCase;
 import com.leviis.realworldexample.user.application.port.inbound.UpdateUserUseCase;
 import com.leviis.realworldexample.user.application.port.inbound.UserLoginUseCase;
 import com.leviis.realworldexample.user.application.port.outbound.PasswordService;
@@ -56,5 +58,10 @@ public class AdapterConfig {
     @Bean
     public FollowUserUseCase followUserUseCase() {
         return new FollowUserHandler(userCommandRepository, userQueryRepository);
+    }
+
+    @Bean
+    public UnfollowUserUseCase unfollowUserUseCase() {
+        return new UnfollowUserHandler(userCommandRepository, userQueryRepository);
     }
 }

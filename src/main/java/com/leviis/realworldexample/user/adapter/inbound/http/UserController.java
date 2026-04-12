@@ -4,10 +4,12 @@ import com.leviis.realworldexample.infrastructure.UserContext;
 import com.leviis.realworldexample.user.adapter.inbound.http.dto.request.UpdateUserRequest;
 import com.leviis.realworldexample.user.adapter.inbound.http.dto.response.FollowUserResponse;
 import com.leviis.realworldexample.user.adapter.inbound.http.dto.response.GetUserProfileResponse;
+import com.leviis.realworldexample.user.adapter.inbound.http.dto.response.UnfollowResponse;
 import com.leviis.realworldexample.user.adapter.inbound.http.dto.response.UserResponse;
 import com.leviis.realworldexample.user.application.port.inbound.FollowUserUseCase;
 import com.leviis.realworldexample.user.application.port.inbound.GetIsFollowingInformationUseCase;
 import com.leviis.realworldexample.user.application.port.inbound.GetUserProfileUseCase;
+import com.leviis.realworldexample.user.application.port.inbound.UnfollowUserUseCase;
 import com.leviis.realworldexample.user.application.port.inbound.UpdateUserUseCase;
 import com.leviis.realworldexample.user.application.query.GetIsFollowingInformationQuery;
 import com.leviis.realworldexample.user.application.query.GetUserProfileQuery;
@@ -17,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +36,7 @@ public final class UserController {
     private final GetUserProfileUseCase getUserProfileUseCase;
     private final GetIsFollowingInformationUseCase getIsFollowingInformationUseCase;
     private final FollowUserUseCase followUserUseCase;
+    private final UnfollowUserUseCase unfollowUserUseCase;
 
     @GetMapping
     public ResponseEntity<ResponseWrapper<UserResponse>> getCurrentUser(
@@ -74,5 +78,16 @@ public final class UserController {
                 .body(new ResponseWrapper<>(
                         "Successfully follow a user",
                         FollowUserResponse.from(foundFollowingUser, isSuccessFollowUser)));
+    }
+
+    @DeleteMapping("/{username}/follow")
+    public ResponseEntity<ResponseWrapper<UnfollowResponse>> unfollowUser(
+            @AuthenticationPrincipal final UserContext userContext, @PathVariable final String username) {
+        var foundUnfollowingUser = getUserProfileUseCase.execute(new GetUserProfileQuery(username));
+        var isSuccessUnfollow = unfollowUserUseCase.execute(userContext.getId(), foundUnfollowingUser.id());
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ResponseWrapper<>(
+                        "Successfully unfollow a user",
+                        UnfollowResponse.from(foundUnfollowingUser, isSuccessUnfollow)));
     }
 }

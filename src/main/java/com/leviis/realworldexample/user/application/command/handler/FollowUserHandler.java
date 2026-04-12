@@ -18,7 +18,7 @@ public final class FollowUserHandler implements FollowUserUseCase {
     @Override
     public boolean execute(final User follower, final User following) {
         if (follower.id().equals(following.id())) {
-            throw new RuntimeException("Cannot self yourself");
+            throw new RuntimeException("Cannot self follow");
         }
 
         var isAlreadyFollowing = userQueryRepository.getIsFollowing(follower.id(), following.id());

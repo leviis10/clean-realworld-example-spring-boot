@@ -1,18 +1,17 @@
 package com.leviis.realworldexample.user.adapter.outbound.persistence;
 
 import com.leviis.realworldexample.user.adapter.outbound.persistence.follow.FollowEntity;
+import com.leviis.realworldexample.user.adapter.outbound.persistence.follow.FollowId;
 import com.leviis.realworldexample.user.adapter.outbound.persistence.follow.JpaFollowRepository;
 import com.leviis.realworldexample.user.adapter.outbound.persistence.user.JpaUserRepository;
 import com.leviis.realworldexample.user.adapter.outbound.persistence.user.UserEntity;
 import com.leviis.realworldexample.user.application.port.outbound.UserCommandRepository;
 import com.leviis.realworldexample.user.domain.User;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public final class UserCommandRepositoryImpl implements UserCommandRepository {
     private final JpaUserRepository jpaUserRepository;
     private final JpaFollowRepository jpaFollowRepository;
@@ -33,13 +32,17 @@ public final class UserCommandRepositoryImpl implements UserCommandRepository {
 
     @Override
     public boolean followUser(final User follower, final User following) {
-        try {
-            jpaFollowRepository.save(FollowEntity.from(UserEntity.from(follower), UserEntity.from(following)));
-            return true;
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return false;
-        }
+        jpaFollowRepository.save(FollowEntity.from(UserEntity.from(follower), UserEntity.from(following)));
+        return true;
+    }
+
+    @Override
+    public boolean unfollowUser(final Long followerId, final Long followingId) {
+        jpaFollowRepository.deleteById(FollowId.builder()
+                .followerId(followerId)
+                .followingId(followingId)
+                .build());
+        return true;
     }
 
     private void updateUserEntity(final UserEntity currentUser, final User updatedUser) {
