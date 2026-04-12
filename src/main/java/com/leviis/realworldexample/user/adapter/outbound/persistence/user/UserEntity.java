@@ -1,4 +1,4 @@
-package com.leviis.realworldexample.user.adapter.outbound.persistence;
+package com.leviis.realworldexample.user.adapter.outbound.persistence.user;
 
 import com.leviis.realworldexample.user.domain.User;
 import jakarta.persistence.Column;

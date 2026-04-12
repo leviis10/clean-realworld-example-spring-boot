@@ -1,5 +1,6 @@
-package com.leviis.realworldexample.user.adapter.outbound.persistence;
+package com.leviis.realworldexample.user.adapter.outbound.persistence.follow;
 
+import com.leviis.realworldexample.user.adapter.outbound.persistence.user.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;

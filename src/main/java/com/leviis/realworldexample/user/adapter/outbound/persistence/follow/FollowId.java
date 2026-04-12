@@ -1,4 +1,4 @@
-package com.leviis.realworldexample.user.adapter.outbound.persistence;
+package com.leviis.realworldexample.user.adapter.outbound.persistence.follow;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;

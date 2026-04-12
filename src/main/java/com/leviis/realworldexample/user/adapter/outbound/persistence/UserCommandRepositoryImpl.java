@@ -1,5 +1,7 @@
 package com.leviis.realworldexample.user.adapter.outbound.persistence;
 
+import com.leviis.realworldexample.user.adapter.outbound.persistence.user.JpaUserRepository;
+import com.leviis.realworldexample.user.adapter.outbound.persistence.user.UserEntity;
 import com.leviis.realworldexample.user.application.port.outbound.UserCommandRepository;
 import com.leviis.realworldexample.user.domain.User;
 import lombok.RequiredArgsConstructor;

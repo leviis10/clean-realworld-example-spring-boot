@@ -1,5 +1,9 @@
 package com.leviis.realworldexample.user.adapter.outbound.persistence;
 
+import com.leviis.realworldexample.user.adapter.outbound.persistence.follow.FollowId;
+import com.leviis.realworldexample.user.adapter.outbound.persistence.follow.JpaFollowRepository;
+import com.leviis.realworldexample.user.adapter.outbound.persistence.user.JpaUserRepository;
+import com.leviis.realworldexample.user.adapter.outbound.persistence.user.UserEntity;
 import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepository;
 import com.leviis.realworldexample.user.domain.Email;
 import com.leviis.realworldexample.user.domain.User;
