@@ -38,9 +38,7 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager() {
-        return _ -> {
-            throw new UnsupportedOperationException("Authentication not implemented yet");
-        };
+        return null;
     }
 
     @Bean

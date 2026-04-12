@@ -14,7 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @AllArgsConstructor
 @Data
 @Builder
-public class UserContext implements UserDetails {
+public final class UserContext implements UserDetails {
     private Long id;
     private String email;
     private String username;
@@ -33,6 +33,18 @@ public class UserContext implements UserDetails {
                 .image(user.image())
                 .password(user.password())
                 .token(token)
+                .build();
+    }
+
+    public User intoUserDomain() {
+        return User.builder()
+                .setId(this.id)
+                .setEmail(this.email)
+                .setUsername(this.username)
+                .setBio(this.bio)
+                .setImage(this.image)
+                .setPassword(this.password)
+                .setToken(this.token)
                 .build();
     }
 }

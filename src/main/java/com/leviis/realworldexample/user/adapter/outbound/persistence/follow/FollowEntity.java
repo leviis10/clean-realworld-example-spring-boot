@@ -38,4 +38,15 @@ public class FollowEntity {
     @CreationTimestamp
     @Column(name = "created_at")
     private OffsetDateTime createdAt;
+
+    public static FollowEntity from(final UserEntity follower, final UserEntity following) {
+        return FollowEntity.builder()
+                .id(FollowId.builder()
+                        .followerId(follower.getId())
+                        .followingId(following.getId())
+                        .build())
+                .follower(follower)
+                .following(following)
+                .build();
+    }
 }

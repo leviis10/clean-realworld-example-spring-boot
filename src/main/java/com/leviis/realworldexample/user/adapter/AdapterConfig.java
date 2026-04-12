@@ -1,7 +1,9 @@
 package com.leviis.realworldexample.user.adapter;
 
+import com.leviis.realworldexample.user.application.command.handler.FollowUserHandler;
 import com.leviis.realworldexample.user.application.command.handler.RegisterUserHandler;
 import com.leviis.realworldexample.user.application.command.handler.UpdateUserHandler;
+import com.leviis.realworldexample.user.application.port.inbound.FollowUserUseCase;
 import com.leviis.realworldexample.user.application.port.inbound.GetIsFollowingInformationUseCase;
 import com.leviis.realworldexample.user.application.port.inbound.GetUserProfileUseCase;
 import com.leviis.realworldexample.user.application.port.inbound.RegisterUserUseCase;
@@ -49,5 +51,10 @@ public class AdapterConfig {
     @Bean
     public GetIsFollowingInformationUseCase getIsFollowingInformationUseCase() {
         return new GetIsFollowingInformationHandler(userQueryRepository);
+    }
+
+    @Bean
+    public FollowUserUseCase followUserUseCase() {
+        return new FollowUserHandler(userCommandRepository, userQueryRepository);
     }
 }

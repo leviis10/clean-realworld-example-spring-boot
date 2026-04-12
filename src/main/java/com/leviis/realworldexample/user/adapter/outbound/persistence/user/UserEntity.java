@@ -51,6 +51,7 @@ public final class UserEntity {
 
     public static UserEntity from(final User user) {
         return UserEntity.builder()
+                .id(user.id())
                 .email(user.email().value())
                 .username(user.username())
                 .password(user.password())

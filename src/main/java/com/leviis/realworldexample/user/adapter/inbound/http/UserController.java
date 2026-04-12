@@ -2,8 +2,10 @@ package com.leviis.realworldexample.user.adapter.inbound.http;
 
 import com.leviis.realworldexample.infrastructure.UserContext;
 import com.leviis.realworldexample.user.adapter.inbound.http.dto.request.UpdateUserRequest;
+import com.leviis.realworldexample.user.adapter.inbound.http.dto.response.FollowUserResponse;
 import com.leviis.realworldexample.user.adapter.inbound.http.dto.response.GetUserProfileResponse;
 import com.leviis.realworldexample.user.adapter.inbound.http.dto.response.UserResponse;
+import com.leviis.realworldexample.user.application.port.inbound.FollowUserUseCase;
 import com.leviis.realworldexample.user.application.port.inbound.GetIsFollowingInformationUseCase;
 import com.leviis.realworldexample.user.application.port.inbound.GetUserProfileUseCase;
 import com.leviis.realworldexample.user.application.port.inbound.UpdateUserUseCase;
@@ -17,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +32,7 @@ public final class UserController {
     private final UpdateUserUseCase updateUserUseCase;
     private final GetUserProfileUseCase getUserProfileUseCase;
     private final GetIsFollowingInformationUseCase getIsFollowingInformationUseCase;
+    private final FollowUserUseCase followUserUseCase;
 
     @GetMapping
     public ResponseEntity<ResponseWrapper<UserResponse>> getCurrentUser(
@@ -58,5 +62,17 @@ public final class UserController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ResponseWrapper<>(
                         "Successfully retrieved a user", GetUserProfileResponse.from(foundUser, isFollowing)));
+    }
+
+    @PostMapping("/{username}/follow")
+    public ResponseEntity<ResponseWrapper<FollowUserResponse>> followUser(
+            @AuthenticationPrincipal final UserContext userContext, @PathVariable final String username) {
+        var foundFollowingUser = getUserProfileUseCase.execute(new GetUserProfileQuery(username));
+        var isSuccessFollowUser = followUserUseCase.execute(userContext.intoUserDomain(), foundFollowingUser);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ResponseWrapper<>(
+                        "Successfully follow a user",
+                        FollowUserResponse.from(foundFollowingUser, isSuccessFollowUser)));
     }
 }

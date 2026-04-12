@@ -6,4 +6,6 @@ public interface UserCommandRepository {
     User save(User user);
 
     User updateById(Long id, User updatedUser);
+
+    boolean followUser(User follower, User following);
 }
