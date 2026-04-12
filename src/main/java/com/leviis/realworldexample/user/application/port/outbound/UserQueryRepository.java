@@ -10,4 +10,6 @@ public interface UserQueryRepository {
     Optional<User> findByUsername(String username);
 
     Optional<User> findById(Long id);
+
+    boolean getIsFollowing(Long followerId, Long followingId);
 }

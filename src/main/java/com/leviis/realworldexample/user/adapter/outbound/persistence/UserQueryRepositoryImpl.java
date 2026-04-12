@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public final class UserQueryRepositoryImpl implements UserQueryRepository {
     private final JpaUserRepository jpaUserRepository;
+    private final JpaFollowRepository jpaFollowRepository;
 
     @Override
     public Optional<User> findByEmail(final Email email) {
@@ -28,5 +29,14 @@ public final class UserQueryRepositoryImpl implements UserQueryRepository {
     public Optional<User> findById(final Long id) {
         var foundUser = jpaUserRepository.findById(id);
         return foundUser.map(UserEntity::intoDomain);
+    }
+
+    @Override
+    public boolean getIsFollowing(final Long followerId, final Long followingId) {
+        var data = jpaFollowRepository.findById(FollowId.builder()
+                .followerId(followerId)
+                .followingId(followingId)
+                .build());
+        return data.isPresent();
     }
 }
