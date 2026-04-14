@@ -27,6 +27,8 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/users/*")
                         .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/tags")
+                        .permitAll()
                         .anyRequest()
                         .authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

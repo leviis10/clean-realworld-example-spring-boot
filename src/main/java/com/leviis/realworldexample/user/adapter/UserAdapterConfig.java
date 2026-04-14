@@ -24,7 +24,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @RequiredArgsConstructor
-public class AdapterConfig {
+public class UserAdapterConfig {
     private final UserCommandRepository userCommandRepository;
     private final UserQueryRepository userQueryRepository;
     private final PasswordService passwordService;

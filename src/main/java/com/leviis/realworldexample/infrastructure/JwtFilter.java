@@ -42,7 +42,7 @@ public final class JwtFilter extends OncePerRequestFilter {
 
     private String getTokenFrom(final HttpServletRequest request) {
         var authorizationHeader = request.getHeader("Authorization");
-        if (authorizationHeader == null) {
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
             return null;
         }
         return authorizationHeader.substring("Bearer ".length());
