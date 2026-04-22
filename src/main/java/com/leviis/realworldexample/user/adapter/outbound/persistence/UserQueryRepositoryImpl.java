@@ -7,13 +7,15 @@ import com.leviis.realworldexample.user.adapter.outbound.persistence.user.UserEn
 import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepository;
 import com.leviis.realworldexample.user.domain.Email;
 import com.leviis.realworldexample.user.domain.User;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
-@Service
 @RequiredArgsConstructor
-public final class UserQueryRepositoryImpl implements UserQueryRepository {
+@Repository
+public class UserQueryRepositoryImpl implements UserQueryRepository {
     private final JpaUserRepository jpaUserRepository;
     private final JpaFollowRepository jpaFollowRepository;
 
@@ -42,5 +44,22 @@ public final class UserQueryRepositoryImpl implements UserQueryRepository {
                 .followingId(followingId)
                 .build());
         return data.isPresent();
+    }
+
+    @Override
+    public List<User> findByIds(final Set<Long> ids) {
+        var foundUsers = jpaUserRepository.findAllById(ids);
+        return foundUsers.stream().map(UserEntity::intoDomain).toList();
+    }
+
+    @Override
+    public List<Long> findIsFollowingIn(final User follower, final List<User> followings) {
+        if (follower == null) {
+            return List.of();
+        }
+
+        var followingEntity = followings.stream().map(UserEntity::from).toList();
+        var followData = jpaFollowRepository.findByFollowerAndFollowingIn(UserEntity.from(follower), followingEntity);
+        return followData.stream().map(data -> data.getId().getFollowingId()).toList();
     }
 }

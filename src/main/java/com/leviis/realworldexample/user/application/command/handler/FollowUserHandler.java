@@ -1,9 +1,9 @@
 package com.leviis.realworldexample.user.application.command.handler;
 
+import com.leviis.realworldexample.user.application.command.FollowUserCommand;
 import com.leviis.realworldexample.user.application.port.inbound.FollowUserUseCase;
 import com.leviis.realworldexample.user.application.port.outbound.UserCommandRepository;
 import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepository;
-import com.leviis.realworldexample.user.domain.User;
 
 public final class FollowUserHandler implements FollowUserUseCase {
     private final UserCommandRepository userCommandRepository;
@@ -16,7 +16,10 @@ public final class FollowUserHandler implements FollowUserUseCase {
     }
 
     @Override
-    public boolean execute(final User follower, final User following) {
+    public boolean execute(final FollowUserCommand command) {
+        var follower = command.follower();
+        var following = command.following();
+
         if (follower.id().equals(following.id())) {
             throw new RuntimeException("Cannot self follow");
         }

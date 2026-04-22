@@ -52,7 +52,7 @@
     <!-- https://checkstyle.org/filters/suppressionfilter.html -->
     <module name="SuppressionFilter">
         <property name="file" value="${org.checkstyle.sun.suppressionfilter.config}"
-                  default="checkstyle-suppressions.xml" />
+                  default="checkstyle-suppressions.xml"/>
         <property name="optional" value="true"/>
     </module>
 
@@ -121,7 +121,6 @@
         <!-- Checks for Size Violations.                    -->
         <!-- See https://checkstyle.org/checks/sizes/index.html -->
         <module name="MethodLength"/>
-        <module name="ParameterNumber"/>
 
         <!-- Checks for whitespace                               -->
         <!-- See https://checkstyle.org/checks/whitespace/index.html -->
@@ -159,7 +158,7 @@
         <module name="EqualsHashCode"/>
         <module name="FallThrough"/>
         <module name="HiddenField">
-            <property name="ignoreConstructorParameter" value="true" />
+            <property name="ignoreConstructorParameter" value="true"/>
             <property name="ignoreSetter" value="true"/>
             <property name="setterCanReturnItsClass" value="true"/>
         </module>
@@ -175,7 +174,7 @@
         <!-- Checks for class design                         -->
         <!-- See https://checkstyle.org/checks/design/index.html -->
         <module name="DesignForExtension">
-            <property name="ignoredAnnotations" value="Bean"/>
+            <property name="ignoredAnnotations" value="Bean,Override"/>
         </module>
         <module name="DeclarationOrder"/>
         <module name="FinalClass"/>
@@ -193,7 +192,7 @@
         <!-- https://checkstyle.org/filters/suppressionxpathfilter.html -->
         <module name="SuppressionXpathFilter">
             <property name="file" value="${org.checkstyle.sun.suppressionxpathfilter.config}"
-                      default="checkstyle-xpath-suppressions.xml" />
+                      default="checkstyle-xpath-suppressions.xml"/>
             <property name="optional" value="true"/>
         </module>
 

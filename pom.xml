@@ -53,7 +53,7 @@
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-			<version>3.0.2</version>
+			<version>3.0.3</version>
 		</dependency>
 
 		<dependency>
@@ -95,8 +95,7 @@
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-jdk18on</artifactId>
-			<version>1.83</version>
-			<scope>compile</scope>
+			<version>1.84</version>
 		</dependency>
 
 		<dependency>
@@ -159,7 +158,7 @@
 			<plugin>
 				<groupId>com.diffplug.spotless</groupId>
 				<artifactId>spotless-maven-plugin</artifactId>
-				<version>3.1.0</version>
+				<version>3.4.0</version>
 				<configuration>
 					<java>
 						<palantirJavaFormat />
@@ -167,9 +166,9 @@
 				</configuration>
 				<executions>
 					<execution>
-						<phase>validate</phase>
+						<phase>verify</phase>
 						<goals>
-							<goal>check</goal>
+							<goal>apply</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -181,12 +180,13 @@
 				<configuration>
 					<configLocation>checkstyle-configuration.xml</configLocation>
 					<consoleOutput>true</consoleOutput>
+					<failsOnError>true</failsOnError>
+					<linkXRef>false</linkXRef>
 				</configuration>
 				<executions>
 					<execution>
-						<phase>validate</phase>
 						<goals>
-							<goal>checkstyle</goal>
+							<goal>check</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -196,14 +196,15 @@
 				<artifactId>maven-pmd-plugin</artifactId>
 				<version>3.28.0</version>
 				<configuration>
+					<targetJdk>25</targetJdk>
 					<printFailingErrors>true</printFailingErrors>
 					<analysisCache>true</analysisCache>
 				</configuration>
 				<executions>
 					<execution>
-						<phase>validate</phase>
 						<goals>
 							<goal>check</goal>
+							<goal>cpd-check</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -211,7 +212,7 @@
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>4.9.8.2</version>
+				<version>4.9.8.3</version>
 				<configuration>
 					<plugins>
 						<plugin>
@@ -223,7 +224,6 @@
 				</configuration>
 				<executions>
 					<execution>
-						<phase>verify</phase>
 						<goals>
 							<goal>check</goal>
 						</goals>

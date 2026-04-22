@@ -1,7 +1,7 @@
 package com.leviis.realworldexample.user.application.port.inbound;
 
-import com.leviis.realworldexample.user.domain.User;
+import com.leviis.realworldexample.user.application.command.FollowUserCommand;
 
 public interface FollowUserUseCase {
-    boolean execute(User follower, User following);
+    boolean execute(FollowUserCommand command);
 }

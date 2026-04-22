@@ -22,6 +22,8 @@ public final class UserContext implements UserDetails {
     private String image;
     private String password;
     private String token;
+
+    @Builder.Default
     private List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("USER"));
 
     public static UserContext from(final User user, final String token) {

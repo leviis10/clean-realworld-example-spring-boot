@@ -6,6 +6,8 @@ import com.leviis.realworldexample.user.adapter.inbound.http.dto.response.Follow
 import com.leviis.realworldexample.user.adapter.inbound.http.dto.response.GetUserProfileResponse;
 import com.leviis.realworldexample.user.adapter.inbound.http.dto.response.UnfollowResponse;
 import com.leviis.realworldexample.user.adapter.inbound.http.dto.response.UserResponse;
+import com.leviis.realworldexample.user.application.command.FollowUserCommand;
+import com.leviis.realworldexample.user.application.command.UnfollowUserCommand;
 import com.leviis.realworldexample.user.application.port.inbound.FollowUserUseCase;
 import com.leviis.realworldexample.user.application.port.inbound.GetIsFollowingInformationUseCase;
 import com.leviis.realworldexample.user.application.port.inbound.GetUserProfileUseCase;
@@ -72,7 +74,10 @@ public final class UserController {
     public ResponseEntity<ResponseWrapper<FollowUserResponse>> followUser(
             @AuthenticationPrincipal final UserContext userContext, @PathVariable final String username) {
         var foundFollowingUser = getUserProfileUseCase.execute(new GetUserProfileQuery(username));
-        var isSuccessFollowUser = followUserUseCase.execute(userContext.intoUserDomain(), foundFollowingUser);
+        var isSuccessFollowUser = followUserUseCase.execute(FollowUserCommand.builder()
+                .setFollower(userContext.intoUserDomain())
+                .setFollowing(foundFollowingUser)
+                .build());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ResponseWrapper<>(
@@ -84,7 +89,10 @@ public final class UserController {
     public ResponseEntity<ResponseWrapper<UnfollowResponse>> unfollowUser(
             @AuthenticationPrincipal final UserContext userContext, @PathVariable final String username) {
         var foundUnfollowingUser = getUserProfileUseCase.execute(new GetUserProfileQuery(username));
-        var isSuccessUnfollow = unfollowUserUseCase.execute(userContext.getId(), foundUnfollowingUser.id());
+        var isSuccessUnfollow = unfollowUserUseCase.execute(UnfollowUserCommand.builder()
+                .setFollowerId(userContext.getId())
+                .setFollowingId(foundUnfollowingUser.id())
+                .build());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ResponseWrapper<>(
                         "Successfully unfollow a user",

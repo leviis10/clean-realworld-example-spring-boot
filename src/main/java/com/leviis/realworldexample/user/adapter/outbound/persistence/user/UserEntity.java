@@ -1,13 +1,17 @@
 package com.leviis.realworldexample.user.adapter.outbound.persistence.user;
 
+import com.leviis.realworldexample.article.adapter.outbound.persistence.article.ArticleEntity;
+import com.leviis.realworldexample.article.adapter.outbound.persistence.userfavoritearticle.UserFavoriteArticleEntity;
 import com.leviis.realworldexample.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.OffsetDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -48,6 +52,12 @@ public final class UserEntity {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserFavoriteArticleEntity> favoriteArticles;
+
+    @OneToMany(mappedBy = "author")
+    private List<ArticleEntity> articles;
 
     public static UserEntity from(final User user) {
         return UserEntity.builder()
