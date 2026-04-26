@@ -5,4 +5,6 @@ import java.util.List;
 
 public interface ArticleQueryRepository {
     List<Article> findAll(String tag, String author, String favoriteBy, int limit, int offset);
+
+    List<Article> findAllByAuthorIdIn(List<Long> authorIds, int offset, int limit);
 }

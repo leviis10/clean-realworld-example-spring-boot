@@ -1,7 +1,6 @@
 package com.leviis.realworldexample.article.adapter.inbound.http.dto.response;
 
 import com.leviis.realworldexample.article.application.query.ArticleWithDetails;
-import com.leviis.realworldexample.article.application.query.ArticleWithDetails.Author;
 import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -13,16 +12,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Builder
-public class FindAllArticleResponse {
+public class FindAllFeedArticleResponse {
     private List<ArticleDto> articles;
-    private Integer articleCount;
+    private Integer articlesCount;
 
-    public static FindAllArticleResponse from(final List<ArticleWithDetails> articles) {
-        var articlesData = articles.stream().map(ArticleDto::from).toList();
+    public static FindAllFeedArticleResponse from(final List<ArticleWithDetails> foundFeedArticle) {
+        var articlesData = foundFeedArticle.stream().map(ArticleDto::from).toList();
 
-        return FindAllArticleResponse.builder()
+        return FindAllFeedArticleResponse.builder()
                 .articles(articlesData)
-                .articleCount(articles.size())
+                .articlesCount(foundFeedArticle.size())
                 .build();
     }
 
@@ -66,7 +65,7 @@ public class FindAllArticleResponse {
         private String image;
         private Boolean isFollowing;
 
-        public static AuthorDto from(final Author author) {
+        public static AuthorDto from(final ArticleWithDetails.Author author) {
             return AuthorDto.builder()
                     .username(author.username())
                     .bio(author.bio())

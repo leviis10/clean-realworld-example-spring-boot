@@ -2,6 +2,7 @@ package com.leviis.realworldexample.article.adapter.inbound.http.dto.queryparame
 
 import com.leviis.realworldexample.article.application.query.FindAllArticleQuery;
 import com.leviis.realworldexample.infrastructure.UserContext;
+import com.leviis.realworldexample.infrastructure.constants.PaginationConstants;
 import com.leviis.realworldexample.user.domain.User;
 import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
@@ -17,8 +18,12 @@ public final class FindAllArticleQueryParameter {
     private String tag;
     private String author;
     private String favoriteBy;
-    private Integer limit;
-    private Integer offset;
+
+    @Builder.Default
+    private Integer limit = PaginationConstants.DEFAULT_LIMIT;
+
+    @Builder.Default
+    private Integer offset = PaginationConstants.DEFAULT_OFFSET;
 
     public FindAllArticleQuery intoQuery(@Nullable final UserContext userContext) {
         return FindAllArticleQuery.builder()

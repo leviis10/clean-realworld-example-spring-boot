@@ -2,6 +2,7 @@ package com.leviis.realworldexample.user.adapter.outbound.persistence.user;
 
 import com.leviis.realworldexample.article.adapter.outbound.persistence.article.ArticleEntity;
 import com.leviis.realworldexample.article.adapter.outbound.persistence.userfavoritearticle.UserFavoriteArticleEntity;
+import com.leviis.realworldexample.user.adapter.outbound.persistence.follow.FollowEntity;
 import com.leviis.realworldexample.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -58,6 +59,9 @@ public final class UserEntity {
 
     @OneToMany(mappedBy = "author")
     private List<ArticleEntity> articles;
+
+    @OneToMany(mappedBy = "following")
+    private List<FollowEntity> followings;
 
     public static UserEntity from(final User user) {
         return UserEntity.builder()

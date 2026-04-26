@@ -5,6 +5,7 @@ import com.leviis.realworldexample.article.adapter.outbound.persistence.article.
 import com.leviis.realworldexample.article.adapter.outbound.persistence.article.JpaArticleRepository;
 import com.leviis.realworldexample.article.application.port.outbound.ArticleQueryRepository;
 import com.leviis.realworldexample.article.domain.Article;
+import com.leviis.realworldexample.user.adapter.outbound.persistence.user.UserEntity;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +25,17 @@ public class ArticleQueryRepositoryImpl implements ArticleQueryRepository {
         var spec = ArticleSpecification.from(tag, author, favoriteBy);
         var pageable = PageRequest.of(offset, limit, Sort.by("createdAt").descending());
         var foundArticles = jpaArticleRepository.findAll(spec, pageable);
+        return foundArticles.map(ArticleEntity::intoArticleDomain).toList();
+    }
+
+    @Override
+    @Transactional
+    public List<Article> findAllByAuthorIdIn(final List<Long> authorIds, final int offset, final int limit) {
+        var authors = authorIds.stream()
+                .map(id -> UserEntity.builder().id(id).build())
+                .toList();
+        var pageable = PageRequest.of(offset, limit, Sort.by("createdAt").descending());
+        var foundArticles = jpaArticleRepository.findAllByAuthorIn(authors, pageable);
         return foundArticles.map(ArticleEntity::intoArticleDomain).toList();
     }
 }
