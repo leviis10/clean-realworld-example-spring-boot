@@ -1,6 +1,6 @@
 package com.leviis.realworldexample.user.domain;
 
-public record User(Long id, Email email, String username, String bio, String image, String password, String token) {
+public record User(Long id, Email email, String username, String bio, String image, String password) {
     public static UserBuilder builder() {
         return new UserBuilder();
     }
@@ -12,8 +12,7 @@ public record User(Long id, Email email, String username, String bio, String ima
                 .setUsername(user.username)
                 .setBio(user.bio)
                 .setImage(user.image)
-                .setPassword(user.password)
-                .setToken(user.token);
+                .setPassword(user.password);
     }
 
     public static final class UserBuilder {
@@ -23,7 +22,6 @@ public record User(Long id, Email email, String username, String bio, String ima
         private String bio;
         private String image;
         private String password;
-        private String token;
 
         public UserBuilder setId(final Long id) {
             this.id = id;
@@ -60,13 +58,8 @@ public record User(Long id, Email email, String username, String bio, String ima
             return this;
         }
 
-        public UserBuilder setToken(final String token) {
-            this.token = token;
-            return this;
-        }
-
         public User build() {
-            return new User(this.id, this.email, this.username, this.bio, this.image, this.password, this.token);
+            return new User(this.id, this.email, this.username, this.bio, this.image, this.password);
         }
     }
 }

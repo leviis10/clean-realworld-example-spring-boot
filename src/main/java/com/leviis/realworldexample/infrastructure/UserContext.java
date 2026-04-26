@@ -46,7 +46,6 @@ public final class UserContext implements UserDetails {
                 .setBio(this.bio)
                 .setImage(this.image)
                 .setPassword(this.password)
-                .setToken(this.token)
                 .build();
     }
 }

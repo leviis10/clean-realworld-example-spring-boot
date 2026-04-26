@@ -1,6 +1,7 @@
 package com.leviis.realworldexample.user.application.command.handler;
 
 import com.leviis.realworldexample.user.application.command.RegisterUserCommand;
+import com.leviis.realworldexample.user.application.command.UserWithToken;
 import com.leviis.realworldexample.user.application.port.inbound.RegisterUserUseCase;
 import com.leviis.realworldexample.user.application.port.outbound.PasswordService;
 import com.leviis.realworldexample.user.application.port.outbound.TokenService;
@@ -28,7 +29,7 @@ public final class RegisterUserHandler implements RegisterUserUseCase {
     }
 
     @Override
-    public User execute(final RegisterUserCommand command) {
+    public UserWithToken execute(final RegisterUserCommand command) {
         Email email = new Email(command.email());
         RawPassword rawPassword = new RawPassword(command.password());
 
@@ -42,7 +43,7 @@ public final class RegisterUserHandler implements RegisterUserUseCase {
                 .build());
 
         var token = tokenService.generateToken(createdUser);
-        return User.from(createdUser).setToken(token).build();
+        return UserWithToken.from(createdUser, token);
     }
 
     private void validateUserExists(final RegisterUserCommand command, final Email email) {

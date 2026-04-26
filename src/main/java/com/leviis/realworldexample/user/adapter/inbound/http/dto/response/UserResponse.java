@@ -1,6 +1,7 @@
 package com.leviis.realworldexample.user.adapter.inbound.http.dto.response;
 
 import com.leviis.realworldexample.infrastructure.UserContext;
+import com.leviis.realworldexample.user.application.command.UserWithToken;
 import com.leviis.realworldexample.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,8 +19,14 @@ public class UserResponse {
     private String bio;
     private String image;
 
-    public static UserResponse from(final User user) {
-        return from(user, user.token());
+    public static UserResponse from(final UserWithToken user) {
+        return UserResponse.builder()
+                .email(user.email())
+                .token(user.token())
+                .username(user.username())
+                .bio(user.bio())
+                .image(user.image())
+                .build();
     }
 
     public static UserResponse from(final User user, final String token) {
