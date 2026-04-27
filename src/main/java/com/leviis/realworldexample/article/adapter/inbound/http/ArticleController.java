@@ -4,8 +4,11 @@ import com.leviis.realworldexample.article.adapter.inbound.http.dto.queryparamet
 import com.leviis.realworldexample.article.adapter.inbound.http.dto.queryparameter.FindAllArticleQueryParameter;
 import com.leviis.realworldexample.article.adapter.inbound.http.dto.response.FindAllArticleResponse;
 import com.leviis.realworldexample.article.adapter.inbound.http.dto.response.FindAllFeedArticleResponse;
+import com.leviis.realworldexample.article.adapter.inbound.http.dto.response.GetArticleResponse;
 import com.leviis.realworldexample.article.application.port.inbound.FindAllArticleUseCase;
 import com.leviis.realworldexample.article.application.port.inbound.FindAllFeedArticleUseCase;
+import com.leviis.realworldexample.article.application.port.inbound.GetArticleUseCase;
+import com.leviis.realworldexample.article.application.query.GetArticleQuery;
 import com.leviis.realworldexample.infrastructure.UserContext;
 import com.leviis.realworldexample.utils.http.ResponseWrapper;
 import jakarta.annotation.Nullable;
@@ -14,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public final class ArticleController {
     private final FindAllArticleUseCase findAllArticleUseCase;
     private final FindAllFeedArticleUseCase findAllFeedArticleUseCase;
+    private final GetArticleUseCase getArticleUseCase;
 
     @GetMapping
     public ResponseEntity<ResponseWrapper<FindAllArticleResponse>> findAll(
@@ -43,5 +48,16 @@ public final class ArticleController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ResponseWrapper<>(
                         "Successfully retrieved feeds", FindAllFeedArticleResponse.from(foundFeedArticle)));
+    }
+
+    @GetMapping("/{slug}")
+    public ResponseEntity<ResponseWrapper<GetArticleResponse>> getArticle(
+            @Nullable @AuthenticationPrincipal final UserContext userContext, @PathVariable final String slug) {
+        var authenticatedUser = userContext == null ? null : userContext.intoUserDomain();
+        var foundArticle = getArticleUseCase.execute(GetArticleQuery.from(authenticatedUser, slug));
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ResponseWrapper<>(
+                        "Successfully retrieved an article", GetArticleResponse.from(foundArticle)));
     }
 }

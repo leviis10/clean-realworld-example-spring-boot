@@ -3,7 +3,7 @@ package com.leviis.realworldexample.article.application.query.handler;
 import com.leviis.realworldexample.article.application.port.inbound.FindAllArticleUseCase;
 import com.leviis.realworldexample.article.application.port.outbound.ArticleQueryRepository;
 import com.leviis.realworldexample.article.application.port.outbound.UserFavoriteArticleQueryRepository;
-import com.leviis.realworldexample.article.application.query.ArticleWithDetails;
+import com.leviis.realworldexample.article.application.query.ArticleWithAuthor;
 import com.leviis.realworldexample.article.application.query.FindAllArticleQuery;
 import com.leviis.realworldexample.article.domain.Article;
 import com.leviis.realworldexample.tag.application.port.outbound.TagQueryRepository;
@@ -30,7 +30,7 @@ public final class FindAllArticleHandler implements FindAllArticleUseCase {
     }
 
     @Override
-    public List<ArticleWithDetails> execute(final FindAllArticleQuery query) {
+    public List<ArticleWithAuthor> execute(final FindAllArticleQuery query) {
         var foundArticles = articleQueryRepository.findAll(
                 query.tag(), query.author(), query.favoriteBy(), query.limit(), query.offset());
         var foundTags = tagQueryRepository.findAllByIdIn(getTagIdFrom(foundArticles));
@@ -40,7 +40,7 @@ public final class FindAllArticleHandler implements FindAllArticleUseCase {
         var foundAuthors = userQueryRepository.findByIds(getAuthorIdFrom(foundArticles));
         var foundIsFollowingAuthors = userQueryRepository.findIsFollowingIn(query.user(), foundAuthors);
 
-        return ArticleWithDetails.from(
+        return ArticleWithAuthor.from(
                 foundArticles,
                 foundTags,
                 favoriteArticleId,

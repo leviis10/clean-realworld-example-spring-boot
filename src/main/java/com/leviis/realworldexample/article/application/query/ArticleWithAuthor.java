@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public record ArticleWithDetails(
+public record ArticleWithAuthor(
         String slug,
         String title,
         String description,
@@ -20,7 +20,7 @@ public record ArticleWithDetails(
         boolean isFavorite,
         long favoriteCount,
         Author author) {
-    public ArticleWithDetails(
+    public ArticleWithAuthor(
             final String slug,
             final String title,
             final String description,
@@ -41,7 +41,7 @@ public record ArticleWithDetails(
         this.author = author;
     }
 
-    public static List<ArticleWithDetails> from(
+    public static List<ArticleWithAuthor> from(
             final List<Article> articles,
             final List<Tag> tags,
             final List<Long> favoriteArticleId,
@@ -187,8 +187,8 @@ public record ArticleWithDetails(
             return this;
         }
 
-        public ArticleWithDetails build() {
-            return new ArticleWithDetails(
+        public ArticleWithAuthor build() {
+            return new ArticleWithAuthor(
                     this.slug,
                     this.title,
                     this.description,

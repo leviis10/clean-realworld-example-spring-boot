@@ -1,6 +1,6 @@
 package com.leviis.realworldexample.article.adapter.inbound.http.dto.response;
 
-import com.leviis.realworldexample.article.application.query.ArticleWithDetails;
+import com.leviis.realworldexample.article.application.query.ArticleWithAuthor;
 import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -16,7 +16,7 @@ public class FindAllFeedArticleResponse {
     private List<ArticleDto> articles;
     private Integer articlesCount;
 
-    public static FindAllFeedArticleResponse from(final List<ArticleWithDetails> foundFeedArticle) {
+    public static FindAllFeedArticleResponse from(final List<ArticleWithAuthor> foundFeedArticle) {
         var articlesData = foundFeedArticle.stream().map(ArticleDto::from).toList();
 
         return FindAllFeedArticleResponse.builder()
@@ -40,7 +40,7 @@ public class FindAllFeedArticleResponse {
         private Long favoriteCount;
         private AuthorDto author;
 
-        public static ArticleDto from(final ArticleWithDetails article) {
+        public static ArticleDto from(final ArticleWithAuthor article) {
             return ArticleDto.builder()
                     .slug(article.slug())
                     .title(article.title())
@@ -65,7 +65,7 @@ public class FindAllFeedArticleResponse {
         private String image;
         private Boolean isFollowing;
 
-        public static AuthorDto from(final ArticleWithDetails.Author author) {
+        public static AuthorDto from(final ArticleWithAuthor.Author author) {
             return AuthorDto.builder()
                     .username(author.username())
                     .bio(author.bio())

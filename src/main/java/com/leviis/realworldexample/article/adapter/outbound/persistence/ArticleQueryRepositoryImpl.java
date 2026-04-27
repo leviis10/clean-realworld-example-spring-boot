@@ -5,8 +5,10 @@ import com.leviis.realworldexample.article.adapter.outbound.persistence.article.
 import com.leviis.realworldexample.article.adapter.outbound.persistence.article.JpaArticleRepository;
 import com.leviis.realworldexample.article.application.port.outbound.ArticleQueryRepository;
 import com.leviis.realworldexample.article.domain.Article;
+import com.leviis.realworldexample.article.domain.Slug;
 import com.leviis.realworldexample.user.adapter.outbound.persistence.user.UserEntity;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -37,5 +39,11 @@ public class ArticleQueryRepositoryImpl implements ArticleQueryRepository {
         var pageable = PageRequest.of(offset, limit, Sort.by("createdAt").descending());
         var foundArticles = jpaArticleRepository.findAllByAuthorIn(authors, pageable);
         return foundArticles.map(ArticleEntity::intoArticleDomain).toList();
+    }
+
+    @Override
+    public Optional<Article> getBySlug(final Slug slug) {
+        var foundArticle = jpaArticleRepository.getBySlugAndSlugId(slug.value(), slug.id());
+        return foundArticle.map(ArticleEntity::intoArticleDomain);
     }
 }

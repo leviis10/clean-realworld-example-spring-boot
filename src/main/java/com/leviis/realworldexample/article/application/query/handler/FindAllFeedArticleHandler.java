@@ -3,7 +3,7 @@ package com.leviis.realworldexample.article.application.query.handler;
 import com.leviis.realworldexample.article.application.port.inbound.FindAllFeedArticleUseCase;
 import com.leviis.realworldexample.article.application.port.outbound.ArticleQueryRepository;
 import com.leviis.realworldexample.article.application.port.outbound.UserFavoriteArticleQueryRepository;
-import com.leviis.realworldexample.article.application.query.ArticleWithDetails;
+import com.leviis.realworldexample.article.application.query.ArticleWithAuthor;
 import com.leviis.realworldexample.article.application.query.FindAllFeedArticleQuery;
 import com.leviis.realworldexample.article.domain.Article;
 import com.leviis.realworldexample.tag.application.port.outbound.TagQueryRepository;
@@ -34,7 +34,7 @@ public class FindAllFeedArticleHandler implements FindAllFeedArticleUseCase {
     }
 
     @Override
-    public List<ArticleWithDetails> execute(final FindAllFeedArticleQuery query) {
+    public List<ArticleWithAuthor> execute(final FindAllFeedArticleQuery query) {
         var followingIds = followQueryRepository.findAllFollowingIdByFollowerId(
                 query.user().id());
         var foundArticles = articleQueryRepository.findAllByAuthorIdIn(followingIds, query.offset(), query.limit());
@@ -45,7 +45,7 @@ public class FindAllFeedArticleHandler implements FindAllFeedArticleUseCase {
         var foundAuthors = userQueryRepository.findByIds(getAuthorIdFrom(foundArticles));
         var foundIsFollowingAuthors = userQueryRepository.findIsFollowingIn(query.user(), foundAuthors);
 
-        return ArticleWithDetails.from(
+        return ArticleWithAuthor.from(
                 foundArticles,
                 foundTags,
                 favoriteArticleId,

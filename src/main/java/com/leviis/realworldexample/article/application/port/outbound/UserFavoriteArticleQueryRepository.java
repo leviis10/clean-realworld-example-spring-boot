@@ -9,4 +9,8 @@ public interface UserFavoriteArticleQueryRepository {
     List<Long> findUserArticleFavoriteIn(User user, List<Article> articles);
 
     Map<Long, Long> getFavoriteCount(List<Article> articles);
+
+    long getFavoriteCount(Article article);
+
+    boolean getIsFavoriteArticle(User user, Long articleId);
 }

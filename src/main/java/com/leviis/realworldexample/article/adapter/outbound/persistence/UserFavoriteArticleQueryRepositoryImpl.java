@@ -2,6 +2,7 @@ package com.leviis.realworldexample.article.adapter.outbound.persistence;
 
 import com.leviis.realworldexample.article.adapter.outbound.persistence.article.ArticleEntity;
 import com.leviis.realworldexample.article.adapter.outbound.persistence.userfavoritearticle.JpaUserFavoriteArticleRepository;
+import com.leviis.realworldexample.article.adapter.outbound.persistence.userfavoritearticle.UserFavoriteArticleId;
 import com.leviis.realworldexample.article.application.port.outbound.UserFavoriteArticleQueryRepository;
 import com.leviis.realworldexample.article.domain.Article;
 import com.leviis.realworldexample.user.adapter.outbound.persistence.user.UserEntity;
@@ -39,5 +40,19 @@ public class UserFavoriteArticleQueryRepositoryImpl implements UserFavoriteArtic
         }
 
         return result;
+    }
+
+    @Override
+    public long getFavoriteCount(final Article article) {
+        return jpaUserFavoriteArticleRepository.countByArticle(ArticleEntity.from(article));
+    }
+
+    @Override
+    public boolean getIsFavoriteArticle(final User user, final Long articleId) {
+        var foundData = jpaUserFavoriteArticleRepository.findById(UserFavoriteArticleId.builder()
+                .userId(user.id())
+                .articleId(articleId)
+                .build());
+        return foundData.isPresent();
     }
 }
