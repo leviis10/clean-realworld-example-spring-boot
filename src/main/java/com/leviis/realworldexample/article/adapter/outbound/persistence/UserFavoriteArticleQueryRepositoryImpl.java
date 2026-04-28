@@ -49,6 +49,10 @@ public class UserFavoriteArticleQueryRepositoryImpl implements UserFavoriteArtic
 
     @Override
     public boolean getIsFavoriteArticle(final User user, final Long articleId) {
+        if (user == null) {
+            return false;
+        }
+
         var foundData = jpaUserFavoriteArticleRepository.findById(UserFavoriteArticleId.builder()
                 .userId(user.id())
                 .articleId(articleId)

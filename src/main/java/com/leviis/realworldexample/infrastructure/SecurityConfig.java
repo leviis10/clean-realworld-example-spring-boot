@@ -25,8 +25,15 @@ public class SecurityConfig {
         httpSecurity
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/api/v1/auth/**")
                         .permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/users/*", "/api/v1/tags", "/api/v1/articles")
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/v1/users/*",
+                                "/api/v1/tags",
+                                "/api/v1/articles",
+                                "/api/v1/articles/*")
                         .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/articles/feed")
+                        .authenticated()
                         .anyRequest()
                         .authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
