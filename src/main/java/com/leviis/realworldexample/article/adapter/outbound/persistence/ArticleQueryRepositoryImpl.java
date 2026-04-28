@@ -42,6 +42,7 @@ public class ArticleQueryRepositoryImpl implements ArticleQueryRepository {
     }
 
     @Override
+    @Transactional
     public Optional<Article> getBySlug(final Slug slug) {
         var foundArticle = jpaArticleRepository.getBySlugAndSlugId(slug.value(), slug.id());
         return foundArticle.map(ArticleEntity::intoArticleDomain);

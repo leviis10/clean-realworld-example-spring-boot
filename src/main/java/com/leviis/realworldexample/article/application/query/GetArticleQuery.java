@@ -15,21 +15,20 @@ public record GetArticleQuery(User authenticatedUser, String slug, UUID slugId) 
             throw new IllegalArgumentException("Invalid slug");
         }
 
+        var slugLength = slug.length() - UUID_MIN_LENGTH;
         return builder()
                 .setAuthenticatedUser(authenticatedUser)
-                .setSlug(getSlugFrom(slug))
-                .setSlugId(getSlugIdFrom(slug))
+                .setSlug(getSlugFrom(slug, slugLength))
+                .setSlugId(getSlugIdFrom(slug, slugLength))
                 .build();
     }
 
-    private static UUID getSlugIdFrom(final String slug) {
-        return UUID.fromString(slug.substring(UUID_MIN_LENGTH));
+    private static UUID getSlugIdFrom(final String slug, final int slugLength) {
+        return UUID.fromString(slug.substring(slugLength));
     }
 
-    private static String getSlugFrom(final String slug) {
-        var slugLength = slug.length() - UUID_MIN_LENGTH;
-
-        return slug.substring(0, slugLength + 1);
+    private static String getSlugFrom(final String slug, final int slugLength) {
+        return slug.substring(0, slugLength - 1);
     }
 
     public static final class GetArticleQueryBuilder {
