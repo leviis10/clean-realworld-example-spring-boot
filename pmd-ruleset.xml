@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+
+<ruleset name="Custom Rules"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+
+    <description>
+        My custom rules
+    </description>
+
+    <!-- https://docs.pmd-code.org/pmd-doc-7.17.0/pmd_rules_java.html -->
+
+    <!-- https://docs.pmd-code.org/pmd-doc-7.17.0/pmd_rules_java_bestpractices.html -->
+    <rule ref="category/java/bestpractices.xml"/>
+
+    <!-- https://docs.pmd-code.org/pmd-doc-7.17.0/pmd_rules_java_codestyle.html -->
+    <rule ref="category/java/codestyle.xml">
+        <exclude name="CommentDefaultAccessModifier"/>
+        <exclude name="LongVariable"/>
+        <exclude name="ShortVariable"/>
+        <exclude name="LinguisticNaming"/>
+    </rule>
+
+    <!-- https://docs.pmd-code.org/pmd-doc-7.17.0/pmd_rules_java_design.html -->
+    <rule ref="category/java/design.xml">
+        <exclude name="ExcessiveImports"/>
+        <exclude name="TooManyMethods"/>
+    </rule>
+
+    <!-- https://docs.pmd-code.org/pmd-doc-7.17.0/pmd_rules_java_documentation.html -->
+    <rule ref="category/java/documentation.xml">
+        <exclude name="CommentRequired"/>
+    </rule>
+
+    <!-- https://docs.pmd-code.org/pmd-doc-7.17.0/pmd_rules_java_errorprone.html -->
+    <rule ref="category/java/errorprone.xml"/>
+
+    <!-- https://docs.pmd-code.org/pmd-doc-7.17.0/pmd_rules_java_multithreading.html -->
+    <rule ref="category/java/multithreading.xml"/>
+
+    <!-- https://docs.pmd-code.org/pmd-doc-7.17.0/pmd_rules_java_performance.html -->
+    <rule ref="category/java/performance.xml"/>
+
+    <!-- https://docs.pmd-code.org/pmd-doc-7.17.0/pmd_rules_java_security.html -->
+    <rule ref="category/java/security.xml"/>
+
+</ruleset>

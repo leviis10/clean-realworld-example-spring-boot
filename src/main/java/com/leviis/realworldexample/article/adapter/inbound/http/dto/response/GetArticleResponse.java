@@ -1,6 +1,6 @@
 package com.leviis.realworldexample.article.adapter.inbound.http.dto.response;
 
-import com.leviis.realworldexample.article.application.query.ArticleWithBodyAndAuthor;
+import com.leviis.realworldexample.article.application.readmodel.ArticleWithBodyAndAuthor;
 import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;

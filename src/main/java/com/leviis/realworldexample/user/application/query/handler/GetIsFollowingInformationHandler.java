@@ -13,9 +13,7 @@ public final class GetIsFollowingInformationHandler implements GetIsFollowingInf
 
     @Override
     public boolean execute(final GetIsFollowingInformationQuery query) {
-        if (query.followerId() == null) {
-            return false;
-        }
-        return userQueryRepository.getIsFollowing(query.followerId(), query.followingId());
+        return query.followerId() != null
+                && userQueryRepository.getIsFollowing(query.followerId(), query.followingId());
     }
 }

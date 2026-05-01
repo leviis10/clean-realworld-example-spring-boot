@@ -15,6 +15,7 @@ import com.leviis.realworldexample.user.application.port.inbound.UnfollowUserUse
 import com.leviis.realworldexample.user.application.port.inbound.UpdateUserUseCase;
 import com.leviis.realworldexample.user.application.query.GetIsFollowingInformationQuery;
 import com.leviis.realworldexample.user.application.query.GetUserProfileQuery;
+import com.leviis.realworldexample.user.domain.User;
 import com.leviis.realworldexample.utils.http.ResponseWrapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -43,16 +44,16 @@ public final class UserController {
     @GetMapping
     public ResponseEntity<ResponseWrapper<UserResponse>> getCurrentUser(
             @AuthenticationPrincipal final UserContext userContext) {
-        var data = UserResponse.from(userContext);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new ResponseWrapper<>("Successfully retrieved current user", data));
+                .body(new ResponseWrapper<>("Successfully retrieved current user", UserResponse.from(userContext)));
     }
 
     @PutMapping
     public ResponseEntity<ResponseWrapper<UserResponse>> updateUser(
             @AuthenticationPrincipal final UserContext userContext,
             @Valid @RequestBody final UpdateUserRequest request) {
-        var data = updateUserUseCase.execute(request.intoCommand(userContext.getId()));
+        final User data = updateUserUseCase.execute(request.intoCommand(userContext.getId()));
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ResponseWrapper<>(
                         "Successfully update user", UserResponse.from(data, userContext.getToken())));
@@ -61,8 +62,8 @@ public final class UserController {
     @GetMapping("/{username}")
     public ResponseEntity<ResponseWrapper<GetUserProfileResponse>> getUserProfile(
             @PathVariable final String username, @AuthenticationPrincipal final UserContext userContext) {
-        var foundUser = getUserProfileUseCase.execute(new GetUserProfileQuery(username));
-        var isFollowing = getIsFollowingInformationUseCase.execute(
+        final User foundUser = getUserProfileUseCase.execute(new GetUserProfileQuery(username));
+        final boolean isFollowing = getIsFollowingInformationUseCase.execute(
                 new GetIsFollowingInformationQuery(userContext != null ? userContext.getId() : null, foundUser.id()));
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -73,8 +74,8 @@ public final class UserController {
     @PostMapping("/{username}/follow")
     public ResponseEntity<ResponseWrapper<FollowUserResponse>> followUser(
             @AuthenticationPrincipal final UserContext userContext, @PathVariable final String username) {
-        var foundFollowingUser = getUserProfileUseCase.execute(new GetUserProfileQuery(username));
-        var isSuccessFollowUser = followUserUseCase.execute(FollowUserCommand.builder()
+        final User foundFollowingUser = getUserProfileUseCase.execute(new GetUserProfileQuery(username));
+        final boolean isSuccessFollowUser = followUserUseCase.execute(FollowUserCommand.builder()
                 .setFollower(userContext.intoUserDomain())
                 .setFollowing(foundFollowingUser)
                 .build());
@@ -88,11 +89,12 @@ public final class UserController {
     @DeleteMapping("/{username}/follow")
     public ResponseEntity<ResponseWrapper<UnfollowResponse>> unfollowUser(
             @AuthenticationPrincipal final UserContext userContext, @PathVariable final String username) {
-        var foundUnfollowingUser = getUserProfileUseCase.execute(new GetUserProfileQuery(username));
-        var isSuccessUnfollow = unfollowUserUseCase.execute(UnfollowUserCommand.builder()
+        final User foundUnfollowingUser = getUserProfileUseCase.execute(new GetUserProfileQuery(username));
+        final boolean isSuccessUnfollow = unfollowUserUseCase.execute(UnfollowUserCommand.builder()
                 .setFollowerId(userContext.getId())
                 .setFollowingId(foundUnfollowingUser.id())
                 .build());
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ResponseWrapper<>(
                         "Successfully unfollow a user",

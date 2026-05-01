@@ -18,21 +18,25 @@ public final class UserCommandRepositoryImpl implements UserCommandRepository {
 
     @Override
     public User save(final User user) {
-        var createdUser = jpaUserRepository.save(UserEntity.from(user));
+        final UserEntity createdUser = jpaUserRepository.save(UserEntity.from(user));
+
         return createdUser.intoDomain();
     }
 
     @Override
     public User updateById(final Long id, final User updatedUserData) {
-        var foundUser = jpaUserRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        final UserEntity foundUser =
+                jpaUserRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         updateUserEntity(foundUser, updatedUserData);
-        var updatedUser = jpaUserRepository.save(foundUser);
+        final UserEntity updatedUser = jpaUserRepository.save(foundUser);
+
         return updatedUser.intoDomain();
     }
 
     @Override
     public boolean followUser(final User follower, final User following) {
         jpaFollowRepository.save(FollowEntity.from(UserEntity.from(follower), UserEntity.from(following)));
+
         return true;
     }
 
@@ -42,6 +46,7 @@ public final class UserCommandRepositoryImpl implements UserCommandRepository {
                 .followerId(followerId)
                 .followingId(followingId)
                 .build());
+
         return true;
     }
 

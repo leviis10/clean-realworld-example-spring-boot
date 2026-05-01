@@ -4,6 +4,8 @@ import com.leviis.realworldexample.user.application.command.UnfollowUserCommand;
 import com.leviis.realworldexample.user.application.port.inbound.UnfollowUserUseCase;
 import com.leviis.realworldexample.user.application.port.outbound.UserCommandRepository;
 import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepository;
+import com.leviis.realworldexample.user.domain.exceptions.AlreadyUnfollowException;
+import com.leviis.realworldexample.user.domain.exceptions.SelfUnfollowException;
 
 public final class UnfollowUserHandler implements UnfollowUserUseCase {
     private final UserCommandRepository userCommandRepository;
@@ -18,12 +20,12 @@ public final class UnfollowUserHandler implements UnfollowUserUseCase {
     @Override
     public boolean execute(final UnfollowUserCommand command) {
         if (command.followerId().equals(command.followingId())) {
-            throw new RuntimeException("Cannot self unfollow");
+            throw new SelfUnfollowException();
         }
 
-        var getIsFollowing = userQueryRepository.getIsFollowing(command.followerId(), command.followingId());
+        final boolean getIsFollowing = userQueryRepository.getIsFollowing(command.followerId(), command.followingId());
         if (!getIsFollowing) {
-            throw new RuntimeException("Already Unfollowed");
+            throw new AlreadyUnfollowException();
         }
 
         return userCommandRepository.unfollowUser(command.followerId(), command.followingId());

@@ -1,0 +1,34 @@
+package com.leviis.realworldexample.article.adapter.outbound.persistence;
+
+import com.leviis.realworldexample.article.adapter.outbound.persistence.article.ArticleEntity;
+import com.leviis.realworldexample.article.adapter.outbound.persistence.article.JpaArticleRepository;
+import com.leviis.realworldexample.article.adapter.outbound.persistence.articletag.ArticleTagEntity;
+import com.leviis.realworldexample.article.adapter.outbound.persistence.articletag.JpaArticleTagRepository;
+import com.leviis.realworldexample.article.application.port.outbound.ArticleCommandRepository;
+import com.leviis.realworldexample.article.domain.Article;
+import com.leviis.realworldexample.tag.domain.Tag;
+import java.util.List;
+import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+
+@RequiredArgsConstructor
+@Repository
+public class ArticleCommandRepositoryImpl implements ArticleCommandRepository {
+    private final JpaArticleRepository jpaArticleRepository;
+    private final JpaArticleTagRepository jpaArticleTagRepository;
+
+    @Override
+    public Article create(final Article article, final Map<Long, Tag> tagMap) {
+        final ArticleEntity newArticle = jpaArticleRepository.save(ArticleEntity.from(article, tagMap));
+        jpaArticleTagRepository.saveAll(getArticleTags(newArticle, tagMap));
+        return newArticle.intoArticleDomain();
+    }
+
+    private static List<ArticleTagEntity> getArticleTags(
+            final ArticleEntity articleEntity, final Map<Long, Tag> tagMap) {
+        return tagMap.keySet().stream()
+                .map(tagId -> ArticleTagEntity.from(articleEntity, tagMap.get(tagId)))
+                .toList();
+    }
+}

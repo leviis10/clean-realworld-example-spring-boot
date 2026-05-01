@@ -5,10 +5,12 @@ import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepos
 import com.leviis.realworldexample.user.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
+import java.time.OffsetDateTime;
 import java.util.Date;
 import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
@@ -30,15 +32,17 @@ public final class TokenServiceImpl implements TokenService {
     public String generateToken(final User user) {
         return Jwts.builder()
                 .subject(user.id().toString())
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + Long.parseLong(expiration)))
+                .issuedAt(Date.from(OffsetDateTime.now().toInstant()))
+                .expiration(Date.from(OffsetDateTime.now()
+                        .plusSeconds(Long.parseLong(expiration))
+                        .toInstant()))
                 .signWith(getSigningKey())
                 .compact();
     }
 
     @Override
     public User getUserFrom(final String token) {
-        var claims = getClaims(token);
+        final Claims claims = getClaims(token);
 
         return userQueryRepository
                 .findById(Long.valueOf(claims.getSubject()))
@@ -46,13 +50,15 @@ public final class TokenServiceImpl implements TokenService {
     }
 
     private Claims getClaims(final String token) {
-        var jwtParser = Jwts.parser().verifyWith((SecretKey) getSigningKey()).build();
+        final JwtParser jwtParser =
+                Jwts.parser().verifyWith((SecretKey) getSigningKey()).build();
 
         return jwtParser.parse(token).accept(Jws.CLAIMS).getPayload();
     }
 
     private Key getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        final byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }

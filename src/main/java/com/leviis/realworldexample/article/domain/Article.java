@@ -2,6 +2,7 @@ package com.leviis.realworldexample.article.domain;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public record Article(
         Long id,
@@ -24,7 +25,7 @@ public record Article(
             final OffsetDateTime createdAt,
             final OffsetDateTime updatedAt) {
         this.id = id;
-        this.slug = slug;
+        this.slug = Optional.ofNullable(slug).orElse(Slug.from(title));
         this.title = title;
         this.description = description;
         this.body = body;

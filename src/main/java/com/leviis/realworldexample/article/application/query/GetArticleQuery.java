@@ -15,7 +15,7 @@ public record GetArticleQuery(User authenticatedUser, String slug, UUID slugId) 
             throw new IllegalArgumentException("Invalid slug");
         }
 
-        var slugLength = slug.length() - UUID_MIN_LENGTH;
+        final int slugLength = slug.length() - UUID_MIN_LENGTH;
         return builder()
                 .setAuthenticatedUser(authenticatedUser)
                 .setSlug(getSlugFrom(slug, slugLength))

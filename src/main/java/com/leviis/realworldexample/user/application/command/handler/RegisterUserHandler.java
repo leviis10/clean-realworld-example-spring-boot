@@ -10,6 +10,7 @@ import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepos
 import com.leviis.realworldexample.user.domain.Email;
 import com.leviis.realworldexample.user.domain.RawPassword;
 import com.leviis.realworldexample.user.domain.User;
+import java.util.Optional;
 
 public final class RegisterUserHandler implements RegisterUserUseCase {
     private final UserCommandRepository userCommandRepository;
@@ -30,28 +31,29 @@ public final class RegisterUserHandler implements RegisterUserUseCase {
 
     @Override
     public UserWithToken execute(final RegisterUserCommand command) {
-        Email email = new Email(command.email());
-        RawPassword rawPassword = new RawPassword(command.password());
+        final Email email = new Email(command.email());
+        final RawPassword rawPassword = new RawPassword(command.password());
 
         validateUserExists(command, email);
 
-        var hashedPassword = passwordService.hashPassword(rawPassword);
-        var createdUser = userCommandRepository.save(User.builder()
+        final String hashedPassword = passwordService.hashPassword(rawPassword);
+        final User createdUser = userCommandRepository.save(User.builder()
                 .setEmail(email)
                 .setUsername(command.username())
                 .setPassword(hashedPassword)
                 .build());
 
-        var token = tokenService.generateToken(createdUser);
+        final String token = tokenService.generateToken(createdUser);
         return UserWithToken.from(createdUser, token);
     }
 
     private void validateUserExists(final RegisterUserCommand command, final Email email) {
-        var foundUserByEmail = userQueryRepository.findByEmail(email);
+        final Optional<User> foundUserByEmail = userQueryRepository.findByEmail(email);
         if (foundUserByEmail.isPresent()) {
             throw new IllegalStateException("Email is already registered");
         }
-        var foundUserByUsername = userQueryRepository.findByUsername(command.username());
+
+        final Optional<User> foundUserByUsername = userQueryRepository.findByUsername(command.username());
         if (foundUserByUsername.isPresent()) {
             throw new IllegalStateException("Username is already registered");
         }

@@ -3,15 +3,19 @@ package com.leviis.realworldexample.article.application.query.handler;
 import com.leviis.realworldexample.article.application.port.inbound.GetArticleUseCase;
 import com.leviis.realworldexample.article.application.port.outbound.ArticleQueryRepository;
 import com.leviis.realworldexample.article.application.port.outbound.UserFavoriteArticleQueryRepository;
-import com.leviis.realworldexample.article.application.query.ArticleWithBodyAndAuthor;
 import com.leviis.realworldexample.article.application.query.GetArticleQuery;
+import com.leviis.realworldexample.article.application.readmodel.ArticleWithBodyAndAuthor;
+import com.leviis.realworldexample.article.domain.Article;
 import com.leviis.realworldexample.article.domain.Slug;
 import com.leviis.realworldexample.tag.application.port.outbound.TagQueryRepository;
+import com.leviis.realworldexample.tag.domain.Tag;
 import com.leviis.realworldexample.user.application.port.outbound.FollowQueryRepository;
 import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepository;
+import com.leviis.realworldexample.user.domain.User;
 import java.util.HashSet;
+import java.util.List;
 
-public class GetArticleHandler implements GetArticleUseCase {
+public final class GetArticleHandler implements GetArticleUseCase {
     private final ArticleQueryRepository articleQueryRepository;
     private final TagQueryRepository tagQueryRepository;
     private final UserFavoriteArticleQueryRepository userFavoriteArticleQueryRepository;
@@ -33,15 +37,16 @@ public class GetArticleHandler implements GetArticleUseCase {
 
     @Override
     public ArticleWithBodyAndAuthor execute(final GetArticleQuery query) {
-        var foundArticle = articleQueryRepository
+        final Article foundArticle = articleQueryRepository
                 .getBySlug(new Slug(query.slug(), query.slugId()))
                 .orElseThrow(() -> new RuntimeException("Article not found"));
-        var foundTags = tagQueryRepository.findAllByIdIn(new HashSet<>(foundArticle.tagIds()));
-        var isFavoriteArticle =
+        final List<Tag> foundTags = tagQueryRepository.findAllByIdIn(new HashSet<>(foundArticle.tagIds()));
+        final boolean isFavoriteArticle =
                 userFavoriteArticleQueryRepository.getIsFavoriteArticle(query.authenticatedUser(), foundArticle.id());
-        var favoritesCount = userFavoriteArticleQueryRepository.getFavoriteCount(foundArticle);
-        var foundAuthor = userQueryRepository.findById(foundArticle.authorId()).orElse(null);
-        var isFollowingAuthor = followQueryRepository.findIsFollowing(query.authenticatedUser(), foundAuthor);
+        final long favoritesCount = userFavoriteArticleQueryRepository.getFavoriteCount(foundArticle);
+        final User foundAuthor =
+                userQueryRepository.findById(foundArticle.authorId()).orElse(null);
+        final boolean isFollowingAuthor = followQueryRepository.findIsFollowing(query.authenticatedUser(), foundAuthor);
 
         return ArticleWithBodyAndAuthor.from(
                 foundArticle, foundTags, isFavoriteArticle, favoritesCount, foundAuthor, isFollowingAuthor);

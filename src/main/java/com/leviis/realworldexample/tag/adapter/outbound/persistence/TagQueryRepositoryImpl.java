@@ -16,13 +16,19 @@ public class TagQueryRepositoryImpl implements TagQueryRepository {
 
     @Override
     public List<Tag> findAll() {
-        var foundTags = jpaTagRepository.findAll();
+        final List<TagEntity> foundTags = jpaTagRepository.findAll();
         return foundTags.stream().map(TagEntity::intoTagDomain).toList();
     }
 
     @Override
     public List<Tag> findAllByIdIn(final Set<Long> ids) {
-        var foundTags = jpaTagRepository.findAllById(ids);
+        final List<TagEntity> foundTags = jpaTagRepository.findAllById(ids);
+        return foundTags.stream().map(TagEntity::intoTagDomain).toList();
+    }
+
+    @Override
+    public List<Tag> findAllByNameIn(final Set<String> tagNames) {
+        final List<TagEntity> foundTags = jpaTagRepository.findAllByNameIn(tagNames);
         return foundTags.stream().map(TagEntity::intoTagDomain).toList();
     }
 }

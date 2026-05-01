@@ -1,4 +1,4 @@
-package com.leviis.realworldexample.article.application.query;
+package com.leviis.realworldexample.article.application.readmodel;
 
 import com.leviis.realworldexample.article.domain.Article;
 import com.leviis.realworldexample.article.domain.Slug;
@@ -166,6 +166,10 @@ public record ArticleWithBodyAndAuthor(
                     this.favoritesCount,
                     this.author);
         }
+    }
+
+    public static ArticleWithBodyAndAuthor from(final User author, final List<Tag> tags, final Article article) {
+        return from(article, tags, false, 0, author, false);
     }
 
     public static ArticleWithBodyAndAuthor from(

@@ -8,4 +8,6 @@ public interface TagQueryRepository {
     List<Tag> findAll();
 
     List<Tag> findAllByIdIn(Set<Long> ids);
+
+    List<Tag> findAllByNameIn(Set<String> tagNames);
 }

@@ -4,6 +4,7 @@ import com.leviis.realworldexample.article.adapter.outbound.persistence.articlet
 import com.leviis.realworldexample.article.adapter.outbound.persistence.userfavoritearticle.UserFavoriteArticleEntity;
 import com.leviis.realworldexample.article.domain.Article;
 import com.leviis.realworldexample.article.domain.Slug;
+import com.leviis.realworldexample.tag.domain.Tag;
 import com.leviis.realworldexample.user.adapter.outbound.persistence.user.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,6 +17,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,6 +27,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
+import org.jspecify.annotations.Nullable;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -47,9 +50,10 @@ public final class ArticleEntity {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "description")
+    @Column(name = "description", nullable = false)
     private String description;
 
+    @Column(name = "body", nullable = false)
     private String body;
 
     @ManyToOne
@@ -70,7 +74,7 @@ public final class ArticleEntity {
     @OneToMany(mappedBy = "article")
     private List<ArticleTagEntity> tags;
 
-    public static ArticleEntity from(final Article article) {
+    public static ArticleEntity from(final Article article, @Nullable final Map<Long, Tag> tagMap) {
         return ArticleEntity.builder()
                 .id(article.id())
                 .slug(article.slug().value())
@@ -81,11 +85,27 @@ public final class ArticleEntity {
                 .author(UserEntity.builder().id(article.authorId()).build())
                 .createdAt(article.createdAt())
                 .updatedAt(article.updatedAt())
+                .tags(getTags(article, tagMap))
                 .build();
     }
 
+    public static ArticleEntity from(final Article article) {
+        return from(article, null);
+    }
+
+    public static ArticleEntity from(final Long articleId) {
+        return ArticleEntity.builder().id(articleId).build();
+    }
+
+    private static List<ArticleTagEntity> getTags(final Article article, @Nullable final Map<Long, Tag> tagMap) {
+        return article.tagIds().stream()
+                .map(tagId -> ArticleTagEntity.from(tagId, tagMap))
+                .toList();
+    }
+
     public Article intoArticleDomain() {
-        var tagIds = this.tags.stream().map(tag -> tag.getId().getTagId()).toList();
+        final List<Long> tagIds =
+                this.tags.stream().map(tag -> tag.getId().getTagId()).toList();
 
         return Article.builder()
                 .setId(this.id)

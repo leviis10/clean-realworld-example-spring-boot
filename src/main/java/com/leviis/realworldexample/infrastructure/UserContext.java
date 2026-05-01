@@ -1,6 +1,7 @@
 package com.leviis.realworldexample.infrastructure;
 
 import com.leviis.realworldexample.user.domain.User;
+import java.io.Serial;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,6 +16,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Data
 @Builder
 public final class UserContext implements UserDetails {
+    @Serial
+    private static final long serialVersionUID = 455235400840329858L;
+
     private Long id;
     private String email;
     private String username;

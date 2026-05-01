@@ -4,11 +4,12 @@ import com.leviis.realworldexample.article.application.query.FindAllArticleQuery
 import com.leviis.realworldexample.infrastructure.UserContext;
 import com.leviis.realworldexample.infrastructure.constants.PaginationConstants;
 import com.leviis.realworldexample.user.domain.User;
-import jakarta.annotation.Nullable;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jspecify.annotations.Nullable;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -36,12 +37,7 @@ public final class FindAllArticleQueryParameter {
                 .build();
     }
 
-    @Nullable
-    private User getUserId(@Nullable final UserContext userContext) {
-        if (userContext == null) {
-            return null;
-        }
-
-        return userContext.intoUserDomain();
+    private @Nullable User getUserId(@Nullable final UserContext userContext) {
+        return Optional.ofNullable(userContext).map(UserContext::intoUserDomain).orElse(null);
     }
 }

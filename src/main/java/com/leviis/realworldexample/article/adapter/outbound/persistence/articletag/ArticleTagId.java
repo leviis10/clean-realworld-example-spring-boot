@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jspecify.annotations.Nullable;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,4 +16,12 @@ public class ArticleTagId {
     private Long articleId;
 
     private Long tagId;
+
+    public static ArticleTagId from(@Nullable final Long articleId, @Nullable final Long tagId) {
+        return ArticleTagId.builder().articleId(articleId).tagId(tagId).build();
+    }
+
+    public static ArticleTagId from(final Long tagId) {
+        return from(null, tagId);
+    }
 }

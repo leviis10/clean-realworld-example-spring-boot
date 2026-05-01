@@ -1,4 +1,4 @@
-package com.leviis.realworldexample.article.application.query;
+package com.leviis.realworldexample.article.application.readmodel;
 
 import com.leviis.realworldexample.article.domain.Article;
 import com.leviis.realworldexample.article.domain.Slug;
@@ -49,10 +49,11 @@ public record ArticleWithAuthor(
             final List<User> foundAuthors,
             final User user,
             final List<Long> foundIsFollowingAuthors) {
-        var tagMap = tags.stream().collect(Collectors.toMap(Tag::id, Tag::name, (_, replacement) -> replacement));
-        var favoriteArticleMap = favoriteArticleId.stream()
+        final Map<Long, String> tagMap =
+                tags.stream().collect(Collectors.toMap(Tag::id, Tag::name, (_, replacement) -> replacement));
+        final Map<Long, Boolean> favoriteArticleMap = favoriteArticleId.stream()
                 .collect(Collectors.toMap(id -> id, _ -> true, (_, replacement) -> replacement));
-        var authorMap = foundAuthors.stream()
+        final Map<Long, User> authorMap = foundAuthors.stream()
                 .collect(Collectors.toMap(User::id, Function.identity(), (_, replacement) -> replacement));
 
         return articles.stream()
@@ -80,7 +81,7 @@ public record ArticleWithAuthor(
 
     public record Author(String username, String bio, String image, boolean isFollowing) {
         public static Author from(final User author, final User user, final List<Long> followingData) {
-            var followingDataMap = followingData.stream()
+            final Map<Long, Boolean> followingDataMap = followingData.stream()
                     .collect(Collectors.toMap(followingId -> followingId, _ -> true, (_, replacement) -> replacement));
 
             return builder()

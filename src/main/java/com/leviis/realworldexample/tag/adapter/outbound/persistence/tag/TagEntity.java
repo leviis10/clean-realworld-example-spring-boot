@@ -11,12 +11,14 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.jspecify.annotations.Nullable;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -43,6 +45,18 @@ public final class TagEntity {
 
     @OneToMany(mappedBy = "tag")
     private List<ArticleTagEntity> articles;
+
+    public static TagEntity from(@Nullable final Tag tag) {
+        return TagEntity.builder().id(getId(tag)).name(getName(tag)).build();
+    }
+
+    private static @Nullable String getName(@Nullable final Tag tag) {
+        return Optional.ofNullable(tag).map(Tag::name).orElse(null);
+    }
+
+    private static @Nullable Long getId(@Nullable final Tag tag) {
+        return Optional.ofNullable(tag).map(Tag::id).orElse(null);
+    }
 
     public Tag intoTagDomain() {
         return Tag.builder().setId(this.id).setName(this.name).build();

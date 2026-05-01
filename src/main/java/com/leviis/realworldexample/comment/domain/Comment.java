@@ -1,9 +1,5 @@
 package com.leviis.realworldexample.comment.domain;
 
-public class Comment {
-    //    private String body;
-    //    private Long authorId;
-    //    private Long articleId;
-    //    private OffsetDateTime createdAt;
-    //    private OffsetDateTime updatedAt;
-}
+import java.time.OffsetDateTime;
+
+public record Comment(String body, Long authorId, Long articleId, OffsetDateTime createdAt, OffsetDateTime updatedAt) {}

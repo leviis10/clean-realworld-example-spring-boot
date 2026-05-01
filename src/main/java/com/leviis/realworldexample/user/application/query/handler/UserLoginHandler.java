@@ -7,6 +7,8 @@ import com.leviis.realworldexample.user.application.port.outbound.TokenService;
 import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepository;
 import com.leviis.realworldexample.user.application.query.UserLoginQuery;
 import com.leviis.realworldexample.user.domain.Email;
+import com.leviis.realworldexample.user.domain.User;
+import com.leviis.realworldexample.user.domain.exceptions.IncorrectPasswordException;
 
 public final class UserLoginHandler implements UserLoginUseCase {
     private final UserQueryRepository userQueryRepository;
@@ -24,16 +26,16 @@ public final class UserLoginHandler implements UserLoginUseCase {
 
     @Override
     public UserWithToken execute(final UserLoginQuery query) {
-        var foundUser = userQueryRepository
+        final User foundUser = userQueryRepository
                 .findByEmail(new Email(query.email()))
                 .orElseThrow(() -> new RuntimeException("Unregistered email address"));
 
-        var isCorrectPassword = passwordService.compare(query.password(), foundUser.password());
+        final boolean isCorrectPassword = passwordService.compare(query.password(), foundUser.password());
         if (!isCorrectPassword) {
-            throw new RuntimeException("Incorrect Password");
+            throw new IncorrectPasswordException();
         }
 
-        var token = tokenService.generateToken(foundUser);
+        final String token = tokenService.generateToken(foundUser);
         return UserWithToken.from(foundUser, token);
     }
 }

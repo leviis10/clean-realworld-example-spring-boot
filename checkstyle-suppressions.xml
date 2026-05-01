@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE suppressions PUBLIC
+        "-//Checkstyle//DTD SuppressionFilter Configuration 1.0//EN"
+        "https://checkstyle.org/dtds/suppressions_1_0.dtd">
+
+<suppressions>
+    <!-- Repository -->
+    <suppress checks="DesignForExtension"
+              files="ArticleQueryRepositoryImpl.java"
+              lines="1-9999"/>
+    <suppress checks="DesignForExtension"
+              files="UserFavoriteArticleQueryRepositoryImpl.java"
+              lines="1-9999"/>
+    <suppress checks="DesignForExtension"
+              files="ArticleCommandRepositoryImpl.java"
+              lines="1-9999"/>
+    <suppress checks="DesignForExtension"
+              files="TagQueryRepositoryImpl.java"
+              lines="1-9999"/>
+    <suppress checks="DesignForExtension"
+              files="UserQueryRepositoryImpl.java"
+              lines="1-9999"/>
+    <suppress checks="DesignForExtension"
+              files="FollowQueryRepositoryImpl.java"
+              lines="1-9999"/>
+
+    <!-- Adapter -->
+    <suppress checks="DesignForExtension"
+              files="ArticleAdapterConfig.java"
+              lines="1-9999"/>
+    <suppress checks="DesignForExtension"
+              files="TagAdapterConfig.java"
+              lines="1-9999"/>
+    <suppress checks="DesignForExtension"
+              files="UserAdapterConfig.java"
+              lines="1-9999"/>
+
+    <!-- Configuration -->
+    <suppress checks="DesignForExtension"
+              files="SecurityConfig.java"
+              lines="1-9999"/>
+</suppressions>

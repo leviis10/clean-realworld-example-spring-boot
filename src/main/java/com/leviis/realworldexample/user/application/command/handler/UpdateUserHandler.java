@@ -22,11 +22,9 @@ public final class UpdateUserHandler implements UpdateUserUseCase {
     }
 
     private User getUpdatedUser(final UpdateUserCommand command) {
-        if (command.password() != null) {
-            var hashedPassword = passwordService.hashPassword(new RawPassword(command.password()));
-            return command.intoUserDomain(hashedPassword);
-        }
+        final String hashedPassword =
+                command.password() != null ? passwordService.hashPassword(new RawPassword(command.password())) : null;
 
-        return command.intoUserDomain();
+        return command.intoUserDomain(hashedPassword);
     }
 }

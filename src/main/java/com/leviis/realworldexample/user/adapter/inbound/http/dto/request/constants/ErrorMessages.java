@@ -1,5 +1,6 @@
 package com.leviis.realworldexample.user.adapter.inbound.http.dto.request.constants;
 
+@SuppressWarnings("PMD.DataClass")
 public final class ErrorMessages {
     public static final String INVALID_EMAIL_VALIDATION = "That email doesn't look quite right.";
     public static final String NULL_EMAIL_VALIDATION = "An email address is required, but none was provided.";

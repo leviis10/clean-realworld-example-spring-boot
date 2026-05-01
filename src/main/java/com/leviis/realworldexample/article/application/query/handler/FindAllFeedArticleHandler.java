@@ -3,17 +3,20 @@ package com.leviis.realworldexample.article.application.query.handler;
 import com.leviis.realworldexample.article.application.port.inbound.FindAllFeedArticleUseCase;
 import com.leviis.realworldexample.article.application.port.outbound.ArticleQueryRepository;
 import com.leviis.realworldexample.article.application.port.outbound.UserFavoriteArticleQueryRepository;
-import com.leviis.realworldexample.article.application.query.ArticleWithAuthor;
 import com.leviis.realworldexample.article.application.query.FindAllFeedArticleQuery;
+import com.leviis.realworldexample.article.application.readmodel.ArticleWithAuthor;
 import com.leviis.realworldexample.article.domain.Article;
 import com.leviis.realworldexample.tag.application.port.outbound.TagQueryRepository;
+import com.leviis.realworldexample.tag.domain.Tag;
 import com.leviis.realworldexample.user.application.port.outbound.FollowQueryRepository;
 import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepository;
-import java.util.HashSet;
+import com.leviis.realworldexample.user.domain.User;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-public class FindAllFeedArticleHandler implements FindAllFeedArticleUseCase {
+public final class FindAllFeedArticleHandler implements FindAllFeedArticleUseCase {
     private final ArticleQueryRepository articleQueryRepository;
     private final FollowQueryRepository followQueryRepository;
     private final TagQueryRepository tagQueryRepository;
@@ -35,15 +38,16 @@ public class FindAllFeedArticleHandler implements FindAllFeedArticleUseCase {
 
     @Override
     public List<ArticleWithAuthor> execute(final FindAllFeedArticleQuery query) {
-        var followingIds = followQueryRepository.findAllFollowingIdByFollowerId(
+        final List<Long> followingIds = followQueryRepository.findAllFollowingIdByFollowerId(
                 query.user().id());
-        var foundArticles = articleQueryRepository.findAllByAuthorIdIn(followingIds, query.offset(), query.limit());
-        var foundTags = tagQueryRepository.findAllByIdIn(getTagIdFrom(foundArticles));
-        var favoriteArticleId =
+        final List<Article> foundArticles =
+                articleQueryRepository.findAllByAuthorIdIn(followingIds, query.offset(), query.limit());
+        final List<Tag> foundTags = tagQueryRepository.findAllByIdIn(getTagIdFrom(foundArticles));
+        final List<Long> favoriteArticleId =
                 userFavoriteArticleQueryRepository.findUserArticleFavoriteIn(query.user(), foundArticles);
-        var getFavoriteCount = userFavoriteArticleQueryRepository.getFavoriteCount(foundArticles);
-        var foundAuthors = userQueryRepository.findByIds(getAuthorIdFrom(foundArticles));
-        var foundIsFollowingAuthors = userQueryRepository.findIsFollowingIn(query.user(), foundAuthors);
+        final Map<Long, Long> getFavoriteCount = userFavoriteArticleQueryRepository.getFavoriteCount(foundArticles);
+        final List<User> foundAuthors = userQueryRepository.findByIds(getAuthorIdFrom(foundArticles));
+        final List<Long> foundIsFollowingAuthors = userQueryRepository.findIsFollowingIn(query.user(), foundAuthors);
 
         return ArticleWithAuthor.from(
                 foundArticles,
@@ -56,22 +60,10 @@ public class FindAllFeedArticleHandler implements FindAllFeedArticleUseCase {
     }
 
     private Set<Long> getTagIdFrom(final List<Article> articles) {
-        var result = new HashSet<Long>();
-
-        for (var article : articles) {
-            result.addAll(article.tagIds());
-        }
-
-        return result;
+        return articles.stream().flatMap(article -> article.tagIds().stream()).collect(Collectors.toSet());
     }
 
     private Set<Long> getAuthorIdFrom(final List<Article> articles) {
-        var result = new HashSet<Long>();
-
-        for (var article : articles) {
-            result.add(article.authorId());
-        }
-
-        return result;
+        return articles.stream().map(Article::authorId).collect(Collectors.toSet());
     }
 }

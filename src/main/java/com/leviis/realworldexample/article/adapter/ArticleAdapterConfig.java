@@ -1,8 +1,11 @@
 package com.leviis.realworldexample.article.adapter;
 
+import com.leviis.realworldexample.article.application.command.handler.CreateArticleHandler;
+import com.leviis.realworldexample.article.application.port.inbound.CreateArticleUseCase;
 import com.leviis.realworldexample.article.application.port.inbound.FindAllArticleUseCase;
 import com.leviis.realworldexample.article.application.port.inbound.FindAllFeedArticleUseCase;
 import com.leviis.realworldexample.article.application.port.inbound.GetArticleUseCase;
+import com.leviis.realworldexample.article.application.port.outbound.ArticleCommandRepository;
 import com.leviis.realworldexample.article.application.port.outbound.ArticleQueryRepository;
 import com.leviis.realworldexample.article.application.port.outbound.UserFavoriteArticleQueryRepository;
 import com.leviis.realworldexample.article.application.query.handler.FindAllArticleHandler;
@@ -17,12 +20,13 @@ import org.springframework.context.annotation.Configuration;
 
 @RequiredArgsConstructor
 @Configuration
-public class AdapterConfig {
+public class ArticleAdapterConfig {
     private final ArticleQueryRepository articleQueryRepository;
     private final TagQueryRepository tagQueryRepository;
     private final UserQueryRepository userQueryRepository;
     private final UserFavoriteArticleQueryRepository userFavoriteArticleQueryRepository;
     private final FollowQueryRepository followQueryRepository;
+    private final ArticleCommandRepository articleCommandRepository;
 
     @Bean
     public FindAllArticleUseCase findAllArticleUseCase() {
@@ -48,5 +52,10 @@ public class AdapterConfig {
                 userFavoriteArticleQueryRepository,
                 userQueryRepository,
                 followQueryRepository);
+    }
+
+    @Bean
+    public CreateArticleUseCase createArticleUseCase() {
+        return new CreateArticleHandler(tagQueryRepository, articleCommandRepository);
     }
 }

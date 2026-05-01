@@ -3,6 +3,7 @@ package com.leviis.realworldexample.user.adapter.inbound.http;
 import com.leviis.realworldexample.user.adapter.inbound.http.dto.request.RegisterUserRequest;
 import com.leviis.realworldexample.user.adapter.inbound.http.dto.request.UserLoginRequest;
 import com.leviis.realworldexample.user.adapter.inbound.http.dto.response.UserResponse;
+import com.leviis.realworldexample.user.application.command.UserWithToken;
 import com.leviis.realworldexample.user.application.port.inbound.RegisterUserUseCase;
 import com.leviis.realworldexample.user.application.port.inbound.UserLoginUseCase;
 import com.leviis.realworldexample.utils.http.ResponseWrapper;
@@ -25,14 +26,14 @@ public final class AuthController {
     @PostMapping("/register")
     public ResponseEntity<ResponseWrapper<UserResponse>> register(
             @Valid @RequestBody final RegisterUserRequest request) {
-        var data = registerUserUseCase.execute(request.intoRegisterUserCommand());
+        final UserWithToken data = registerUserUseCase.execute(request.intoRegisterUserCommand());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseWrapper<>("Success registering new user", UserResponse.from(data)));
     }
 
     @PostMapping("/login")
     public ResponseEntity<ResponseWrapper<UserResponse>> login(@Valid @RequestBody final UserLoginRequest request) {
-        var user = userLoginUseCase.execute(request.intoUserLoginQuery());
+        final UserWithToken user = userLoginUseCase.execute(request.intoUserLoginQuery());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ResponseWrapper<>("Successfully logged in", UserResponse.from(user)));
     }

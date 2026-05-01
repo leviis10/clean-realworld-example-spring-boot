@@ -19,7 +19,7 @@ public final class TagController {
 
     @GetMapping
     public ResponseEntity<ResponseWrapper<List<String>>> findAll() {
-        var data = findAllTagsUseCase.execute();
+        final List<Tag> data = findAllTagsUseCase.execute();
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ResponseWrapper<>(

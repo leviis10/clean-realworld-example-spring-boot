@@ -1,7 +1,7 @@
 package com.leviis.realworldexample.article.adapter.inbound.http.dto.response;
 
-import com.leviis.realworldexample.article.application.query.ArticleWithAuthor;
-import com.leviis.realworldexample.article.application.query.ArticleWithAuthor.Author;
+import com.leviis.realworldexample.article.application.readmodel.ArticleWithAuthor;
+import com.leviis.realworldexample.article.application.readmodel.ArticleWithAuthor.Author;
 import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,8 @@ public class FindAllArticleResponse {
     private Integer articleCount;
 
     public static FindAllArticleResponse from(final List<ArticleWithAuthor> articles) {
-        var articlesData = articles.stream().map(ArticleDto::from).toList();
+        final List<ArticleDto> articlesData =
+                articles.stream().map(ArticleDto::from).toList();
 
         return FindAllArticleResponse.builder()
                 .articles(articlesData)
