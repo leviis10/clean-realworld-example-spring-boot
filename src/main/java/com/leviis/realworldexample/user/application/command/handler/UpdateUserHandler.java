@@ -6,7 +6,6 @@ import com.leviis.realworldexample.user.application.port.outbound.PasswordServic
 import com.leviis.realworldexample.user.application.port.outbound.UserCommandRepository;
 import com.leviis.realworldexample.user.domain.RawPassword;
 import com.leviis.realworldexample.user.domain.User;
-
 import java.util.Optional;
 
 public final class UpdateUserHandler implements UpdateUserUseCase {

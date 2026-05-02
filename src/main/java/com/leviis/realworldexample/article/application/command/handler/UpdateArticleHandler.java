@@ -13,6 +13,7 @@ import com.leviis.realworldexample.tag.domain.Tag;
 import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.List;
+import org.apache.logging.log4j.internal.annotation.SuppressFBWarnings;
 
 public final class UpdateArticleHandler implements UpdateArticleUseCase {
     private final ArticleCommandRepository articleCommandRepository;
@@ -20,6 +21,9 @@ public final class UpdateArticleHandler implements UpdateArticleUseCase {
     private final TagQueryRepository tagQueryRepository;
     private final UserFavoriteArticleQueryRepository userFavoriteArticleQueryRepository;
 
+    @SuppressFBWarnings(
+            value = "EI_EXPOSE_REP2",
+            justification = "Repository interfaces are effectively immutable — no internal state is exposed")
     public UpdateArticleHandler(
             final ArticleQueryRepository articleQueryRepository,
             final ArticleCommandRepository articleCommandRepository,

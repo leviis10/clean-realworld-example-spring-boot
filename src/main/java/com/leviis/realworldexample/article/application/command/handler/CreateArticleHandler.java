@@ -12,11 +12,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import org.apache.logging.log4j.internal.annotation.SuppressFBWarnings;
 
 public final class CreateArticleHandler implements CreateArticleUseCase {
     private final TagQueryRepository tagQueryRepository;
     private final ArticleCommandRepository articleCommandRepository;
 
+    @SuppressFBWarnings(
+            value = "EI_EXPOSE_REP2",
+            justification = "Repository interfaces are effectively immutable — no internal state is exposed")
     public CreateArticleHandler(
             final TagQueryRepository tagQueryRepository, final ArticleCommandRepository articleCommandRepository) {
         this.tagQueryRepository = tagQueryRepository;

@@ -18,4 +18,6 @@ public interface JpaArticleRepository
     Optional<ArticleEntity> getBySlugAndSlugId(String slug, UUID slugId);
 
     Optional<ArticleEntity> getByAuthorAndSlugAndSlugId(UserEntity author, String slug, UUID slugId);
+
+    void deleteByAuthorAndSlugAndSlugId(UserEntity author, String slug, UUID slugId);
 }

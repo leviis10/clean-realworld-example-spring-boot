@@ -7,8 +7,10 @@ import com.leviis.realworldexample.article.adapter.inbound.http.dto.request.Upda
 import com.leviis.realworldexample.article.adapter.inbound.http.dto.response.ArticleResponse;
 import com.leviis.realworldexample.article.adapter.inbound.http.dto.response.FindAllArticleResponse;
 import com.leviis.realworldexample.article.adapter.inbound.http.dto.response.FindAllFeedArticleResponse;
+import com.leviis.realworldexample.article.application.command.DeleteArticleCommand;
 import com.leviis.realworldexample.article.application.command.UpdateArticleCommand;
 import com.leviis.realworldexample.article.application.port.inbound.CreateArticleUseCase;
+import com.leviis.realworldexample.article.application.port.inbound.DeleteArticleUseCase;
 import com.leviis.realworldexample.article.application.port.inbound.FindAllArticleUseCase;
 import com.leviis.realworldexample.article.application.port.inbound.FindAllFeedArticleUseCase;
 import com.leviis.realworldexample.article.application.port.inbound.GetArticleUseCase;
@@ -29,6 +31,7 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,6 +49,7 @@ public final class ArticleController {
     private final GetArticleUseCase getArticleUseCase;
     private final CreateArticleUseCase createArticleUseCase;
     private final UpdateArticleUseCase updateArticleUseCase;
+    private final DeleteArticleUseCase deleteArticleUseCase;
 
     @GetMapping
     public ResponseEntity<ResponseWrapper<FindAllArticleResponse>> findAll(
@@ -105,5 +109,13 @@ public final class ArticleController {
                 .build());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ResponseWrapper<>("Successfully update the article", ArticleResponse.from(updatedArticle)));
+    }
+
+    @DeleteMapping("/{slug}")
+    public ResponseEntity<Void> deleteBySlug(
+            @AuthenticationPrincipal final UserContext userContext, @PathVariable final String slug) {
+        deleteArticleUseCase.execute(new DeleteArticleCommand(
+                userContext.intoUserDomain(), Slug.from(SlugUtils.getTitleFrom(slug), SlugUtils.getIdFrom(slug))));
+        return ResponseEntity.noContent().build();
     }
 }
