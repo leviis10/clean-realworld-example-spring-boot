@@ -168,6 +168,15 @@ public record ArticleWithBodyAndAuthor(
         }
     }
 
+    public static ArticleWithBodyAndAuthor from(
+            final User author,
+            final List<Tag> tags,
+            final boolean isFavorite,
+            final long favoritesCount,
+            final Article article) {
+        return from(article, tags, isFavorite, favoritesCount, author, false);
+    }
+
     public static ArticleWithBodyAndAuthor from(final User author, final List<Tag> tags, final Article article) {
         return from(article, tags, false, 0, author, false);
     }

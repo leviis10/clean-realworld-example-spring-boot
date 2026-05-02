@@ -50,10 +50,6 @@ public record UpdateUserCommand(Long id, String email, String username, String p
         }
     }
 
-    public User intoUserDomain() {
-        return intoUserDomain(this.password);
-    }
-
     public User intoUserDomain(final String hashedPassword) {
         return User.builder()
                 .setId(this.id)

@@ -20,6 +20,7 @@
         <exclude name="LongVariable"/>
         <exclude name="ShortVariable"/>
         <exclude name="LinguisticNaming"/>
+        <exclude name="OnlyOneReturn"/>
     </rule>
 
     <!-- https://docs.pmd-code.org/pmd-doc-7.17.0/pmd_rules_java_design.html -->

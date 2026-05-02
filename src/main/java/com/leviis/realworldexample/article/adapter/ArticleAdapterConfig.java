@@ -1,10 +1,12 @@
 package com.leviis.realworldexample.article.adapter;
 
 import com.leviis.realworldexample.article.application.command.handler.CreateArticleHandler;
+import com.leviis.realworldexample.article.application.command.handler.UpdateArticleHandler;
 import com.leviis.realworldexample.article.application.port.inbound.CreateArticleUseCase;
 import com.leviis.realworldexample.article.application.port.inbound.FindAllArticleUseCase;
 import com.leviis.realworldexample.article.application.port.inbound.FindAllFeedArticleUseCase;
 import com.leviis.realworldexample.article.application.port.inbound.GetArticleUseCase;
+import com.leviis.realworldexample.article.application.port.inbound.UpdateArticleUseCase;
 import com.leviis.realworldexample.article.application.port.outbound.ArticleCommandRepository;
 import com.leviis.realworldexample.article.application.port.outbound.ArticleQueryRepository;
 import com.leviis.realworldexample.article.application.port.outbound.UserFavoriteArticleQueryRepository;
@@ -57,5 +59,14 @@ public class ArticleAdapterConfig {
     @Bean
     public CreateArticleUseCase createArticleUseCase() {
         return new CreateArticleHandler(tagQueryRepository, articleCommandRepository);
+    }
+
+    @Bean
+    public UpdateArticleUseCase updateArticleUseCase() {
+        return new UpdateArticleHandler(
+                articleQueryRepository,
+                articleCommandRepository,
+                tagQueryRepository,
+                userFavoriteArticleQueryRepository);
     }
 }

@@ -45,8 +45,10 @@ public final class JwtFilter extends OncePerRequestFilter {
 
     private @Nullable String getTokenFrom(final HttpServletRequest request) {
         final String authorizationHeader = request.getHeader("Authorization");
-        return (authorizationHeader == null || !authorizationHeader.startsWith("Bearer "))
-                ? null
-                : authorizationHeader.substring("Bearer ".length());
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            return null;
+        }
+
+        return authorizationHeader.substring("Bearer ".length());
     }
 }

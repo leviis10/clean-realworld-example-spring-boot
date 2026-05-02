@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Repository
@@ -23,6 +24,13 @@ public class ArticleCommandRepositoryImpl implements ArticleCommandRepository {
         final ArticleEntity newArticle = jpaArticleRepository.save(ArticleEntity.from(article, tagMap));
         jpaArticleTagRepository.saveAll(getArticleTags(newArticle, tagMap));
         return newArticle.intoArticleDomain();
+    }
+
+    @Override
+    @Transactional
+    public Article save(final Article article) {
+        final ArticleEntity savedArticle = jpaArticleRepository.save(ArticleEntity.from(article));
+        return savedArticle.intoArticleDomain();
     }
 
     private static List<ArticleTagEntity> getArticleTags(

@@ -7,6 +7,8 @@ import com.leviis.realworldexample.user.application.port.outbound.UserCommandRep
 import com.leviis.realworldexample.user.domain.RawPassword;
 import com.leviis.realworldexample.user.domain.User;
 
+import java.util.Optional;
+
 public final class UpdateUserHandler implements UpdateUserUseCase {
     private final UserCommandRepository userCommandRepository;
     private final PasswordService passwordService;
@@ -22,8 +24,9 @@ public final class UpdateUserHandler implements UpdateUserUseCase {
     }
 
     private User getUpdatedUser(final UpdateUserCommand command) {
-        final String hashedPassword =
-                command.password() != null ? passwordService.hashPassword(new RawPassword(command.password())) : null;
+        final String hashedPassword = Optional.ofNullable(command.password())
+                .map(password -> passwordService.hashPassword(new RawPassword(password)))
+                .orElse(null);
 
         return command.intoUserDomain(hashedPassword);
     }

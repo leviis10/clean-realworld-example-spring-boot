@@ -2,6 +2,7 @@ package com.leviis.realworldexample.article.application.port.outbound;
 
 import com.leviis.realworldexample.article.domain.Article;
 import com.leviis.realworldexample.article.domain.Slug;
+import com.leviis.realworldexample.user.domain.User;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,4 +12,6 @@ public interface ArticleQueryRepository {
     List<Article> findAllByAuthorIdIn(List<Long> authorIds, int offset, int limit);
 
     Optional<Article> getBySlug(Slug slug);
+
+    Optional<Article> getByAuthorAndSlug(User author, Slug slug);
 }

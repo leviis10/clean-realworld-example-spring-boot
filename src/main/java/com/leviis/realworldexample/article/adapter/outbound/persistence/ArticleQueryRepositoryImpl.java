@@ -7,6 +7,7 @@ import com.leviis.realworldexample.article.application.port.outbound.ArticleQuer
 import com.leviis.realworldexample.article.domain.Article;
 import com.leviis.realworldexample.article.domain.Slug;
 import com.leviis.realworldexample.user.adapter.outbound.persistence.user.UserEntity;
+import com.leviis.realworldexample.user.domain.User;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +50,15 @@ public class ArticleQueryRepositoryImpl implements ArticleQueryRepository {
     @Transactional
     public Optional<Article> getBySlug(final Slug slug) {
         final Optional<ArticleEntity> foundArticle = jpaArticleRepository.getBySlugAndSlugId(slug.value(), slug.id());
+        return foundArticle.map(ArticleEntity::intoArticleDomain);
+    }
+
+    @Override
+    @Transactional
+    public Optional<Article> getByAuthorAndSlug(final User author, final Slug slug) {
+        final Optional<ArticleEntity> foundArticle =
+                jpaArticleRepository.getByAuthorAndSlugAndSlugId(UserEntity.from(author), slug.value(), slug.id());
+
         return foundArticle.map(ArticleEntity::intoArticleDomain);
     }
 }

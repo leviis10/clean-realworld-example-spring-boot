@@ -16,4 +16,6 @@ public interface JpaArticleRepository
     Page<ArticleEntity> findAllByAuthorIn(List<UserEntity> authors, Pageable pageable);
 
     Optional<ArticleEntity> getBySlugAndSlugId(String slug, UUID slugId);
+
+    Optional<ArticleEntity> getByAuthorAndSlugAndSlugId(UserEntity author, String slug, UUID slugId);
 }

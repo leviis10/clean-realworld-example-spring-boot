@@ -18,6 +18,7 @@ import com.leviis.realworldexample.user.application.query.GetUserProfileQuery;
 import com.leviis.realworldexample.user.domain.User;
 import com.leviis.realworldexample.utils.http.ResponseWrapper;
 import jakarta.validation.Valid;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,8 +64,10 @@ public final class UserController {
     public ResponseEntity<ResponseWrapper<GetUserProfileResponse>> getUserProfile(
             @PathVariable final String username, @AuthenticationPrincipal final UserContext userContext) {
         final User foundUser = getUserProfileUseCase.execute(new GetUserProfileQuery(username));
+        final Long followerId =
+                Optional.ofNullable(userContext).map(UserContext::getId).orElse(null);
         final boolean isFollowing = getIsFollowingInformationUseCase.execute(
-                new GetIsFollowingInformationQuery(userContext != null ? userContext.getId() : null, foundUser.id()));
+                new GetIsFollowingInformationQuery(followerId, foundUser.id()));
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ResponseWrapper<>(

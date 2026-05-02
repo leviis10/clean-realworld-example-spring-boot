@@ -35,6 +35,19 @@ public record Article(
         this.updatedAt = updatedAt;
     }
 
+    public ArticleBuilder intoBuilder() {
+        return new ArticleBuilder()
+                .setId(this.id)
+                .setSlug(this.slug)
+                .setTitle(this.title)
+                .setDescription(this.description)
+                .setBody(this.body)
+                .setAuthorId(this.authorId)
+                .setTagIds(this.tagIds)
+                .setCreatedAt(this.createdAt)
+                .setUpdatedAt(this.updatedAt);
+    }
+
     public static ArticleBuilder builder() {
         return new ArticleBuilder();
     }

@@ -98,6 +98,10 @@ public final class ArticleEntity {
     }
 
     private static List<ArticleTagEntity> getTags(final Article article, @Nullable final Map<Long, Tag> tagMap) {
+        if (tagMap == null) {
+            return List.of();
+        }
+
         return article.tagIds().stream()
                 .map(tagId -> ArticleTagEntity.from(tagId, tagMap))
                 .toList();

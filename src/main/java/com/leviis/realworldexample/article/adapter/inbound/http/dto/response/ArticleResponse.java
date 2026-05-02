@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Builder
-public class CreateArticleResponse {
+public class ArticleResponse {
     private String slug;
     private String title;
     private String description;
@@ -24,8 +24,8 @@ public class CreateArticleResponse {
     private Long favoritesCount;
     private AuthorDto author;
 
-    public static CreateArticleResponse from(final ArticleWithBodyAndAuthor article) {
-        return CreateArticleResponse.builder()
+    public static ArticleResponse from(final ArticleWithBodyAndAuthor article) {
+        return ArticleResponse.builder()
                 .slug(article.slug())
                 .title(article.title())
                 .description(article.description())

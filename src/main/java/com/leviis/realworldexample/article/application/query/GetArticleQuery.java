@@ -1,34 +1,25 @@
 package com.leviis.realworldexample.article.application.query;
 
 import com.leviis.realworldexample.user.domain.User;
+import com.leviis.realworldexample.utils.SlugUtils;
 import java.util.UUID;
 
 public record GetArticleQuery(User authenticatedUser, String slug, UUID slugId) {
-    private static final int UUID_MIN_LENGTH = 36;
-
     public static GetArticleQueryBuilder builder() {
         return new GetArticleQueryBuilder();
     }
 
     public static GetArticleQuery from(final User authenticatedUser, final String slug) {
-        if (slug.length() <= UUID_MIN_LENGTH) {
+        if (slug.length() <= SlugUtils.UUID_MIN_LENGTH) {
             throw new IllegalArgumentException("Invalid slug");
         }
 
-        final int slugLength = slug.length() - UUID_MIN_LENGTH;
+        final int slugLength = slug.length() - SlugUtils.UUID_MIN_LENGTH;
         return builder()
                 .setAuthenticatedUser(authenticatedUser)
-                .setSlug(getSlugFrom(slug, slugLength))
-                .setSlugId(getSlugIdFrom(slug, slugLength))
+                .setSlug(SlugUtils.getTitleFrom(slug, slugLength))
+                .setSlugId(SlugUtils.getIdFrom(slug, slugLength))
                 .build();
-    }
-
-    private static UUID getSlugIdFrom(final String slug, final int slugLength) {
-        return UUID.fromString(slug.substring(slugLength));
-    }
-
-    private static String getSlugFrom(final String slug, final int slugLength) {
-        return slug.substring(0, slugLength - 1);
     }
 
     public static final class GetArticleQueryBuilder {
