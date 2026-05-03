@@ -24,6 +24,9 @@
     <suppress checks="DesignForExtension"
               files="FollowQueryRepositoryImpl.java"
               lines="1-9999"/>
+    <suppress checks="DesignForExtension"
+              files="CommentCommandRepositoryImpl.java"
+              lines="1-9999"/>
 
     <!-- Adapter -->
     <suppress checks="DesignForExtension"
@@ -34,6 +37,9 @@
               lines="1-9999"/>
     <suppress checks="DesignForExtension"
               files="UserAdapterConfig.java"
+              lines="1-9999"/>
+    <suppress checks="DesignForExtension"
+              files="CommentAdapterConfig.java"
               lines="1-9999"/>
 
     <!-- Configuration -->

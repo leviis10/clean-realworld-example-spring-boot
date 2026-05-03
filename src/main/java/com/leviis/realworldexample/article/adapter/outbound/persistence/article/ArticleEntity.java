@@ -4,6 +4,7 @@ import com.leviis.realworldexample.article.adapter.outbound.persistence.articlet
 import com.leviis.realworldexample.article.adapter.outbound.persistence.userfavoritearticle.UserFavoriteArticleEntity;
 import com.leviis.realworldexample.article.domain.Article;
 import com.leviis.realworldexample.article.domain.Slug;
+import com.leviis.realworldexample.comment.adapter.outbound.persistence.comment.CommentEntity;
 import com.leviis.realworldexample.tag.domain.Tag;
 import com.leviis.realworldexample.user.adapter.outbound.persistence.user.UserEntity;
 import jakarta.persistence.Column;
@@ -73,6 +74,9 @@ public final class ArticleEntity {
 
     @OneToMany(mappedBy = "article")
     private List<ArticleTagEntity> tags;
+
+    @OneToMany(mappedBy = "article")
+    private List<CommentEntity> comments;
 
     public static ArticleEntity from(final Article article, @Nullable final Map<Long, Tag> tagMap) {
         return ArticleEntity.builder()

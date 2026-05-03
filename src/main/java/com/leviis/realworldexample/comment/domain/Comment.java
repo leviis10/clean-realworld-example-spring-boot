@@ -1,5 +1,8 @@
 package com.leviis.realworldexample.comment.domain;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
+import lombok.Builder;
 
-public record Comment(String body, Long authorId, Long articleId, OffsetDateTime createdAt, OffsetDateTime updatedAt) {}
+@Builder(setterPrefix = "set", toBuilder = true)
+public record Comment(
+        Long id, String body, Long authorId, Long articleId, LocalDateTime createdAt, LocalDateTime updatedAt) {}
