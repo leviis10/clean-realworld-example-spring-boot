@@ -30,7 +30,8 @@ public class SecurityConfig {
                                 "/api/v1/users/*",
                                 "/api/v1/tags",
                                 "/api/v1/articles",
-                                "/api/v1/articles/*")
+                                "/api/v1/articles/*",
+                                "/api/v1/comments")
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/articles/feed")
                         .authenticated()

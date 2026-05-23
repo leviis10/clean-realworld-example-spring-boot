@@ -10,15 +10,10 @@ public record GetArticleQuery(User authenticatedUser, String slug, UUID slugId) 
     }
 
     public static GetArticleQuery from(final User authenticatedUser, final String slug) {
-        if (slug.length() <= SlugUtils.UUID_MIN_LENGTH) {
-            throw new IllegalArgumentException("Invalid slug");
-        }
-
-        final int slugLength = slug.length() - SlugUtils.UUID_MIN_LENGTH;
         return builder()
                 .setAuthenticatedUser(authenticatedUser)
-                .setSlug(SlugUtils.getTitleFrom(slug, slugLength))
-                .setSlugId(SlugUtils.getIdFrom(slug, slugLength))
+                .setSlug(SlugUtils.getTitleFrom(slug))
+                .setSlugId(SlugUtils.getIdFrom(slug))
                 .build();
     }
 
