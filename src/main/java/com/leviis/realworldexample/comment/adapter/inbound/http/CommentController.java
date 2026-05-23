@@ -3,10 +3,13 @@ package com.leviis.realworldexample.comment.adapter.inbound.http;
 import com.leviis.realworldexample.article.domain.Slug;
 import com.leviis.realworldexample.comment.adapter.inbound.http.dto.queryparameter.FindAllArticleBySlugQueryParameter;
 import com.leviis.realworldexample.comment.adapter.inbound.http.dto.request.CreateCommentRequest;
+import com.leviis.realworldexample.comment.adapter.inbound.http.dto.request.DeleteByIdAndArticleSlugRequest;
 import com.leviis.realworldexample.comment.adapter.inbound.http.dto.response.CreateCommentResponse;
 import com.leviis.realworldexample.comment.adapter.inbound.http.dto.response.FindAllByArticleSlugResponse;
 import com.leviis.realworldexample.comment.application.command.CreateCommentCommand;
+import com.leviis.realworldexample.comment.application.command.DeleteCommentCommand;
 import com.leviis.realworldexample.comment.application.port.inbound.CreateCommentUseCase;
+import com.leviis.realworldexample.comment.application.port.inbound.DeleteCommentUseCase;
 import com.leviis.realworldexample.comment.application.port.inbound.FindAllCommentUseCase;
 import com.leviis.realworldexample.comment.application.query.FindAllCommentQuery;
 import com.leviis.realworldexample.comment.application.readmodel.CommentWithAuthor;
@@ -23,8 +26,10 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
 public final class CommentController {
     private final CreateCommentUseCase createCommentUseCase;
     private final FindAllCommentUseCase findAllCommentUseCase;
+    private final DeleteCommentUseCase deleteCommentUseCase;
 
     @PostMapping
     public ResponseEntity<ResponseWrapper<CreateCommentResponse>> create(
@@ -69,5 +75,20 @@ public final class CommentController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ResponseWrapper<>(
                         "Successfully fetch all comments", FindAllByArticleSlugResponse.from(foundComments)));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteByIdAndArticleSlug(
+            @AuthenticationPrincipal final UserContext userContext,
+            @PathVariable("id") final Long commentId,
+            @Valid @RequestBody final DeleteByIdAndArticleSlugRequest request) {
+        deleteCommentUseCase.execute(DeleteCommentCommand.builder()
+                .setAuthenticatedUserId(userContext.getId())
+                .setCommentId(commentId)
+                .setArticleSlug(
+                        new Slug(SlugUtils.getTitleFrom(request.getSlug()), SlugUtils.getIdFrom(request.getSlug())))
+                .build());
+
+        return ResponseEntity.noContent().build();
     }
 }

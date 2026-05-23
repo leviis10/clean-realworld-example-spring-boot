@@ -23,7 +23,7 @@ public final class UpdateArticleHandler implements UpdateArticleUseCase {
 
     @SuppressFBWarnings(
             value = "EI_EXPOSE_REP2",
-            justification = "Repository interfaces are effectively immutable — no internal state is exposed")
+            justification = "Repository interfaces are effectively immutable - no internal state is exposed")
     public UpdateArticleHandler(
             final ArticleQueryRepository articleQueryRepository,
             final ArticleCommandRepository articleCommandRepository,

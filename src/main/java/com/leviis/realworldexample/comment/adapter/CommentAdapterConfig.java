@@ -2,7 +2,9 @@ package com.leviis.realworldexample.comment.adapter;
 
 import com.leviis.realworldexample.article.application.port.outbound.ArticleQueryRepository;
 import com.leviis.realworldexample.comment.application.command.handler.CreateCommentHandler;
+import com.leviis.realworldexample.comment.application.command.handler.DeleteCommentHandler;
 import com.leviis.realworldexample.comment.application.port.inbound.CreateCommentUseCase;
+import com.leviis.realworldexample.comment.application.port.inbound.DeleteCommentUseCase;
 import com.leviis.realworldexample.comment.application.port.inbound.FindAllCommentUseCase;
 import com.leviis.realworldexample.comment.application.port.outbound.CommentCommandRepository;
 import com.leviis.realworldexample.comment.application.port.outbound.CommentQueryRepository;
@@ -30,5 +32,10 @@ public class CommentAdapterConfig {
     @Bean
     public FindAllCommentUseCase findAllCommentUseCase() {
         return new FindAllCommentHandler(commentQueryRepository, userQueryRepository, followQueryRepository);
+    }
+
+    @Bean
+    public DeleteCommentUseCase deleteCommentUseCase() {
+        return new DeleteCommentHandler(commentCommandRepository);
     }
 }

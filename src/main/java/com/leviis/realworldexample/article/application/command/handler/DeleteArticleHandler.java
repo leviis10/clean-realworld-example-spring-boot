@@ -10,7 +10,7 @@ public final class DeleteArticleHandler implements DeleteArticleUseCase {
 
     @SuppressFBWarnings(
             value = "EI_EXPOSE_REP2",
-            justification = "Repository interfaces are effectively immutable — no internal state is exposed")
+            justification = "Repository interfaces are effectively immutable - no internal state is exposed")
     public DeleteArticleHandler(final ArticleCommandRepository articleCommandRepository) {
         this.articleCommandRepository = articleCommandRepository;
     }

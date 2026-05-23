@@ -20,7 +20,7 @@ public final class CreateArticleHandler implements CreateArticleUseCase {
 
     @SuppressFBWarnings(
             value = "EI_EXPOSE_REP2",
-            justification = "Repository interfaces are effectively immutable — no internal state is exposed")
+            justification = "Repository interfaces are effectively immutable - no internal state is exposed")
     public CreateArticleHandler(
             final TagQueryRepository tagQueryRepository, final ArticleCommandRepository articleCommandRepository) {
         this.tagQueryRepository = tagQueryRepository;

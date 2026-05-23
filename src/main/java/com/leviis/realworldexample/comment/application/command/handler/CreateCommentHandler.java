@@ -7,11 +7,15 @@ import com.leviis.realworldexample.comment.application.port.inbound.CreateCommen
 import com.leviis.realworldexample.comment.application.port.outbound.CommentCommandRepository;
 import com.leviis.realworldexample.comment.application.readmodel.CommentWithAuthor;
 import com.leviis.realworldexample.comment.domain.Comment;
+import org.apache.logging.log4j.internal.annotation.SuppressFBWarnings;
 
 public final class CreateCommentHandler implements CreateCommentUseCase {
     private final CommentCommandRepository commentCommandRepository;
     private final ArticleQueryRepository articleQueryRepository;
 
+    @SuppressFBWarnings(
+            value = "EI_EXPOSE_REP2",
+            justification = "Repository interfaces are effectively immutable - no internal state is exposed")
     public CreateCommentHandler(
             final CommentCommandRepository commentCommandRepository,
             final ArticleQueryRepository articleQueryRepository) {
