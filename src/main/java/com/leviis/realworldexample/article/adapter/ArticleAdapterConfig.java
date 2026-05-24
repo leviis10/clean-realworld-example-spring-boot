@@ -1,10 +1,12 @@
 package com.leviis.realworldexample.article.adapter;
 
+import com.leviis.realworldexample.article.application.command.handler.AddArticleToFavoriteHandler;
 import com.leviis.realworldexample.article.application.command.handler.CreateArticleHandler;
 import com.leviis.realworldexample.article.application.command.handler.CreateCommentHandler;
 import com.leviis.realworldexample.article.application.command.handler.DeleteArticleHandler;
 import com.leviis.realworldexample.article.application.command.handler.DeleteCommentHandler;
 import com.leviis.realworldexample.article.application.command.handler.UpdateArticleHandler;
+import com.leviis.realworldexample.article.application.port.inbound.AddArticleToFavoriteUseCase;
 import com.leviis.realworldexample.article.application.port.inbound.CreateArticleUseCase;
 import com.leviis.realworldexample.article.application.port.inbound.CreateCommentUseCase;
 import com.leviis.realworldexample.article.application.port.inbound.DeleteArticleUseCase;
@@ -18,6 +20,7 @@ import com.leviis.realworldexample.article.application.port.outbound.ArticleComm
 import com.leviis.realworldexample.article.application.port.outbound.ArticleQueryRepository;
 import com.leviis.realworldexample.article.application.port.outbound.CommentCommandRepository;
 import com.leviis.realworldexample.article.application.port.outbound.CommentQueryRepository;
+import com.leviis.realworldexample.article.application.port.outbound.UserFavoriteArticleCommandRepository;
 import com.leviis.realworldexample.article.application.port.outbound.UserFavoriteArticleQueryRepository;
 import com.leviis.realworldexample.article.application.query.handler.FindAllArticleHandler;
 import com.leviis.realworldexample.article.application.query.handler.FindAllCommentHandler;
@@ -41,6 +44,7 @@ public class ArticleAdapterConfig {
     private final ArticleCommandRepository articleCommandRepository;
     private final CommentCommandRepository commentCommandRepository;
     private final CommentQueryRepository commentQueryRepository;
+    private final UserFavoriteArticleCommandRepository userFavoriteArticleCommandRepository;
 
     @Bean
     public FindAllArticleUseCase findAllArticleUseCase() {
@@ -100,5 +104,15 @@ public class ArticleAdapterConfig {
     @Bean
     public DeleteCommentUseCase deleteCommentUseCase() {
         return new DeleteCommentHandler(commentCommandRepository);
+    }
+
+    @Bean
+    public AddArticleToFavoriteUseCase addArticleToFavoriteUseCase() {
+        return new AddArticleToFavoriteHandler(
+                userFavoriteArticleCommandRepository,
+                userFavoriteArticleQueryRepository,
+                userQueryRepository,
+                tagQueryRepository,
+                followQueryRepository);
     }
 }

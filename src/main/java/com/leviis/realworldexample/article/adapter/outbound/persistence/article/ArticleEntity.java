@@ -111,6 +111,15 @@ public final class ArticleEntity {
                 .toList();
     }
 
+    @SuppressWarnings("unchecked")
+    public <T> T into(final Class<T> target) {
+        if (target == Article.class) {
+            return (T) this.intoArticleDomain();
+        }
+
+        throw new IllegalArgumentException("Cast to " + target + " is not supported");
+    }
+
     public Article intoArticleDomain() {
         final List<Long> tagIds =
                 this.tags.stream().map(tag -> tag.getId().getTagId()).toList();

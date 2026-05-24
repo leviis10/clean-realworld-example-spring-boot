@@ -34,14 +34,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/articles/{slug}")
+@RequestMapping("/api/v1/articles/{slug}/comments")
 public final class ArticleCommentController {
     private final CreateCommentUseCase createCommentUseCase;
     private final FindAllCommentUseCase findAllCommentUseCase;
     private final DeleteCommentUseCase deleteCommentUseCase;
 
-    @PostMapping("/comments")
-    public ResponseEntity<ResponseWrapper<CreateCommentResponse>> createComment(
+    @PostMapping
+    public ResponseEntity<ResponseWrapper<CreateCommentResponse>> create(
             @AuthenticationPrincipal final UserContext userContext,
             @PathVariable final String slug,
             @Valid @RequestBody final CreateCommentRequest request) {
@@ -55,8 +55,8 @@ public final class ArticleCommentController {
                         "Successfully created new comment", CreateCommentResponse.from(createComment)));
     }
 
-    @GetMapping("/comments")
-    public ResponseEntity<ResponseWrapper<List<FindAllByArticleSlugResponse>>> findAllCommentByArticleSlug(
+    @GetMapping
+    public ResponseEntity<ResponseWrapper<List<FindAllByArticleSlugResponse>>> findAllByArticleSlug(
             @Nullable @AuthenticationPrincipal final UserContext userContext, @PathVariable final String slug) {
         final User authenticatedUser = Optional.ofNullable(userContext)
                 .map(UserContext::intoUserDomain)
@@ -72,7 +72,7 @@ public final class ArticleCommentController {
                         "Successfully fetch all comments", FindAllByArticleSlugResponse.from(foundComments)));
     }
 
-    @DeleteMapping("/comments/{commentId}")
+    @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteByIdAndArticleSlug(
             @AuthenticationPrincipal final UserContext userContext,
             @PathVariable final String slug,

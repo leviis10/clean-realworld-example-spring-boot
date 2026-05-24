@@ -19,7 +19,7 @@ import org.hibernate.annotations.CreationTimestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Builder
+@Builder(setterPrefix = "set")
 @Entity
 @Table(name = "user_favorite_article")
 public class UserFavoriteArticleEntity {
