@@ -1,7 +1,7 @@
-package com.leviis.realworldexample.comment.adapter.outbound.persistence.comment;
+package com.leviis.realworldexample.article.adapter.outbound.persistence.comment;
 
 import com.leviis.realworldexample.article.adapter.outbound.persistence.article.ArticleEntity;
-import com.leviis.realworldexample.comment.domain.Comment;
+import com.leviis.realworldexample.article.domain.Comment;
 import com.leviis.realworldexample.user.adapter.outbound.persistence.user.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

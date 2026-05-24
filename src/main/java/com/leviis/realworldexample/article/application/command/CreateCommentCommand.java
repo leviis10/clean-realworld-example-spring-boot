@@ -1,7 +1,7 @@
-package com.leviis.realworldexample.comment.application.command;
+package com.leviis.realworldexample.article.application.command;
 
+import com.leviis.realworldexample.article.domain.Comment;
 import com.leviis.realworldexample.article.domain.Slug;
-import com.leviis.realworldexample.comment.domain.Comment;
 import com.leviis.realworldexample.user.domain.User;
 import lombok.Builder;
 

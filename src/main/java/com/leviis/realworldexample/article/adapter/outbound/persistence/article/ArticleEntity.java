@@ -1,10 +1,10 @@
 package com.leviis.realworldexample.article.adapter.outbound.persistence.article;
 
 import com.leviis.realworldexample.article.adapter.outbound.persistence.articletag.ArticleTagEntity;
+import com.leviis.realworldexample.article.adapter.outbound.persistence.comment.CommentEntity;
 import com.leviis.realworldexample.article.adapter.outbound.persistence.userfavoritearticle.UserFavoriteArticleEntity;
 import com.leviis.realworldexample.article.domain.Article;
 import com.leviis.realworldexample.article.domain.Slug;
-import com.leviis.realworldexample.comment.adapter.outbound.persistence.comment.CommentEntity;
 import com.leviis.realworldexample.tag.domain.Tag;
 import com.leviis.realworldexample.user.adapter.outbound.persistence.user.UserEntity;
 import jakarta.persistence.Column;

@@ -1,6 +1,6 @@
-package com.leviis.realworldexample.comment.adapter.inbound.http.dto.response;
+package com.leviis.realworldexample.article.adapter.inbound.http.dto.response;
 
-import com.leviis.realworldexample.comment.application.readmodel.CommentWithAuthor;
+import com.leviis.realworldexample.article.application.readmodel.CommentWithAuthor;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

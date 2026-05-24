@@ -1,10 +1,10 @@
-package com.leviis.realworldexample.comment.application.query.handler;
+package com.leviis.realworldexample.article.application.query.handler;
 
-import com.leviis.realworldexample.comment.application.port.inbound.FindAllCommentUseCase;
-import com.leviis.realworldexample.comment.application.port.outbound.CommentQueryRepository;
-import com.leviis.realworldexample.comment.application.query.FindAllCommentQuery;
-import com.leviis.realworldexample.comment.application.readmodel.CommentWithAuthor;
-import com.leviis.realworldexample.comment.domain.Comment;
+import com.leviis.realworldexample.article.application.port.inbound.FindAllCommentUseCase;
+import com.leviis.realworldexample.article.application.port.outbound.CommentQueryRepository;
+import com.leviis.realworldexample.article.application.query.FindAllCommentQuery;
+import com.leviis.realworldexample.article.application.readmodel.CommentWithAuthor;
+import com.leviis.realworldexample.article.domain.Comment;
 import com.leviis.realworldexample.user.application.port.outbound.FollowQueryRepository;
 import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepository;
 import com.leviis.realworldexample.user.domain.User;

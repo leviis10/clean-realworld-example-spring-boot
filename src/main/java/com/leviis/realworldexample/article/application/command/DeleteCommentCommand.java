@@ -1,4 +1,4 @@
-package com.leviis.realworldexample.comment.application.command;
+package com.leviis.realworldexample.article.application.command;
 
 import com.leviis.realworldexample.article.domain.Slug;
 import lombok.Builder;

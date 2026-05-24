@@ -1,10 +1,10 @@
-package com.leviis.realworldexample.comment.adapter.outbound.persistence;
+package com.leviis.realworldexample.article.adapter.outbound.persistence;
 
+import com.leviis.realworldexample.article.adapter.outbound.persistence.comment.CommentEntity;
+import com.leviis.realworldexample.article.adapter.outbound.persistence.comment.JpaCommentRepository;
+import com.leviis.realworldexample.article.application.port.outbound.CommentCommandRepository;
+import com.leviis.realworldexample.article.domain.Comment;
 import com.leviis.realworldexample.article.domain.Slug;
-import com.leviis.realworldexample.comment.adapter.outbound.persistence.comment.CommentEntity;
-import com.leviis.realworldexample.comment.adapter.outbound.persistence.comment.JpaCommentRepository;
-import com.leviis.realworldexample.comment.application.port.outbound.CommentCommandRepository;
-import com.leviis.realworldexample.comment.domain.Comment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

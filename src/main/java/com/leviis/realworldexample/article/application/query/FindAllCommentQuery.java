@@ -1,4 +1,4 @@
-package com.leviis.realworldexample.comment.application.query;
+package com.leviis.realworldexample.article.application.query;
 
 import com.leviis.realworldexample.article.domain.Slug;
 import com.leviis.realworldexample.user.domain.User;

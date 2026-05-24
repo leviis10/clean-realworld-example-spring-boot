@@ -1,4 +1,4 @@
-package com.leviis.realworldexample.comment.domain;
+package com.leviis.realworldexample.article.domain;
 
 import java.time.LocalDateTime;
 import lombok.Builder;

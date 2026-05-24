@@ -1,8 +1,8 @@
-package com.leviis.realworldexample.comment.application.command.handler;
+package com.leviis.realworldexample.article.application.command.handler;
 
-import com.leviis.realworldexample.comment.application.command.DeleteCommentCommand;
-import com.leviis.realworldexample.comment.application.port.inbound.DeleteCommentUseCase;
-import com.leviis.realworldexample.comment.application.port.outbound.CommentCommandRepository;
+import com.leviis.realworldexample.article.application.command.DeleteCommentCommand;
+import com.leviis.realworldexample.article.application.port.inbound.DeleteCommentUseCase;
+import com.leviis.realworldexample.article.application.port.outbound.CommentCommandRepository;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

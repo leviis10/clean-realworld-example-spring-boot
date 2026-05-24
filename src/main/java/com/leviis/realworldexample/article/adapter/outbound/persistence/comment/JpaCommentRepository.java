@@ -1,4 +1,4 @@
-package com.leviis.realworldexample.comment.adapter.outbound.persistence.comment;
+package com.leviis.realworldexample.article.adapter.outbound.persistence.comment;
 
 import java.util.List;
 import java.util.UUID;

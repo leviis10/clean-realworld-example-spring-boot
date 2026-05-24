@@ -1,6 +1,6 @@
-package com.leviis.realworldexample.comment.application.readmodel;
+package com.leviis.realworldexample.article.application.readmodel;
 
-import com.leviis.realworldexample.comment.domain.Comment;
+import com.leviis.realworldexample.article.domain.Comment;
 import com.leviis.realworldexample.user.domain.User;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

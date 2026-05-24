@@ -1,6 +1,6 @@
-package com.leviis.realworldexample.comment.adapter.inbound.http.dto.request;
+package com.leviis.realworldexample.article.adapter.inbound.http.dto.request;
 
-import com.leviis.realworldexample.comment.domain.Comment;
+import com.leviis.realworldexample.article.domain.Comment;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,9 +14,6 @@ import lombok.NoArgsConstructor;
 public final class CreateCommentRequest {
     @NotBlank(message = "Body cannot be blank.")
     private String body;
-
-    @NotBlank(message = "Slug cannot be empty")
-    private String slug;
 
     @SuppressWarnings("unchecked")
     public <T> T into(final Class<T> target) {
