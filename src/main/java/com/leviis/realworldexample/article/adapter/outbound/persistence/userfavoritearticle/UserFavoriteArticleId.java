@@ -15,4 +15,11 @@ public class UserFavoriteArticleId {
     private Long userId;
 
     private Long articleId;
+
+    public static UserFavoriteArticleId from(final Long userId, final Long articleId) {
+        return UserFavoriteArticleId.builder()
+                .userId(userId)
+                .articleId(articleId)
+                .build();
+    }
 }

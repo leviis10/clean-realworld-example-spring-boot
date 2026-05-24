@@ -38,4 +38,9 @@ public class UserFavoriteArticleCommandRepositoryImpl implements UserFavoriteArt
 
         return savedFavoriteArticle.getArticle().into(Article.class);
     }
+
+    @Override
+    public void delete(final long authenticatedUserId, final long articleId) {
+        jpaUserFavoriteArticleRepository.deleteById(UserFavoriteArticleId.from(authenticatedUserId, articleId));
+    }
 }

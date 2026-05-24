@@ -5,6 +5,7 @@ import com.leviis.realworldexample.article.application.command.handler.CreateArt
 import com.leviis.realworldexample.article.application.command.handler.CreateCommentHandler;
 import com.leviis.realworldexample.article.application.command.handler.DeleteArticleHandler;
 import com.leviis.realworldexample.article.application.command.handler.DeleteCommentHandler;
+import com.leviis.realworldexample.article.application.command.handler.UnfavoriteArticleHandler;
 import com.leviis.realworldexample.article.application.command.handler.UpdateArticleHandler;
 import com.leviis.realworldexample.article.application.port.inbound.AddArticleToFavoriteUseCase;
 import com.leviis.realworldexample.article.application.port.inbound.CreateArticleUseCase;
@@ -15,6 +16,7 @@ import com.leviis.realworldexample.article.application.port.inbound.FindAllArtic
 import com.leviis.realworldexample.article.application.port.inbound.FindAllCommentUseCase;
 import com.leviis.realworldexample.article.application.port.inbound.FindAllFeedArticleUseCase;
 import com.leviis.realworldexample.article.application.port.inbound.GetArticleUseCase;
+import com.leviis.realworldexample.article.application.port.inbound.UnfavoriteArticleUseCase;
 import com.leviis.realworldexample.article.application.port.inbound.UpdateArticleUseCase;
 import com.leviis.realworldexample.article.application.port.outbound.ArticleCommandRepository;
 import com.leviis.realworldexample.article.application.port.outbound.ArticleQueryRepository;
@@ -114,5 +116,16 @@ public class ArticleAdapterConfig {
                 userQueryRepository,
                 tagQueryRepository,
                 followQueryRepository);
+    }
+
+    @Bean
+    public UnfavoriteArticleUseCase unfavoriteArticleUseCase() {
+        return new UnfavoriteArticleHandler(
+                userFavoriteArticleCommandRepository,
+                userFavoriteArticleQueryRepository,
+                userQueryRepository,
+                tagQueryRepository,
+                followQueryRepository,
+                articleQueryRepository);
     }
 }
