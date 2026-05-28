@@ -1,6 +1,7 @@
 package com.leviis.realworldexample.infrastructure.exceptions;
 
 import com.leviis.realworldexample.article.application.exceptions.ArticleNotFoundException;
+import com.leviis.realworldexample.article.application.exceptions.AuthorNotFoundException;
 import com.leviis.realworldexample.infrastructure.constants.ErrorTypeConstants;
 import com.leviis.realworldexample.user.application.exceptions.IncorrectCredentialsException;
 import com.leviis.realworldexample.user.application.exceptions.UserNotFoundException;
@@ -151,6 +152,20 @@ public final class GlobalExceptionHandler {
         final HttpStatus httpStatus = HttpStatus.NOT_FOUND;
         final ProblemDetail response = ProblemDetailUtils.constructProblemDetail(
                 httpStatus, e.getMessage(), ErrorTypeConstants.ABOUT_BLANK, "User Not Found", request.getRequestURI());
+
+        return ResponseEntity.status(httpStatus).body(response);
+    }
+
+    @ExceptionHandler(AuthorNotFoundException.class)
+    public ResponseEntity<ProblemDetail> handleAuthorNotFoundException(
+            final AuthorNotFoundException e, final HttpServletRequest request) {
+        final HttpStatus httpStatus = HttpStatus.NOT_FOUND;
+        final ProblemDetail response = ProblemDetailUtils.constructProblemDetail(
+                httpStatus,
+                e.getMessage(),
+                ErrorTypeConstants.ABOUT_BLANK,
+                "Author Not Found",
+                request.getRequestURI());
 
         return ResponseEntity.status(httpStatus).body(response);
     }

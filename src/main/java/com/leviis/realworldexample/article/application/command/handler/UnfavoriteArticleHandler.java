@@ -1,6 +1,8 @@
 package com.leviis.realworldexample.article.application.command.handler;
 
 import com.leviis.realworldexample.article.application.command.UnfavoriteArticleCommand;
+import com.leviis.realworldexample.article.application.exceptions.ArticleNotFoundException;
+import com.leviis.realworldexample.article.application.exceptions.AuthorNotFoundException;
 import com.leviis.realworldexample.article.application.port.inbound.UnfavoriteArticleUseCase;
 import com.leviis.realworldexample.article.application.port.outbound.ArticleQueryRepository;
 import com.leviis.realworldexample.article.application.port.outbound.UserFavoriteArticleCommandRepository;
@@ -29,13 +31,13 @@ public final class UnfavoriteArticleHandler implements UnfavoriteArticleUseCase 
     public ArticleWithBodyAndAuthor execute(final UnfavoriteArticleCommand command) {
         final Article foundArticle = articleQueryRepository
                 .getBySlug(command.articleSlug())
-                .orElseThrow(() -> new RuntimeException("Article not found"));
+                .orElseThrow(() -> new ArticleNotFoundException(command.articleSlug()));
         userFavoriteArticleCommandRepository.delete(command.authenticatedUser().id(), foundArticle.id());
         final List<Tag> foundArticleTags = tagQueryRepository.findAllByIdIn(new HashSet<>(foundArticle.tagIds()));
         final long articleFavoritesCount = userFavoriteArticleQueryRepository.getFavoriteCount(foundArticle);
         final User foundArticleAuthor = userQueryRepository
                 .findById(foundArticle.authorId())
-                .orElseThrow(() -> new RuntimeException("Author not found"));
+                .orElseThrow(() -> new AuthorNotFoundException(foundArticle.authorId()));
         final boolean isFollowingArticleAuthor =
                 followQueryRepository.findIsFollowing(command.authenticatedUser(), foundArticleAuthor);
 
