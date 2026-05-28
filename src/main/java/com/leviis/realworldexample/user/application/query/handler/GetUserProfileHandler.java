@@ -1,5 +1,6 @@
 package com.leviis.realworldexample.user.application.query.handler;
 
+import com.leviis.realworldexample.user.application.exceptions.UserNotFoundException;
 import com.leviis.realworldexample.user.application.port.inbound.GetUserProfileUseCase;
 import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepository;
 import com.leviis.realworldexample.user.application.query.GetUserProfileQuery;
@@ -16,6 +17,6 @@ public final class GetUserProfileHandler implements GetUserProfileUseCase {
     public User execute(final GetUserProfileQuery query) {
         return userQueryRepository
                 .findByUsername(query.username())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException(query.username()));
     }
 }
