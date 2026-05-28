@@ -27,6 +27,7 @@
     <rule ref="category/java/design.xml">
         <exclude name="ExcessiveImports"/>
         <exclude name="TooManyMethods"/>
+        <exclude name="UseObjectForClearerAPI"/>
     </rule>
 
     <!-- https://docs.pmd-code.org/pmd-doc-7.17.0/pmd_rules_java_documentation.html -->

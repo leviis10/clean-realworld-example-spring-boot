@@ -13,6 +13,7 @@ import com.leviis.realworldexample.utils.http.ResponseWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,11 +24,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/articles/{slug}/favorite")
-public final class ArticleFavoriteController {
+public class ArticleFavoriteController {
     private final AddArticleToFavoriteUseCase addArticleToFavoriteUseCase;
     private final UnfavoriteArticleUseCase unfavoriteArticleUseCase;
 
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseWrapper<ArticleResponse>> add(
             @AuthenticationPrincipal final UserContext userContext, @PathVariable final String slug) {
         final ArticleWithBodyAndAuthor favoriteArticle =
@@ -42,6 +44,7 @@ public final class ArticleFavoriteController {
     }
 
     @DeleteMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseWrapper<ArticleResponse>> delete(
             @AuthenticationPrincipal final UserContext userContext, @PathVariable final String slug) {
         final ArticleWithBodyAndAuthor unfavoritedArticle =

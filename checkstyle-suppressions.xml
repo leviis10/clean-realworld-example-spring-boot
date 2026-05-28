@@ -31,7 +31,21 @@
               files="CommentQueryRepositoryImpl.java"
               lines="1-9999"/>
 
-    <!-- Adapter -->
+    <!-- Controller -->
+    <suppress checks="DesignForExtension"
+              files="ArticleController.java"
+              lines="1-9999"/>
+    <suppress checks="DesignForExtension"
+              files="ArticleCommentController.java"
+              lines="1-9999"/>
+    <suppress checks="DesignForExtension"
+              files="ArticleFavoriteController.java"
+              lines="1-9999"/>
+    <suppress checks="DesignForExtension"
+              files="UserController.java"
+              lines="1-9999"/>
+
+    <!-- Adapter Config -->
     <suppress checks="DesignForExtension"
               files="ArticleAdapterConfig.java"
               lines="1-9999"/>

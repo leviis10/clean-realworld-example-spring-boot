@@ -22,6 +22,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
-public final class UserController {
+public class UserController {
     private final UpdateUserUseCase updateUserUseCase;
     private final GetUserProfileUseCase getUserProfileUseCase;
     private final GetIsFollowingInformationUseCase getIsFollowingInformationUseCase;
@@ -43,6 +44,7 @@ public final class UserController {
     private final UnfollowUserUseCase unfollowUserUseCase;
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseWrapper<UserResponse>> getCurrentUser(
             @AuthenticationPrincipal final UserContext userContext) {
         return ResponseEntity.status(HttpStatus.OK)
@@ -50,6 +52,7 @@ public final class UserController {
     }
 
     @PutMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseWrapper<UserResponse>> updateUser(
             @AuthenticationPrincipal final UserContext userContext,
             @Valid @RequestBody final UpdateUserRequest request) {
@@ -75,6 +78,7 @@ public final class UserController {
     }
 
     @PostMapping("/{username}/follow")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseWrapper<FollowUserResponse>> followUser(
             @AuthenticationPrincipal final UserContext userContext, @PathVariable final String username) {
         final User foundFollowingUser = getUserProfileUseCase.execute(new GetUserProfileQuery(username));
@@ -90,6 +94,7 @@ public final class UserController {
     }
 
     @DeleteMapping("/{username}/follow")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseWrapper<UnfollowResponse>> unfollowUser(
             @AuthenticationPrincipal final UserContext userContext, @PathVariable final String username) {
         final User foundUnfollowingUser = getUserProfileUseCase.execute(new GetUserProfileQuery(username));

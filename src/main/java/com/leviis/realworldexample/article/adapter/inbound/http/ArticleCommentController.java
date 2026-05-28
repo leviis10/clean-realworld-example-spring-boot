@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,12 +36,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/articles/{slug}/comments")
-public final class ArticleCommentController {
+public class ArticleCommentController {
     private final CreateCommentUseCase createCommentUseCase;
     private final FindAllCommentUseCase findAllCommentUseCase;
     private final DeleteCommentUseCase deleteCommentUseCase;
 
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseWrapper<CreateCommentResponse>> create(
             @AuthenticationPrincipal final UserContext userContext,
             @PathVariable final String slug,
@@ -73,6 +75,7 @@ public final class ArticleCommentController {
     }
 
     @DeleteMapping("/{commentId}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> deleteByIdAndArticleSlug(
             @AuthenticationPrincipal final UserContext userContext,
             @PathVariable final String slug,

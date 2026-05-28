@@ -17,8 +17,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public final class TokenServiceImpl implements TokenService {
     private final UserQueryRepository userQueryRepository;
 

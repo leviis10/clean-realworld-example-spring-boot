@@ -30,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,7 +44,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/articles")
-public final class ArticleController {
+public class ArticleController {
     private final FindAllArticleUseCase findAllArticleUseCase;
     private final FindAllFeedArticleUseCase findAllFeedArticleUseCase;
     private final GetArticleUseCase getArticleUseCase;
@@ -64,6 +65,7 @@ public final class ArticleController {
     }
 
     @GetMapping("/feed")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseWrapper<FindAllFeedArticleResponse>> findAllFeed(
             @AuthenticationPrincipal final UserContext userContext, final FeedArticleQueryParameter queryParameter) {
         final List<ArticleWithAuthor> foundFeedArticle =
@@ -88,6 +90,7 @@ public final class ArticleController {
     }
 
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseWrapper<ArticleResponse>> create(
             @AuthenticationPrincipal final UserContext userContext,
             @Valid @RequestBody final CreateArticleRequest request) {
@@ -98,6 +101,7 @@ public final class ArticleController {
     }
 
     @PutMapping("/{slug}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseWrapper<ArticleResponse>> updateBySlug(
             @AuthenticationPrincipal final UserContext userContext,
             @PathVariable final String slug,
@@ -112,6 +116,7 @@ public final class ArticleController {
     }
 
     @DeleteMapping("/{slug}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> deleteBySlug(
             @AuthenticationPrincipal final UserContext userContext, @PathVariable final String slug) {
         deleteArticleUseCase.execute(new DeleteArticleCommand(

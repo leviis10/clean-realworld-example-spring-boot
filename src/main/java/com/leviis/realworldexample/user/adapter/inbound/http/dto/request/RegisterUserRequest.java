@@ -1,12 +1,11 @@
 package com.leviis.realworldexample.user.adapter.inbound.http.dto.request;
 
 import com.leviis.realworldexample.user.adapter.inbound.http.dto.request.constants.ErrorMessages;
-import com.leviis.realworldexample.user.adapter.inbound.http.dto.request.constants.ValidationRules;
 import com.leviis.realworldexample.user.application.command.RegisterUserCommand;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,7 +20,10 @@ public final class RegisterUserRequest {
     @NotNull(message = ErrorMessages.NULL_EMAIL_VALIDATION)
     private String email;
 
-    @Size(min = ValidationRules.PASSWORD_MIN_LENGTH, message = ErrorMessages.MIN_PASSWORD_VALIDATION)
+    @Pattern(
+            regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
+            message = "Password must be at least contains 1 lowercase character, 1 uppercase character, 1 digit, 1"
+                    + " special characters, and at least have 8 characters long")
     @NotNull(message = ErrorMessages.NULL_PASSWORD_VALIDATION)
     private String password;
 

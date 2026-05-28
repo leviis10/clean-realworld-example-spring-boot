@@ -1,13 +1,14 @@
-package com.leviis.realworldexample.infrastructure;
+package com.leviis.realworldexample.infrastructure.security;
 
+import com.leviis.realworldexample.infrastructure.filter.JwtFilter;
 import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -20,11 +21,14 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-@EnableWebSecurity
-@Configuration
 @RequiredArgsConstructor
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
     private final JwtFilter jwtFilter;
+    private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+    private final RestAccessDeniedHandler restAccessDeniedHandler;
 
     @Value("${cors.allowed-origins}")
     private String[] allowedOrigins;
@@ -32,24 +36,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(final HttpSecurity httpSecurity) {
         httpSecurity
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/v1/auth/**")
-                        .permitAll()
-                        .requestMatchers(
-                                HttpMethod.GET,
-                                "/api/v1/users/*",
-                                "/api/v1/tags",
-                                "/api/v1/articles",
-                                "/api/v1/articles/*",
-                                "/api/v1/articles/*/comments")
-                        .permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/articles/feed")
-                        .authenticated()
-                        .anyRequest()
-                        .authenticated())
+                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(e -> e.authenticationEntryPoint(restAuthenticationEntryPoint)
+                        .accessDeniedHandler(restAccessDeniedHandler));
 
         return httpSecurity.build();
     }

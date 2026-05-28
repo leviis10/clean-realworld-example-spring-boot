@@ -1,6 +1,7 @@
 package com.leviis.realworldexample.article.application.command.handler;
 
 import com.leviis.realworldexample.article.application.command.UpdateArticleCommand;
+import com.leviis.realworldexample.article.application.exceptions.ArticleNotFoundException;
 import com.leviis.realworldexample.article.application.port.inbound.UpdateArticleUseCase;
 import com.leviis.realworldexample.article.application.port.outbound.ArticleCommandRepository;
 import com.leviis.realworldexample.article.application.port.outbound.ArticleQueryRepository;
@@ -39,7 +40,7 @@ public final class UpdateArticleHandler implements UpdateArticleUseCase {
     public ArticleWithBodyAndAuthor execute(final UpdateArticleCommand command) {
         final Article foundArticle = articleQueryRepository
                 .getByAuthorAndSlug(command.authenticatedUser(), command.slug())
-                .orElseThrow(() -> new RuntimeException("Article not found"));
+                .orElseThrow(() -> new ArticleNotFoundException(command.authenticatedUser(), command.slug()));
         final Article updatedArticle =
                 articleCommandRepository.save(updateArticle(foundArticle, command.updateDataDto()));
         final List<Tag> foundTags = tagQueryRepository.findAllByIdIn(new HashSet<>(foundArticle.tagIds()));

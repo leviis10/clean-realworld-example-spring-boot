@@ -1,5 +1,6 @@
 package com.leviis.realworldexample.article.application.query.handler;
 
+import com.leviis.realworldexample.article.application.exceptions.ArticleNotFoundException;
 import com.leviis.realworldexample.article.application.port.inbound.GetArticleUseCase;
 import com.leviis.realworldexample.article.application.port.outbound.ArticleQueryRepository;
 import com.leviis.realworldexample.article.application.port.outbound.UserFavoriteArticleQueryRepository;
@@ -37,9 +38,10 @@ public final class GetArticleHandler implements GetArticleUseCase {
 
     @Override
     public ArticleWithBodyAndAuthor execute(final GetArticleQuery query) {
+        final Slug articleSlug = new Slug(query.slug(), query.slugId());
         final Article foundArticle = articleQueryRepository
-                .getBySlug(new Slug(query.slug(), query.slugId()))
-                .orElseThrow(() -> new RuntimeException("Article not found"));
+                .getBySlug(articleSlug)
+                .orElseThrow(() -> new ArticleNotFoundException(articleSlug));
         final List<Tag> foundTags = tagQueryRepository.findAllByIdIn(new HashSet<>(foundArticle.tagIds()));
         final boolean isFavoriteArticle =
                 userFavoriteArticleQueryRepository.getIsFavoriteArticle(query.authenticatedUser(), foundArticle.id());
