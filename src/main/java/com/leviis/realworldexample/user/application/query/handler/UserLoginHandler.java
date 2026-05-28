@@ -1,6 +1,7 @@
 package com.leviis.realworldexample.user.application.query.handler;
 
 import com.leviis.realworldexample.user.application.command.UserWithToken;
+import com.leviis.realworldexample.user.application.exceptions.IncorrectCredentialsException;
 import com.leviis.realworldexample.user.application.port.inbound.UserLoginUseCase;
 import com.leviis.realworldexample.user.application.port.outbound.PasswordService;
 import com.leviis.realworldexample.user.application.port.outbound.TokenService;
@@ -8,7 +9,6 @@ import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepos
 import com.leviis.realworldexample.user.application.query.UserLoginQuery;
 import com.leviis.realworldexample.user.domain.Email;
 import com.leviis.realworldexample.user.domain.User;
-import com.leviis.realworldexample.user.domain.exceptions.IncorrectPasswordException;
 
 public final class UserLoginHandler implements UserLoginUseCase {
     private final UserQueryRepository userQueryRepository;
@@ -26,13 +26,12 @@ public final class UserLoginHandler implements UserLoginUseCase {
 
     @Override
     public UserWithToken execute(final UserLoginQuery query) {
-        final User foundUser = userQueryRepository
-                .findByEmail(new Email(query.email()))
-                .orElseThrow(() -> new RuntimeException("Unregistered email address"));
+        final Email email = new Email(query.email());
+        final User foundUser = userQueryRepository.findByEmail(email).orElseThrow(IncorrectCredentialsException::new);
 
         final boolean isCorrectPassword = passwordService.compare(query.password(), foundUser.password());
         if (!isCorrectPassword) {
-            throw new IncorrectPasswordException();
+            throw new IncorrectCredentialsException();
         }
 
         final String token = tokenService.generateToken(foundUser);

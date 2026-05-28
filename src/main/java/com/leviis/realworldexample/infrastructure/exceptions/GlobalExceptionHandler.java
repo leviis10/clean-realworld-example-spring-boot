@@ -2,6 +2,7 @@ package com.leviis.realworldexample.infrastructure.exceptions;
 
 import com.leviis.realworldexample.article.application.exceptions.ArticleNotFoundException;
 import com.leviis.realworldexample.infrastructure.constants.ErrorTypeConstants;
+import com.leviis.realworldexample.user.application.exceptions.IncorrectCredentialsException;
 import com.leviis.realworldexample.utils.ProblemDetailUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -138,6 +139,20 @@ public final class GlobalExceptionHandler {
                 e.getMessage(),
                 ErrorTypeConstants.ABOUT_BLANK,
                 "Article Not Found",
+                request.getRequestURI());
+
+        return ResponseEntity.status(httpStatus).body(response);
+    }
+
+    @ExceptionHandler(IncorrectCredentialsException.class)
+    public ResponseEntity<ProblemDetail> handleIncorrectCredentialsException(
+            final IncorrectCredentialsException e, final HttpServletRequest request) {
+        final HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
+        final ProblemDetail response = ProblemDetailUtils.constructProblemDetail(
+                httpStatus,
+                e.getMessage(),
+                ErrorTypeConstants.ABOUT_BLANK,
+                "Failed to authenticate",
                 request.getRequestURI());
 
         return ResponseEntity.status(httpStatus).body(response);
