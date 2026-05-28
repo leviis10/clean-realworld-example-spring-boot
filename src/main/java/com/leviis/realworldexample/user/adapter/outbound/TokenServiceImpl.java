@@ -1,5 +1,6 @@
 package com.leviis.realworldexample.user.adapter.outbound;
 
+import com.leviis.realworldexample.user.application.exceptions.UserNotFoundException;
 import com.leviis.realworldexample.user.application.port.outbound.TokenService;
 import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepository;
 import com.leviis.realworldexample.user.domain.User;
@@ -44,9 +45,8 @@ public final class TokenServiceImpl implements TokenService {
     public User getUserFrom(final String token) {
         final Claims claims = getClaims(token);
 
-        return userQueryRepository
-                .findById(Long.valueOf(claims.getSubject()))
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        final long userId = Long.parseLong(claims.getSubject());
+        return userQueryRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
     }
 
     private Claims getClaims(final String token) {

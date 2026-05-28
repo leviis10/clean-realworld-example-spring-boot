@@ -1,4 +1,4 @@
-package com.leviis.realworldexample.user.domain.exceptions;
+package com.leviis.realworldexample.user.application.exceptions;
 
 import java.io.Serial;
 

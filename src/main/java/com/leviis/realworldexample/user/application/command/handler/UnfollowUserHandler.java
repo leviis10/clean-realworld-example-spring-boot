@@ -1,11 +1,11 @@
 package com.leviis.realworldexample.user.application.command.handler;
 
 import com.leviis.realworldexample.user.application.command.UnfollowUserCommand;
+import com.leviis.realworldexample.user.application.exceptions.AlreadyUnfollowException;
+import com.leviis.realworldexample.user.application.exceptions.SelfUnfollowException;
 import com.leviis.realworldexample.user.application.port.inbound.UnfollowUserUseCase;
 import com.leviis.realworldexample.user.application.port.outbound.UserCommandRepository;
 import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepository;
-import com.leviis.realworldexample.user.domain.exceptions.AlreadyUnfollowException;
-import com.leviis.realworldexample.user.domain.exceptions.SelfUnfollowException;
 
 public final class UnfollowUserHandler implements UnfollowUserUseCase {
     private final UserCommandRepository userCommandRepository;
