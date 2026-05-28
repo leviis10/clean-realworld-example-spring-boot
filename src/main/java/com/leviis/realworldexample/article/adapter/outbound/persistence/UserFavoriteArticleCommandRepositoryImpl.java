@@ -5,6 +5,7 @@ import com.leviis.realworldexample.article.adapter.outbound.persistence.article.
 import com.leviis.realworldexample.article.adapter.outbound.persistence.userfavoritearticle.JpaUserFavoriteArticleRepository;
 import com.leviis.realworldexample.article.adapter.outbound.persistence.userfavoritearticle.UserFavoriteArticleEntity;
 import com.leviis.realworldexample.article.adapter.outbound.persistence.userfavoritearticle.UserFavoriteArticleId;
+import com.leviis.realworldexample.article.application.exceptions.ArticleNotFoundException;
 import com.leviis.realworldexample.article.application.port.outbound.UserFavoriteArticleCommandRepository;
 import com.leviis.realworldexample.article.domain.Article;
 import com.leviis.realworldexample.article.domain.Slug;
@@ -24,7 +25,7 @@ public class UserFavoriteArticleCommandRepositoryImpl implements UserFavoriteArt
     public Article create(final long authenticatedUserId, final Slug articleSlug) {
         final ArticleEntity foundArticle = jpaArticleRepository
                 .getBySlugAndSlugId(articleSlug.value(), articleSlug.id())
-                .orElseThrow(() -> new RuntimeException("Article not found"));
+                .orElseThrow(() -> new ArticleNotFoundException(new Slug(articleSlug.value(), articleSlug.id())));
         final UserFavoriteArticleEntity favoriteArticleData = UserFavoriteArticleEntity.builder()
                 .setId(UserFavoriteArticleId.builder()
                         .userId(authenticatedUserId)

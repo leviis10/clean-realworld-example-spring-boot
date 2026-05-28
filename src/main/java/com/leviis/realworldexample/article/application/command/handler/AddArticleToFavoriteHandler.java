@@ -1,6 +1,7 @@
 package com.leviis.realworldexample.article.application.command.handler;
 
 import com.leviis.realworldexample.article.application.command.AddArticleToFavoriteCommand;
+import com.leviis.realworldexample.article.application.exceptions.AuthorNotFoundException;
 import com.leviis.realworldexample.article.application.port.inbound.AddArticleToFavoriteUseCase;
 import com.leviis.realworldexample.article.application.port.outbound.UserFavoriteArticleCommandRepository;
 import com.leviis.realworldexample.article.application.port.outbound.UserFavoriteArticleQueryRepository;
@@ -32,7 +33,7 @@ public final class AddArticleToFavoriteHandler implements AddArticleToFavoriteUs
         final long favoritesCount = userFavoriteArticleQueryRepository.getFavoriteCount(favoritedArticle);
         final User favoriteArticleAuthor = userQueryRepository
                 .findById(favoritedArticle.authorId())
-                .orElseThrow(() -> new RuntimeException("Author not found"));
+                .orElseThrow(() -> new AuthorNotFoundException(favoritedArticle.authorId()));
         final boolean isFollowingFavoriteArticleAuthor =
                 followQueryRepository.findIsFollowing(command.authenticatedUser(), favoriteArticleAuthor);
 
