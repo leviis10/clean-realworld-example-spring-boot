@@ -5,6 +5,7 @@ import com.leviis.realworldexample.user.adapter.outbound.persistence.follow.Foll
 import com.leviis.realworldexample.user.adapter.outbound.persistence.follow.JpaFollowRepository;
 import com.leviis.realworldexample.user.adapter.outbound.persistence.user.JpaUserRepository;
 import com.leviis.realworldexample.user.adapter.outbound.persistence.user.UserEntity;
+import com.leviis.realworldexample.user.application.exceptions.UserNotFoundException;
 import com.leviis.realworldexample.user.application.port.outbound.UserCommandRepository;
 import com.leviis.realworldexample.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +26,7 @@ public final class UserCommandRepositoryImpl implements UserCommandRepository {
 
     @Override
     public User updateById(final Long id, final User updatedUserData) {
-        final UserEntity foundUser =
-                jpaUserRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        final UserEntity foundUser = jpaUserRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         updateUserEntity(foundUser, updatedUserData);
         final UserEntity updatedUser = jpaUserRepository.save(foundUser);
 
