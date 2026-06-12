@@ -9,20 +9,13 @@ import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepos
 import com.leviis.realworldexample.user.application.query.UserLoginQuery;
 import com.leviis.realworldexample.user.domain.Email;
 import com.leviis.realworldexample.user.domain.User;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public final class UserLoginHandler implements UserLoginUseCase {
     private final UserQueryRepository userQueryRepository;
     private final PasswordService passwordService;
     private final TokenService tokenService;
-
-    public UserLoginHandler(
-            final UserQueryRepository userQueryRepository,
-            final PasswordService passwordService,
-            final TokenService tokenService) {
-        this.userQueryRepository = userQueryRepository;
-        this.passwordService = passwordService;
-        this.tokenService = tokenService;
-    }
 
     @Override
     public UserWithToken execute(final UserLoginQuery query) {

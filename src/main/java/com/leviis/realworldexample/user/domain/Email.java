@@ -1,9 +1,17 @@
 package com.leviis.realworldexample.user.domain;
 
-public record Email(String value) {
+import java.util.regex.Pattern;
+import org.jspecify.annotations.NonNull;
+
+public record Email(@NonNull String value) {
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[^@\\s]+@[^@\\s]+\\.[a-zA-Z]{2,}$");
+
     public Email {
-        if (value != null && (value.isBlank() || !value.contains("@"))) {
-            throw new IllegalArgumentException("Invalid Email");
+        if (value.isBlank()) {
+            throw new IllegalArgumentException("Email value can't be empty string");
+        }
+        if (!EMAIL_PATTERN.matcher(value).matches()) {
+            throw new IllegalArgumentException("Invalid email format: " + value);
         }
     }
 }
