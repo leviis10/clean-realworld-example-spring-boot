@@ -1,3 +1,7 @@
 package com.leviis.realworldexample.user.application.query;
 
-public record UserLoginQuery(String email, String password) {}
+import com.leviis.realworldexample.user.domain.Email;
+import lombok.Builder;
+
+@Builder(setterPrefix = "set")
+public record UserLoginQuery(Email email, String password) {}

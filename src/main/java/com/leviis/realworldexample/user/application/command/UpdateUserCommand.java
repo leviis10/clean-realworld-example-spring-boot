@@ -1,5 +1,6 @@
 package com.leviis.realworldexample.user.application.command;
 
+import com.leviis.realworldexample.user.domain.Email;
 import com.leviis.realworldexample.user.domain.User;
 
 public record UpdateUserCommand(Long id, String email, String username, String password, String image, String bio) {
@@ -53,7 +54,7 @@ public record UpdateUserCommand(Long id, String email, String username, String p
     public User intoUserDomain(final String hashedPassword) {
         return User.builder()
                 .setId(this.id)
-                .setEmail(this.email)
+                .setEmail(new Email(this.email))
                 .setUsername(this.username)
                 .setBio(this.bio)
                 .setImage(this.image)

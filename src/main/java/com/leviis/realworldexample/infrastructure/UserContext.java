@@ -1,5 +1,6 @@
 package com.leviis.realworldexample.infrastructure;
 
+import com.leviis.realworldexample.user.domain.Email;
 import com.leviis.realworldexample.user.domain.User;
 import java.io.Serial;
 import java.util.List;
@@ -45,7 +46,7 @@ public final class UserContext implements UserDetails {
     public User intoUserDomain() {
         return User.builder()
                 .setId(this.id)
-                .setEmail(this.email)
+                .setEmail(new Email(this.email))
                 .setUsername(this.username)
                 .setBio(this.bio)
                 .setImage(this.image)

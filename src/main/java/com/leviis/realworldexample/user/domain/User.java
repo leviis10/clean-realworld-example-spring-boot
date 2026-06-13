@@ -33,11 +33,6 @@ public record User(Long id, Email email, String username, String bio, String ima
             return this;
         }
 
-        public UserBuilder setEmail(final String email) {
-            this.email = new Email(email);
-            return this;
-        }
-
         public UserBuilder setUsername(final String username) {
             this.username = username;
             return this;

@@ -7,7 +7,6 @@ import com.leviis.realworldexample.user.application.port.outbound.PasswordServic
 import com.leviis.realworldexample.user.application.port.outbound.TokenService;
 import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepository;
 import com.leviis.realworldexample.user.application.query.UserLoginQuery;
-import com.leviis.realworldexample.user.domain.Email;
 import com.leviis.realworldexample.user.domain.User;
 import lombok.RequiredArgsConstructor;
 
@@ -19,8 +18,8 @@ public final class UserLoginHandler implements UserLoginUseCase {
 
     @Override
     public UserWithToken execute(final UserLoginQuery query) {
-        final Email email = new Email(query.email());
-        final User foundUser = userQueryRepository.findByEmail(email).orElseThrow(IncorrectCredentialsException::new);
+        final User foundUser =
+                userQueryRepository.findByEmail(query.email()).orElseThrow(IncorrectCredentialsException::new);
 
         final boolean isCorrectPassword = passwordService.compare(query.password(), foundUser.password());
         if (!isCorrectPassword) {

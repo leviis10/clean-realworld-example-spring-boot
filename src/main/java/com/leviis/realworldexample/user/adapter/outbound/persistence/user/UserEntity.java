@@ -4,6 +4,7 @@ import com.leviis.realworldexample.article.adapter.outbound.persistence.article.
 import com.leviis.realworldexample.article.adapter.outbound.persistence.comment.CommentEntity;
 import com.leviis.realworldexample.article.adapter.outbound.persistence.userfavoritearticle.UserFavoriteArticleEntity;
 import com.leviis.realworldexample.user.adapter.outbound.persistence.follow.FollowEntity;
+import com.leviis.realworldexample.user.domain.Email;
 import com.leviis.realworldexample.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -85,7 +86,7 @@ public final class UserEntity {
     public User intoDomain() {
         return User.builder()
                 .setId(this.id)
-                .setEmail(this.email)
+                .setEmail(new Email(this.email))
                 .setUsername(this.username)
                 .setBio(this.bio)
                 .setImage(this.image)

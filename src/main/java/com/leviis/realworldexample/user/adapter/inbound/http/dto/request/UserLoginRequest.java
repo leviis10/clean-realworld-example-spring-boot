@@ -3,7 +3,7 @@ package com.leviis.realworldexample.user.adapter.inbound.http.dto.request;
 import com.leviis.realworldexample.user.adapter.inbound.http.dto.request.constants.ErrorMessages;
 import com.leviis.realworldexample.user.adapter.inbound.http.dto.request.constants.ValidationRules;
 import com.leviis.realworldexample.user.application.query.UserLoginQuery;
-import jakarta.validation.constraints.Email;
+import com.leviis.realworldexample.user.domain.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public final class UserLoginRequest {
-    @Email(message = ErrorMessages.INVALID_EMAIL_VALIDATION)
+    @jakarta.validation.constraints.Email(message = ErrorMessages.INVALID_EMAIL_VALIDATION)
     @NotNull(message = "Email cannot be null")
     private String email;
 
@@ -25,6 +25,6 @@ public final class UserLoginRequest {
     private String password;
 
     public UserLoginQuery intoUserLoginQuery() {
-        return new UserLoginQuery(this.email, this.password);
+        return new UserLoginQuery(new Email(this.email), this.password);
     }
 }
