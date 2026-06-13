@@ -33,7 +33,7 @@ class TokenServiceImplTest {
     }
 
     @Test
-    public void shouldReturnTokenWithSameSubjectAsUserIdWhenGenerateToken() {
+    public void generateToken_positiveCase_returnTokenWithSameSubjectAsUserId() {
         User user = User.builder().setId(1L).build();
 
         String response = tokenService.generateToken(user);

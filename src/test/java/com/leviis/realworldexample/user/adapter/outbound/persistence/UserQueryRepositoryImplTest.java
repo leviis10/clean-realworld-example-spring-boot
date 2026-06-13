@@ -9,6 +9,7 @@ import com.leviis.realworldexample.user.adapter.outbound.persistence.user.UserEn
 import com.leviis.realworldexample.user.domain.Email;
 import com.leviis.realworldexample.user.domain.User;
 import java.util.Optional;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,7 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class UserQueryRepositoryImplTests {
+public class UserQueryRepositoryImplTest {
     @Mock
     private JpaUserRepository jpaUserRepository;
 
@@ -26,14 +27,27 @@ public class UserQueryRepositoryImplTests {
     @InjectMocks
     private UserQueryRepositoryImpl userQueryRepository;
 
-    @Test
-    public void shouldReturnUserWhenGivenEmailIsExist() {
-        String email = "johndoe@example.com";
-        when(jpaUserRepository.findByEmail(email))
-                .thenReturn(Optional.of(UserEntity.builder().email(email).build()));
+    @Nested
+    class FindByEmail {
+        @Test
+        public void findByEmail_emailExist_returnUser() {
+            String email = "johndoe@example.com";
+            when(jpaUserRepository.findByEmail(email))
+                    .thenReturn(Optional.of(UserEntity.builder().email(email).build()));
 
-        Optional<User> response = userQueryRepository.findByEmail(new Email(email));
+            Optional<User> response = userQueryRepository.findByEmail(new Email(email));
 
-        assertTrue(response.isPresent());
+            assertTrue(response.isPresent());
+        }
+
+        @Test
+        public void findByEmail_emailNotExist_returnEmpty() {
+            String email = "johndoe@example.com";
+            when(jpaUserRepository.findByEmail(email)).thenReturn(Optional.empty());
+
+            Optional<User> response = userQueryRepository.findByEmail(new Email(email));
+
+            assertTrue(response.isEmpty());
+        }
     }
 }

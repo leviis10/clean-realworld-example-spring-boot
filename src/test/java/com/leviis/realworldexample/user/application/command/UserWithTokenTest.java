@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 class UserWithTokenTest {
     @Test
-    public void shouldCorrectlyMapBetweenReadModelAndDomain() {
+    public void from_positiveCase_returnMappedUserWithToken() {
         Email email = new Email("test@example.com");
         String username = "test-username";
         String bio = "test-bio";

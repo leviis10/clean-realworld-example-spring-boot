@@ -37,7 +37,7 @@ class UserLoginHandlerTest {
     private UserLoginHandler userLoginHandler;
 
     @Test
-    public void shouldSuccessWhenEverythingIsNormal() {
+    public void execute_positiveCase_returnUserWithToken() {
         Email email = new Email("test@example.com");
         String password = "Qwerty123!";
         String username = "test-username";
@@ -67,7 +67,7 @@ class UserLoginHandlerTest {
     }
 
     @Test
-    public void shouldThrowErrorWhenRequestedPasswordIsIncorrect() {
+    public void execute_incorrectPassword_throwIncorrectCredentialsException() {
         Email email = new Email("test@example.com");
         String password = "Qwerty123!";
         String username = "test-username";
@@ -90,7 +90,7 @@ class UserLoginHandlerTest {
     }
 
     @Test
-    public void shouldThrowErrorWhenEmailIsNotExist() {
+    public void execute_emailNotExist_throwIncorrectCredentialsException() {
         Email email = new Email("test@example.com");
         String password = "Qwerty123!";
         UserLoginQuery query =

@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 import org.jspecify.annotations.NonNull;
 
 public record Email(@NonNull String value) {
-    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[^@\\s]+@[^@\\s]+\\.[a-zA-Z]{2,}$");
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[^@\\s]+@[^@\\s]+\\.\\S{2,}$");
 
     public Email {
         if (value.isBlank()) {
