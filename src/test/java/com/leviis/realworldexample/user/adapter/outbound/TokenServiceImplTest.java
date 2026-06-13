@@ -12,6 +12,7 @@ import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 import javax.crypto.SecretKey;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,14 +33,17 @@ class TokenServiceImplTest {
         ReflectionTestUtils.setField(tokenService, "expiration", "99");
     }
 
-    @Test
-    public void generateToken_positiveCase_returnTokenWithSameSubjectAsUserId() {
-        User user = User.builder().setId(1L).build();
+    @Nested
+    class GenerateToken {
+        @Test
+        public void generateToken_positiveCase_returnTokenWithSameSubjectAsUserId() {
+            User user = User.builder().setId(1L).build();
 
-        String response = tokenService.generateToken(user);
+            String response = tokenService.generateToken(user);
 
-        Claims claims = getClaims(response);
-        assertEquals(user.id(), Long.valueOf(claims.getSubject()));
+            Claims claims = getClaims(response);
+            assertEquals(user.id(), Long.valueOf(claims.getSubject()));
+        }
     }
 
     private Claims getClaims(final String token) {

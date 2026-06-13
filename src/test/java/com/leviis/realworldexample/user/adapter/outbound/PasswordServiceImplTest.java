@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
+import com.leviis.realworldexample.user.domain.RawPassword;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,6 +39,19 @@ class PasswordServiceImplTest {
             when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
 
             assertFalse(passwordService.compare(rawPassword, hashedPassword));
+        }
+    }
+
+    @Nested
+    class HashPassword {
+        @Test
+        public void hashPassword_positiveCase_returnHashedPassword() {
+            RawPassword rawPassword = new RawPassword("Qwerty123!");
+            when(passwordEncoder.encode(anyString())).thenReturn(anyString());
+
+            String response = passwordService.hashPassword(rawPassword);
+
+            assertNotEquals(rawPassword.value(), response);
         }
     }
 }

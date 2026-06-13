@@ -50,4 +50,31 @@ public class UserQueryRepositoryImplTest {
             assertTrue(response.isEmpty());
         }
     }
+
+    @Nested
+    class FindByUsername {
+        @Test
+        public void findByUsername_usernameExist_returnUser() {
+            String username = "test-username";
+            UserEntity user = UserEntity.builder()
+                    .username("test-username")
+                    .email("test@example.com")
+                    .build();
+            when(jpaUserRepository.findByUsername(username)).thenReturn(Optional.of(user));
+
+            Optional<User> response = userQueryRepository.findByUsername(username);
+
+            assertTrue(response.isPresent());
+        }
+
+        @Test
+        public void findByUsername_emailNotExist_returnEmpty() {
+            String username = "test-username";
+            when(jpaUserRepository.findByUsername(username)).thenReturn(Optional.empty());
+
+            Optional<User> response = userQueryRepository.findByUsername(username);
+
+            assertTrue(response.isEmpty());
+        }
+    }
 }

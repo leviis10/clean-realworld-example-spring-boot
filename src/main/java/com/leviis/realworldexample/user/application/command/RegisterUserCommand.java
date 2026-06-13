@@ -1,32 +1,8 @@
 package com.leviis.realworldexample.user.application.command;
 
-public record RegisterUserCommand(String email, String password, String username) {
-    public static RegisterUserCommandBuilder builder() {
-        return new RegisterUserCommandBuilder();
-    }
+import com.leviis.realworldexample.user.domain.Email;
+import com.leviis.realworldexample.user.domain.RawPassword;
+import lombok.Builder;
 
-    public static final class RegisterUserCommandBuilder {
-        private String email;
-        private String password;
-        private String username;
-
-        public RegisterUserCommandBuilder setEmail(final String email) {
-            this.email = email;
-            return this;
-        }
-
-        public RegisterUserCommandBuilder setPassword(final String password) {
-            this.password = password;
-            return this;
-        }
-
-        public RegisterUserCommandBuilder setUsername(final String username) {
-            this.username = username;
-            return this;
-        }
-
-        public RegisterUserCommand build() {
-            return new RegisterUserCommand(this.email, this.password, this.username);
-        }
-    }
-}
+@Builder
+public record RegisterUserCommand(Email email, RawPassword password, String username) {}

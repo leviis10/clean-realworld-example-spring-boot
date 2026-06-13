@@ -31,4 +31,34 @@ public class UserEntityTest {
             assertEquals("Qwerty123!", user.password());
         }
     }
+
+    @Nested
+    class From {
+        @Test
+        public void from_positiveCase_returnMappedUserEntity() {
+            long id = 1L;
+            Email email = new Email("test@example.com");
+            String username = "test-username";
+            String bio = "test-bio";
+            String image = "test-image";
+            String password = "Qwerty123!";
+            User user = User.builder()
+                    .setId(id)
+                    .setEmail(email)
+                    .setUsername(username)
+                    .setBio(bio)
+                    .setImage(image)
+                    .setPassword(password)
+                    .build();
+
+            UserEntity response = UserEntity.from(user);
+
+            assertEquals(user.id(), response.getId());
+            assertEquals(user.email().value(), response.getEmail());
+            assertEquals(user.username(), response.getUsername());
+            assertEquals(user.bio(), response.getBio());
+            assertEquals(user.image(), response.getImage());
+            assertEquals(user.password(), response.getPassword());
+        }
+    }
 }

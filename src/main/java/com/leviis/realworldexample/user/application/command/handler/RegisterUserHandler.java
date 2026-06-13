@@ -9,40 +9,26 @@ import com.leviis.realworldexample.user.application.port.outbound.PasswordServic
 import com.leviis.realworldexample.user.application.port.outbound.TokenService;
 import com.leviis.realworldexample.user.application.port.outbound.UserCommandRepository;
 import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepository;
-import com.leviis.realworldexample.user.domain.Email;
-import com.leviis.realworldexample.user.domain.RawPassword;
 import com.leviis.realworldexample.user.domain.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public final class RegisterUserHandler implements RegisterUserUseCase {
     private final UserCommandRepository userCommandRepository;
     private final UserQueryRepository userQueryRepository;
     private final PasswordService passwordService;
     private final TokenService tokenService;
 
-    public RegisterUserHandler(
-            final UserCommandRepository userCommandRepository,
-            final UserQueryRepository userQueryRepository,
-            final PasswordService passwordService,
-            final TokenService tokenService) {
-        this.userCommandRepository = userCommandRepository;
-        this.userQueryRepository = userQueryRepository;
-        this.passwordService = passwordService;
-        this.tokenService = tokenService;
-    }
-
     @Override
     public UserWithToken execute(final RegisterUserCommand command) {
-        final Email email = new Email(command.email());
-        final RawPassword rawPassword = new RawPassword(command.password());
+        validateUserExists(command);
 
-        validateUserExists(command, email);
-
-        final String hashedPassword = passwordService.hashPassword(rawPassword);
+        final String hashedPassword = passwordService.hashPassword(command.password());
         final User createdUser = userCommandRepository.save(User.builder()
-                .setEmail(email)
+                .setEmail(command.email())
                 .setUsername(command.username())
                 .setPassword(hashedPassword)
                 .build());
@@ -51,8 +37,8 @@ public final class RegisterUserHandler implements RegisterUserUseCase {
         return UserWithToken.from(createdUser, token);
     }
 
-    private void validateUserExists(final RegisterUserCommand command, final Email email) {
-        final Optional<User> foundUserByEmail = userQueryRepository.findByEmail(email);
+    private void validateUserExists(final RegisterUserCommand command) {
+        final Optional<User> foundUserByEmail = userQueryRepository.findByEmail(command.email());
         final Optional<User> foundUserByUsername = userQueryRepository.findByUsername(command.username());
         final List<ProblemError> errors = new ArrayList<>();
 
@@ -61,7 +47,7 @@ public final class RegisterUserHandler implements RegisterUserUseCase {
                     .setField("email")
                     .setCode("USER_ALREADY_EXISTS")
                     .setMessage("Email is already registered")
-                    .setRejectedValue(email.value())
+                    .setRejectedValue(command.email().value())
                     .build());
         }
 

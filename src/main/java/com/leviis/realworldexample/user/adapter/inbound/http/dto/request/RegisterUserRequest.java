@@ -2,7 +2,8 @@ package com.leviis.realworldexample.user.adapter.inbound.http.dto.request;
 
 import com.leviis.realworldexample.user.adapter.inbound.http.dto.request.constants.ErrorMessages;
 import com.leviis.realworldexample.user.application.command.RegisterUserCommand;
-import jakarta.validation.constraints.Email;
+import com.leviis.realworldexample.user.domain.Email;
+import com.leviis.realworldexample.user.domain.RawPassword;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -16,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public final class RegisterUserRequest {
-    @Email(message = ErrorMessages.INVALID_EMAIL_VALIDATION)
+    @jakarta.validation.constraints.Email(message = ErrorMessages.INVALID_EMAIL_VALIDATION)
     @NotNull(message = ErrorMessages.NULL_EMAIL_VALIDATION)
     private String email;
 
@@ -32,6 +33,6 @@ public final class RegisterUserRequest {
     private String username;
 
     public RegisterUserCommand intoRegisterUserCommand() {
-        return new RegisterUserCommand(this.email, this.password, this.username);
+        return new RegisterUserCommand(new Email(this.email), new RawPassword(this.password), this.username);
     }
 }

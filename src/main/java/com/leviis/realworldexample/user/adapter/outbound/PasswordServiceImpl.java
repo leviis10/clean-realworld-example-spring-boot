@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public final class PasswordServiceImpl implements PasswordService {
     private final PasswordEncoder passwordEncoder;
 
