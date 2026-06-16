@@ -3,7 +3,8 @@ package com.leviis.realworldexample.user.adapter.inbound.http.dto.request;
 import com.leviis.realworldexample.user.adapter.inbound.http.dto.request.constants.ErrorMessages;
 import com.leviis.realworldexample.user.adapter.inbound.http.dto.request.constants.ValidationRules;
 import com.leviis.realworldexample.user.application.command.UpdateUserCommand;
-import jakarta.validation.constraints.Email;
+import com.leviis.realworldexample.user.domain.Email;
+import com.leviis.realworldexample.user.domain.RawPassword;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public final class UpdateUserRequest {
-    @Email(message = ErrorMessages.INVALID_EMAIL_VALIDATION)
+    @jakarta.validation.constraints.Email(message = ErrorMessages.INVALID_EMAIL_VALIDATION)
     private String email;
 
     @NotBlank(message = ErrorMessages.BLANK_USERNAME_VALIDATION)
@@ -32,9 +33,9 @@ public final class UpdateUserRequest {
     public UpdateUserCommand intoCommand(final Long id) {
         return UpdateUserCommand.builder()
                 .setId(id)
-                .setEmail(this.email)
+                .setEmail(new Email(this.email))
                 .setUsername(this.username)
-                .setPassword(this.password)
+                .setPassword(new RawPassword(this.password))
                 .setImage(this.image)
                 .setBio(this.bio)
                 .build();
