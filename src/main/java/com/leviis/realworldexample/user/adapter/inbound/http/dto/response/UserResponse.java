@@ -1,7 +1,7 @@
 package com.leviis.realworldexample.user.adapter.inbound.http.dto.response;
 
 import com.leviis.realworldexample.infrastructure.UserContext;
-import com.leviis.realworldexample.user.application.command.UserWithToken;
+import com.leviis.realworldexample.user.application.readmodel.UserWithToken;
 import com.leviis.realworldexample.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

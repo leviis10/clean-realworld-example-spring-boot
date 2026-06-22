@@ -1,7 +1,9 @@
 package com.leviis.realworldexample.user.adapter.outbound;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.leviis.realworldexample.user.domain.Email;
 import com.leviis.realworldexample.user.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -37,12 +39,26 @@ class TokenServiceImplTest {
     class GenerateToken {
         @Test
         public void generateToken_positiveCase_returnTokenWithSameSubjectAsUserId() {
-            User user = User.builder().setId(1L).build();
+            User user = User.builder()
+                    .setId(1L)
+                    .setUsername("test-username")
+                    .setEmail(new Email("test@example.com"))
+                    .build();
 
             String response = tokenService.generateToken(user);
 
             Claims claims = getClaims(response);
             assertEquals(user.id(), Long.valueOf(claims.getSubject()));
+        }
+
+        @Test
+        public void generateToken_nullId_ThrowNullPointerException() {
+            User user = User.builder()
+                    .setUsername("test-username")
+                    .setEmail(new Email("test@example.com"))
+                    .build();
+
+            assertThrows(NullPointerException.class, () -> tokenService.generateToken(user));
         }
     }
 

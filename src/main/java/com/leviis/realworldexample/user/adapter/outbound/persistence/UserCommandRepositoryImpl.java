@@ -34,20 +34,16 @@ public final class UserCommandRepositoryImpl implements UserCommandRepository {
     }
 
     @Override
-    public boolean followUser(final User follower, final User following) {
+    public void followUser(final User follower, final User following) {
         jpaFollowRepository.save(FollowEntity.from(UserEntity.from(follower), UserEntity.from(following)));
-
-        return true;
     }
 
     @Override
-    public boolean unfollowUser(final Long followerId, final Long followingId) {
+    public void unfollowUser(final Long followerId, final Long followingId) {
         jpaFollowRepository.deleteById(FollowId.builder()
                 .followerId(followerId)
                 .followingId(followingId)
                 .build());
-
-        return true;
     }
 
     private void updateUserEntity(final UserEntity currentUser, final User updatedUser) {

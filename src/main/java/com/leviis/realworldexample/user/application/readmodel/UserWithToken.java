@@ -1,4 +1,4 @@
-package com.leviis.realworldexample.user.application.command;
+package com.leviis.realworldexample.user.application.readmodel;
 
 import com.leviis.realworldexample.user.domain.User;
 import lombok.Builder;

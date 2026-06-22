@@ -3,27 +3,31 @@ package com.leviis.realworldexample.user.application.command.handler;
 import com.leviis.realworldexample.user.application.command.FollowUserCommand;
 import com.leviis.realworldexample.user.application.exceptions.AlreadyFollowException;
 import com.leviis.realworldexample.user.application.exceptions.SelfFollowException;
+import com.leviis.realworldexample.user.application.exceptions.UserNotFoundException;
 import com.leviis.realworldexample.user.application.port.inbound.FollowUserUseCase;
 import com.leviis.realworldexample.user.application.port.outbound.UserCommandRepository;
 import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepository;
+import com.leviis.realworldexample.user.application.readmodel.UserWithFollowStatus;
 import com.leviis.realworldexample.user.domain.User;
+import java.util.Objects;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public final class FollowUserHandler implements FollowUserUseCase {
     private final UserCommandRepository userCommandRepository;
     private final UserQueryRepository userQueryRepository;
 
-    public FollowUserHandler(
-            final UserCommandRepository userCommandRepository, final UserQueryRepository userQueryRepository) {
-        this.userCommandRepository = userCommandRepository;
-        this.userQueryRepository = userQueryRepository;
-    }
-
     @Override
-    public boolean execute(final FollowUserCommand command) {
+    public UserWithFollowStatus execute(final FollowUserCommand command) {
         final User follower = command.follower();
-        final User following = command.following();
+        final Optional<User> followingOpt = userQueryRepository.findByUsername(command.followingUsername());
+        if (followingOpt.isEmpty()) {
+            throw new UserNotFoundException(command.followingUsername());
+        }
+        final User following = followingOpt.get();
 
-        if (follower.id().equals(following.id())) {
+        if (Objects.requireNonNull(follower.id()).equals(following.id())) {
             throw new SelfFollowException();
         }
 
@@ -32,6 +36,7 @@ public final class FollowUserHandler implements FollowUserUseCase {
             throw new AlreadyFollowException();
         }
 
-        return userCommandRepository.followUser(follower, following);
+        userCommandRepository.followUser(follower, following);
+        return UserWithFollowStatus.from(following, true);
     }
 }

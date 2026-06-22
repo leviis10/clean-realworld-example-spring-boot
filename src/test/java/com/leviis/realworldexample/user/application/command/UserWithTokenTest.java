@@ -2,6 +2,7 @@ package com.leviis.realworldexample.user.application.command;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.leviis.realworldexample.user.application.readmodel.UserWithToken;
 import com.leviis.realworldexample.user.domain.Email;
 import com.leviis.realworldexample.user.domain.User;
 import org.junit.jupiter.api.Test;

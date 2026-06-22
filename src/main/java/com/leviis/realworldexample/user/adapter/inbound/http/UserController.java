@@ -13,13 +13,14 @@ import com.leviis.realworldexample.user.application.port.inbound.GetIsFollowingI
 import com.leviis.realworldexample.user.application.port.inbound.GetUserProfileUseCase;
 import com.leviis.realworldexample.user.application.port.inbound.UnfollowUserUseCase;
 import com.leviis.realworldexample.user.application.port.inbound.UpdateUserUseCase;
-import com.leviis.realworldexample.user.application.query.GetIsFollowingInformationQuery;
 import com.leviis.realworldexample.user.application.query.GetUserProfileQuery;
+import com.leviis.realworldexample.user.application.readmodel.UserWithFollowStatus;
 import com.leviis.realworldexample.user.domain.User;
 import com.leviis.realworldexample.utils.http.ResponseWrapper;
 import jakarta.validation.Valid;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -65,47 +66,41 @@ public class UserController {
 
     @GetMapping("/{username}")
     public ResponseEntity<ResponseWrapper<GetUserProfileResponse>> getUserProfile(
-            @PathVariable final String username, @AuthenticationPrincipal final UserContext userContext) {
-        final User foundUser = getUserProfileUseCase.execute(new GetUserProfileQuery(username));
-        final Long followerId =
-                Optional.ofNullable(userContext).map(UserContext::getId).orElse(null);
-        final boolean isFollowing = getIsFollowingInformationUseCase.execute(
-                new GetIsFollowingInformationQuery(followerId, foundUser.id()));
+            @PathVariable final String username, @Nullable @AuthenticationPrincipal final UserContext userContext) {
+        final UserWithFollowStatus foundUser = getUserProfileUseCase.execute(GetUserProfileQuery.builder()
+                .setUser(Optional.ofNullable(userContext)
+                        .map(UserContext::intoUserDomain)
+                        .orElse(null))
+                .setUsername(username)
+                .build());
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new ResponseWrapper<>(
-                        "Successfully retrieved a user", GetUserProfileResponse.from(foundUser, isFollowing)));
+                .body(new ResponseWrapper<>("Successfully retrieved a user", GetUserProfileResponse.from(foundUser)));
     }
 
     @PostMapping("/{username}/follow")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseWrapper<FollowUserResponse>> followUser(
             @AuthenticationPrincipal final UserContext userContext, @PathVariable final String username) {
-        final User foundFollowingUser = getUserProfileUseCase.execute(new GetUserProfileQuery(username));
-        final boolean isSuccessFollowUser = followUserUseCase.execute(FollowUserCommand.builder()
+        final UserWithFollowStatus followingUser = followUserUseCase.execute(FollowUserCommand.builder()
                 .setFollower(userContext.intoUserDomain())
-                .setFollowing(foundFollowingUser)
+                .setFollowingUsername(username)
                 .build());
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new ResponseWrapper<>(
-                        "Successfully follow a user",
-                        FollowUserResponse.from(foundFollowingUser, isSuccessFollowUser)));
+                .body(new ResponseWrapper<>("Successfully follow a user", FollowUserResponse.from(followingUser)));
     }
 
     @DeleteMapping("/{username}/follow")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseWrapper<UnfollowResponse>> unfollowUser(
             @AuthenticationPrincipal final UserContext userContext, @PathVariable final String username) {
-        final User foundUnfollowingUser = getUserProfileUseCase.execute(new GetUserProfileQuery(username));
-        final boolean isSuccessUnfollow = unfollowUserUseCase.execute(UnfollowUserCommand.builder()
+        final UserWithFollowStatus unfollowedUser = unfollowUserUseCase.execute(UnfollowUserCommand.builder()
                 .setFollowerId(userContext.getId())
-                .setFollowingId(foundUnfollowingUser.id())
+                .setFollowingUsername(username)
                 .build());
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new ResponseWrapper<>(
-                        "Successfully unfollow a user",
-                        UnfollowResponse.from(foundUnfollowingUser, isSuccessUnfollow)));
+                .body(new ResponseWrapper<>("Successfully unfollow a user", UnfollowResponse.from(unfollowedUser)));
     }
 }

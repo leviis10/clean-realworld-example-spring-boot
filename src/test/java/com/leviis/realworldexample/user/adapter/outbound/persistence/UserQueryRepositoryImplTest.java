@@ -1,8 +1,12 @@
 package com.leviis.realworldexample.user.adapter.outbound.persistence;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import com.leviis.realworldexample.user.adapter.outbound.persistence.follow.FollowEntity;
+import com.leviis.realworldexample.user.adapter.outbound.persistence.follow.FollowId;
 import com.leviis.realworldexample.user.adapter.outbound.persistence.follow.JpaFollowRepository;
 import com.leviis.realworldexample.user.adapter.outbound.persistence.user.JpaUserRepository;
 import com.leviis.realworldexample.user.adapter.outbound.persistence.user.UserEntity;
@@ -33,7 +37,11 @@ public class UserQueryRepositoryImplTest {
         public void findByEmail_emailExist_returnUser() {
             String email = "johndoe@example.com";
             when(jpaUserRepository.findByEmail(email))
-                    .thenReturn(Optional.of(UserEntity.builder().email(email).build()));
+                    .thenReturn(Optional.of(UserEntity.builder()
+                            .id(1L)
+                            .username("test-username")
+                            .email(email)
+                            .build()));
 
             Optional<User> response = userQueryRepository.findByEmail(new Email(email));
 
@@ -75,6 +83,33 @@ public class UserQueryRepositoryImplTest {
             Optional<User> response = userQueryRepository.findByUsername(username);
 
             assertTrue(response.isEmpty());
+        }
+    }
+
+    @Nested
+    class GetIsFollowing {
+        @Test
+        public void getIsFollowing_positiveCase_returnTrue() {
+            when(jpaFollowRepository.findById(any(FollowId.class)))
+                    .thenReturn(Optional.of(FollowEntity.builder().build()));
+
+            long followingId = 1L;
+            long followerId = 2L;
+            var response = userQueryRepository.getIsFollowing(followingId, followerId);
+
+            assertTrue(response);
+        }
+
+        @Test
+        public void getIsFollowing_notFollowing_returnFalse() {
+            when(jpaFollowRepository.findById(any(FollowId.class)))
+                    .thenReturn(Optional.empty());
+
+            long followingId = 1L;
+            long followerId = 2L;
+            var response = userQueryRepository.getIsFollowing(followingId, followerId);
+
+            assertFalse(response);
         }
     }
 }

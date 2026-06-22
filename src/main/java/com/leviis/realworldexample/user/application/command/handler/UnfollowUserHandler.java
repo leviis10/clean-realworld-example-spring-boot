@@ -3,31 +3,34 @@ package com.leviis.realworldexample.user.application.command.handler;
 import com.leviis.realworldexample.user.application.command.UnfollowUserCommand;
 import com.leviis.realworldexample.user.application.exceptions.AlreadyUnfollowException;
 import com.leviis.realworldexample.user.application.exceptions.SelfUnfollowException;
+import com.leviis.realworldexample.user.application.exceptions.UserNotFoundException;
 import com.leviis.realworldexample.user.application.port.inbound.UnfollowUserUseCase;
 import com.leviis.realworldexample.user.application.port.outbound.UserCommandRepository;
 import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepository;
+import com.leviis.realworldexample.user.application.readmodel.UserWithFollowStatus;
+import com.leviis.realworldexample.user.domain.User;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public final class UnfollowUserHandler implements UnfollowUserUseCase {
     private final UserCommandRepository userCommandRepository;
     private final UserQueryRepository userQueryRepository;
 
-    public UnfollowUserHandler(
-            final UserCommandRepository userCommandRepository, final UserQueryRepository userQueryRepository) {
-        this.userCommandRepository = userCommandRepository;
-        this.userQueryRepository = userQueryRepository;
-    }
-
     @Override
-    public boolean execute(final UnfollowUserCommand command) {
-        if (command.followerId().equals(command.followingId())) {
+    public UserWithFollowStatus execute(final UnfollowUserCommand command) {
+        final User followingUser = userQueryRepository
+                .findByUsername(command.followingUsername())
+                .orElseThrow(() -> new UserNotFoundException(command.followingUsername()));
+        if (command.followerId().equals(followingUser.id())) {
             throw new SelfUnfollowException();
         }
 
-        final boolean getIsFollowing = userQueryRepository.getIsFollowing(command.followerId(), command.followingId());
+        final boolean getIsFollowing = userQueryRepository.getIsFollowing(command.followerId(), followingUser.id());
         if (!getIsFollowing) {
             throw new AlreadyUnfollowException();
         }
 
-        return userCommandRepository.unfollowUser(command.followerId(), command.followingId());
+        userCommandRepository.unfollowUser(command.followerId(), followingUser.id());
+        return UserWithFollowStatus.from(followingUser, false);
     }
 }

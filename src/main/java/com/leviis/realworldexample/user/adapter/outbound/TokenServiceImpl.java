@@ -13,6 +13,7 @@ import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 import java.time.OffsetDateTime;
 import java.util.Date;
+import java.util.Objects;
 import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,7 +33,7 @@ public final class TokenServiceImpl implements TokenService {
     @Override
     public String generateToken(final User user) {
         return Jwts.builder()
-                .subject(user.id().toString())
+                .subject(Objects.requireNonNull(user.id()).toString())
                 .issuedAt(Date.from(OffsetDateTime.now().toInstant()))
                 .expiration(Date.from(OffsetDateTime.now()
                         .plusSeconds(Long.parseLong(expiration))

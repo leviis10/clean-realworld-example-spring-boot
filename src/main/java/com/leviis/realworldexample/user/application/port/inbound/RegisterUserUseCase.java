@@ -1,7 +1,7 @@
 package com.leviis.realworldexample.user.application.port.inbound;
 
 import com.leviis.realworldexample.user.application.command.RegisterUserCommand;
-import com.leviis.realworldexample.user.application.command.UserWithToken;
+import com.leviis.realworldexample.user.application.readmodel.UserWithToken;
 
 @FunctionalInterface
 public interface RegisterUserUseCase {

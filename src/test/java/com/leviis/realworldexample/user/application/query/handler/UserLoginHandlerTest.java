@@ -7,12 +7,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-import com.leviis.realworldexample.user.application.command.UserWithToken;
 import com.leviis.realworldexample.user.application.exceptions.IncorrectCredentialsException;
 import com.leviis.realworldexample.user.application.port.outbound.PasswordService;
 import com.leviis.realworldexample.user.application.port.outbound.TokenService;
 import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepository;
 import com.leviis.realworldexample.user.application.query.UserLoginQuery;
+import com.leviis.realworldexample.user.application.readmodel.UserWithToken;
 import com.leviis.realworldexample.user.domain.Email;
 import com.leviis.realworldexample.user.domain.User;
 import java.util.Optional;
@@ -46,14 +46,15 @@ class UserLoginHandlerTest {
         String hashedPassword = "test-hashedPassword";
         UserLoginQuery query =
                 UserLoginQuery.builder().setEmail(email).setPassword(password).build();
-        User user = User.builder()
-                .setEmail(email)
-                .setUsername(username)
-                .setBio(bio)
-                .setImage(image)
-                .setPassword(hashedPassword)
-                .build();
-        when(userQueryRepository.findByEmail(any(Email.class))).thenReturn(Optional.of(user));
+        when(userQueryRepository.findByEmail(any(Email.class)))
+                .thenReturn(Optional.of(User.builder()
+                        .setId(1L)
+                        .setEmail(email)
+                        .setUsername(username)
+                        .setBio(bio)
+                        .setImage(image)
+                        .setPassword(hashedPassword)
+                        .build()));
         when(passwordService.compare(anyString(), anyString())).thenReturn(true);
         when(tokenService.generateToken(any(User.class))).thenReturn(anyString());
 
@@ -76,14 +77,15 @@ class UserLoginHandlerTest {
         String hashedPassword = "test-hashedPassword";
         UserLoginQuery query =
                 UserLoginQuery.builder().setEmail(email).setPassword(password).build();
-        User user = User.builder()
-                .setEmail(email)
-                .setUsername(username)
-                .setBio(bio)
-                .setImage(image)
-                .setPassword(hashedPassword)
-                .build();
-        when(userQueryRepository.findByEmail(any(Email.class))).thenReturn(Optional.of(user));
+        when(userQueryRepository.findByEmail(any(Email.class)))
+                .thenReturn(Optional.of(User.builder()
+                        .setId(1L)
+                        .setEmail(email)
+                        .setUsername(username)
+                        .setBio(bio)
+                        .setImage(image)
+                        .setPassword(hashedPassword)
+                        .build()));
         when(passwordService.compare(anyString(), anyString())).thenReturn(false);
 
         assertThrows(IncorrectCredentialsException.class, () -> userLoginHandler.execute(query));

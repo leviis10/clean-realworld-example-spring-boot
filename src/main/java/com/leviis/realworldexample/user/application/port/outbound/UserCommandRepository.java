@@ -7,7 +7,7 @@ public interface UserCommandRepository {
 
     User updateById(Long id, User updatedUser);
 
-    boolean followUser(User follower, User following);
+    void followUser(User follower, User following);
 
-    boolean unfollowUser(Long followerId, Long followingId);
+    void unfollowUser(Long followerId, Long followingId);
 }

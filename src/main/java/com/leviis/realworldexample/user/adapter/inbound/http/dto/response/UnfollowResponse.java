@@ -1,6 +1,6 @@
 package com.leviis.realworldexample.user.adapter.inbound.http.dto.response;
 
-import com.leviis.realworldexample.user.domain.User;
+import com.leviis.realworldexample.user.application.readmodel.UserWithFollowStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,12 +16,12 @@ public class UnfollowResponse {
     private String image;
     private Boolean isFollowing;
 
-    public static UnfollowResponse from(final User user, final boolean isSuccessUnfollow) {
+    public static UnfollowResponse from(final UserWithFollowStatus user) {
         return UnfollowResponse.builder()
                 .username(user.username())
                 .bio(user.bio())
                 .image(user.image())
-                .isFollowing(!isSuccessUnfollow)
+                .isFollowing(user.isFollowing())
                 .build();
     }
 }

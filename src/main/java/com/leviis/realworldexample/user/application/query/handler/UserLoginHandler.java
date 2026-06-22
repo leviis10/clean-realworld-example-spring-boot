@@ -1,12 +1,12 @@
 package com.leviis.realworldexample.user.application.query.handler;
 
-import com.leviis.realworldexample.user.application.command.UserWithToken;
 import com.leviis.realworldexample.user.application.exceptions.IncorrectCredentialsException;
 import com.leviis.realworldexample.user.application.port.inbound.UserLoginUseCase;
 import com.leviis.realworldexample.user.application.port.outbound.PasswordService;
 import com.leviis.realworldexample.user.application.port.outbound.TokenService;
 import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepository;
 import com.leviis.realworldexample.user.application.query.UserLoginQuery;
+import com.leviis.realworldexample.user.application.readmodel.UserWithToken;
 import com.leviis.realworldexample.user.domain.User;
 import lombok.RequiredArgsConstructor;
 

@@ -2,13 +2,16 @@ package com.leviis.realworldexample.user.adapter.outbound.persistence;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 import com.leviis.realworldexample.user.adapter.outbound.persistence.follow.JpaFollowRepository;
 import com.leviis.realworldexample.user.adapter.outbound.persistence.user.JpaUserRepository;
 import com.leviis.realworldexample.user.adapter.outbound.persistence.user.UserEntity;
+import com.leviis.realworldexample.user.application.exceptions.UserNotFoundException;
 import com.leviis.realworldexample.user.domain.Email;
 import com.leviis.realworldexample.user.domain.User;
+import java.util.Optional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,8 +47,8 @@ class UserCommandRepositoryImplTest {
                     .setImage(image)
                     .setPassword(password)
                     .build();
-            UserEntity userEntity = UserEntity.from(user.toBuilder().setId(id).build());
-            when(jpaUserRepository.save(any(UserEntity.class))).thenReturn(userEntity);
+            when(jpaUserRepository.save(any(UserEntity.class)))
+                    .thenReturn(UserEntity.from(user.toBuilder().setId(id).build()));
 
             User response = userCommandRepository.save(user);
 
@@ -55,6 +58,50 @@ class UserCommandRepositoryImplTest {
             assertEquals(user.bio(), response.bio());
             assertEquals(user.image(), response.image());
             assertEquals(user.password(), response.password());
+        }
+    }
+
+    @Nested
+    class UpdateById {
+        @Test
+        public void updateById_positiveCase_returnUserDomain() {
+            long id = 1L;
+            Email email = new Email("test@example.com");
+            String username = "test-username";
+            String bio = "test-bio";
+            String image = "test-image";
+            String password = "test-password";
+            User updatedUserData = User.builder()
+                    .setId(id)
+                    .setEmail(email)
+                    .setUsername(username)
+                    .setBio(bio)
+                    .setImage(image)
+                    .setPassword(password)
+                    .build();
+            when(jpaUserRepository.findById(id))
+                    .thenReturn(Optional.of(UserEntity.builder().build()));
+            when(jpaUserRepository.save(any(UserEntity.class))).thenReturn(UserEntity.from(updatedUserData));
+
+            User response = userCommandRepository.updateById(id, updatedUserData);
+
+            assertEquals(email, response.email());
+            assertEquals(username, response.username());
+            assertEquals(bio, response.bio());
+            assertEquals(image, response.image());
+        }
+
+        @Test
+        public void updateById_updatingNonExistentUser_throwUserNotFoundException() {
+            long id = 1L;
+            User updatedUserData = User.builder()
+                    .setId(id)
+                    .setUsername("test-username")
+                    .setEmail(new Email("test@example.com"))
+                    .build();
+            when(jpaUserRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+            assertThrows(UserNotFoundException.class, () -> userCommandRepository.updateById(id, updatedUserData));
         }
     }
 }
