@@ -5,10 +5,13 @@ import com.leviis.realworldexample.user.adapter.outbound.persistence.follow.Foll
 import com.leviis.realworldexample.user.adapter.outbound.persistence.follow.JpaFollowRepository;
 import com.leviis.realworldexample.user.adapter.outbound.persistence.user.JpaUserRepository;
 import com.leviis.realworldexample.user.adapter.outbound.persistence.user.UserEntity;
+import com.leviis.realworldexample.user.application.exceptions.SelfFollowException;
 import com.leviis.realworldexample.user.application.exceptions.UserNotFoundException;
 import com.leviis.realworldexample.user.application.port.outbound.UserCommandRepository;
 import com.leviis.realworldexample.user.domain.User;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,7 +37,15 @@ public final class UserCommandRepositoryImpl implements UserCommandRepository {
     }
 
     @Override
-    public void followUser(final User follower, final User following) {
+    public void followUser(@NonNull final User follower, @NonNull final User following) {
+        Objects.requireNonNull(follower);
+        Objects.requireNonNull(follower.id());
+        Objects.requireNonNull(following);
+        Objects.requireNonNull(following.id());
+        if (follower.id().equals(following.id())) {
+            throw new SelfFollowException();
+        }
+
         jpaFollowRepository.save(FollowEntity.from(UserEntity.from(follower), UserEntity.from(following)));
     }
 

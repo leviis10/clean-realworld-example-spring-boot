@@ -6,9 +6,8 @@ import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepos
 import com.leviis.realworldexample.user.application.query.GetUserProfileQuery;
 import com.leviis.realworldexample.user.application.readmodel.UserWithFollowStatus;
 import com.leviis.realworldexample.user.domain.User;
-import lombok.RequiredArgsConstructor;
-
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public final class GetUserProfileHandler implements GetUserProfileUseCase {

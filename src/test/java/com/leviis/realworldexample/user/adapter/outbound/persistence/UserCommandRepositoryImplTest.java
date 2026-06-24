@@ -5,9 +5,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
+import com.leviis.realworldexample.user.adapter.outbound.persistence.follow.FollowEntity;
 import com.leviis.realworldexample.user.adapter.outbound.persistence.follow.JpaFollowRepository;
 import com.leviis.realworldexample.user.adapter.outbound.persistence.user.JpaUserRepository;
 import com.leviis.realworldexample.user.adapter.outbound.persistence.user.UserEntity;
+import com.leviis.realworldexample.user.application.exceptions.SelfFollowException;
 import com.leviis.realworldexample.user.application.exceptions.UserNotFoundException;
 import com.leviis.realworldexample.user.domain.Email;
 import com.leviis.realworldexample.user.domain.User;
@@ -102,6 +104,95 @@ class UserCommandRepositoryImplTest {
             when(jpaUserRepository.findById(anyLong())).thenReturn(Optional.empty());
 
             assertThrows(UserNotFoundException.class, () -> userCommandRepository.updateById(id, updatedUserData));
+        }
+    }
+
+    @Nested
+    class FollowUser {
+        @Test
+        public void followUser_positiveCase_success() {
+            when(jpaFollowRepository.save(any(FollowEntity.class)))
+                    .thenReturn(FollowEntity.builder().build());
+
+            User follower = User.builder()
+                    .setId(1L)
+                    .setUsername("test-follower")
+                    .setEmail(new Email("follower@example.com"))
+                    .build();
+            User following = User.builder()
+                    .setId(2L)
+                    .setUsername("test-following")
+                    .setEmail(new Email("following@example.com"))
+                    .build();
+            userCommandRepository.followUser(follower, following);
+        }
+
+        @Test
+        public void followUser_followerAndFollowingIdIsSame_throwSelfFollowException() {
+            long followId = 1L;
+            User follower = User.builder()
+                    .setId(followId)
+                    .setUsername("test-follower")
+                    .setEmail(new Email("follower@example.com"))
+                    .build();
+            User following = User.builder()
+                    .setId(followId)
+                    .setUsername("test-following")
+                    .setEmail(new Email("following@example.com"))
+                    .build();
+            assertThrows(SelfFollowException.class, () -> userCommandRepository.followUser(follower, following));
+        }
+
+        @Test
+        public void followUser_followerIdIsNull_throwNullPointerException() {
+            User follower = User.builder()
+                    .setId(null)
+                    .setUsername("test-follower")
+                    .setEmail(new Email("follower@example.com"))
+                    .build();
+            User following = User.builder()
+                    .setId(2L)
+                    .setUsername("test-following")
+                    .setEmail(new Email("following@example.com"))
+                    .build();
+            assertThrows(NullPointerException.class, () -> userCommandRepository.followUser(follower, following));
+        }
+
+        @Test
+        public void followUser_followingIdIsNull_throwNullPointerException() {
+            User follower = User.builder()
+                    .setId(1L)
+                    .setUsername("test-follower")
+                    .setEmail(new Email("follower@example.com"))
+                    .build();
+            User following = User.builder()
+                    .setId(null)
+                    .setUsername("test-following")
+                    .setEmail(new Email("following@example.com"))
+                    .build();
+            assertThrows(NullPointerException.class, () -> userCommandRepository.followUser(follower, following));
+        }
+
+        @Test
+        public void followUser_followerIsNull_throwNullPointerException() {
+            User follower = null;
+            User following = User.builder()
+                    .setId(2L)
+                    .setUsername("test-following")
+                    .setEmail(new Email("following@example.com"))
+                    .build();
+            assertThrows(NullPointerException.class, () -> userCommandRepository.followUser(follower, following));
+        }
+
+        @Test
+        public void followUser_followingIsNull_throwNullPointerException() {
+            User follower = User.builder()
+                    .setId(1L)
+                    .setUsername("test-follower")
+                    .setEmail(new Email("follower@example.com"))
+                    .build();
+            User following = null;
+            assertThrows(NullPointerException.class, () -> userCommandRepository.followUser(follower, following));
         }
     }
 }

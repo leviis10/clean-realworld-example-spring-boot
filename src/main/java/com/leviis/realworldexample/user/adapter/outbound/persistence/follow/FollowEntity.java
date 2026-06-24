@@ -9,11 +9,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 import java.time.OffsetDateTime;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.jspecify.annotations.NonNull;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -39,7 +41,15 @@ public class FollowEntity {
     @Column(name = "created_at")
     private OffsetDateTime createdAt;
 
-    public static FollowEntity from(final UserEntity follower, final UserEntity following) {
+    public static FollowEntity from(@NonNull final UserEntity follower, @NonNull final UserEntity following) {
+        Objects.requireNonNull(follower);
+        Objects.requireNonNull(follower.getId());
+        Objects.requireNonNull(following);
+        Objects.requireNonNull(following.getId());
+        if (follower.getId().equals(following.getId())) {
+            throw new IllegalArgumentException("Follower and following id can't be same");
+        }
+
         return FollowEntity.builder()
                 .id(FollowId.builder()
                         .followerId(follower.getId())

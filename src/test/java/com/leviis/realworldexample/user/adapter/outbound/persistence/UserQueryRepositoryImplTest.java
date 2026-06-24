@@ -102,8 +102,7 @@ public class UserQueryRepositoryImplTest {
 
         @Test
         public void getIsFollowing_notFollowing_returnFalse() {
-            when(jpaFollowRepository.findById(any(FollowId.class)))
-                    .thenReturn(Optional.empty());
+            when(jpaFollowRepository.findById(any(FollowId.class))).thenReturn(Optional.empty());
 
             long followingId = 1L;
             long followerId = 2L;

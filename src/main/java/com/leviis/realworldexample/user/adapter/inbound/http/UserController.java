@@ -9,7 +9,6 @@ import com.leviis.realworldexample.user.adapter.inbound.http.dto.response.UserRe
 import com.leviis.realworldexample.user.application.command.FollowUserCommand;
 import com.leviis.realworldexample.user.application.command.UnfollowUserCommand;
 import com.leviis.realworldexample.user.application.port.inbound.FollowUserUseCase;
-import com.leviis.realworldexample.user.application.port.inbound.GetIsFollowingInformationUseCase;
 import com.leviis.realworldexample.user.application.port.inbound.GetUserProfileUseCase;
 import com.leviis.realworldexample.user.application.port.inbound.UnfollowUserUseCase;
 import com.leviis.realworldexample.user.application.port.inbound.UpdateUserUseCase;
@@ -40,7 +39,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     private final UpdateUserUseCase updateUserUseCase;
     private final GetUserProfileUseCase getUserProfileUseCase;
-    private final GetIsFollowingInformationUseCase getIsFollowingInformationUseCase;
     private final FollowUserUseCase followUserUseCase;
     private final UnfollowUserUseCase unfollowUserUseCase;
 

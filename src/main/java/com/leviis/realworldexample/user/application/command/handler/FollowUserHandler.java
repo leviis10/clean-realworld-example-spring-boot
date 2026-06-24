@@ -12,6 +12,7 @@ import com.leviis.realworldexample.user.domain.User;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 
 @RequiredArgsConstructor
 public final class FollowUserHandler implements FollowUserUseCase {
@@ -19,7 +20,9 @@ public final class FollowUserHandler implements FollowUserUseCase {
     private final UserQueryRepository userQueryRepository;
 
     @Override
-    public UserWithFollowStatus execute(final FollowUserCommand command) {
+    public UserWithFollowStatus execute(@NonNull final FollowUserCommand command) {
+        Objects.requireNonNull(command);
+
         final User follower = command.follower();
         final Optional<User> followingOpt = userQueryRepository.findByUsername(command.followingUsername());
         if (followingOpt.isEmpty()) {
