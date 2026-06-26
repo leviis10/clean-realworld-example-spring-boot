@@ -50,7 +50,13 @@ public final class UserCommandRepositoryImpl implements UserCommandRepository {
     }
 
     @Override
-    public void unfollowUser(final Long followerId, final Long followingId) {
+    public void unfollowUser(@NonNull final Long followerId, @NonNull final Long followingId) {
+        Objects.requireNonNull(followerId);
+        Objects.requireNonNull(followingId);
+        if (followerId.equals(followingId)) {
+            throw new IllegalArgumentException("Follower and following id cannot be same");
+        }
+
         jpaFollowRepository.deleteById(FollowId.builder()
                 .followerId(followerId)
                 .followingId(followingId)

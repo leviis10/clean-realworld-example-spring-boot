@@ -9,6 +9,8 @@ import com.leviis.realworldexample.user.application.port.outbound.UserCommandRep
 import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepository;
 import com.leviis.realworldexample.user.application.readmodel.UserWithFollowStatus;
 import com.leviis.realworldexample.user.domain.User;
+import java.util.Objects;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -17,7 +19,9 @@ public final class UnfollowUserHandler implements UnfollowUserUseCase {
     private final UserQueryRepository userQueryRepository;
 
     @Override
-    public UserWithFollowStatus execute(final UnfollowUserCommand command) {
+    public UserWithFollowStatus execute(@NonNull final UnfollowUserCommand command) {
+        Objects.requireNonNull(command);
+
         final User followingUser = userQueryRepository
                 .findByUsername(command.followingUsername())
                 .orElseThrow(() -> new UserNotFoundException(command.followingUsername()));

@@ -195,4 +195,36 @@ class UserCommandRepositoryImplTest {
             assertThrows(NullPointerException.class, () -> userCommandRepository.followUser(follower, following));
         }
     }
+
+    @Nested
+    class UnfollowUser {
+        @Test
+        public void unfollowUser_positiveCase_returnNothing() {
+            Long followerId = 1L;
+            Long followingId = 2L;
+            userCommandRepository.unfollowUser(followerId, followingId);
+        }
+
+        @Test
+        public void unfollowUser_followerIdIsNull_throwNullPointerException() {
+            Long followerId = null;
+            Long followingId = 2L;
+            assertThrows(NullPointerException.class, () -> userCommandRepository.unfollowUser(followerId, followingId));
+        }
+
+        @Test
+        public void unfollowUser_followingIdIsNull_throwNullPointerException() {
+            Long followerId = 1L;
+            Long followingId = null;
+            assertThrows(NullPointerException.class, () -> userCommandRepository.unfollowUser(followerId, followingId));
+        }
+
+        @Test
+        public void unfollowUser_followerAndFollowingIdIsSame_throwIllegalArgumentException() {
+            Long followerId = 1L;
+            Long followingId = 1L;
+            assertThrows(
+                    IllegalArgumentException.class, () -> userCommandRepository.unfollowUser(followerId, followingId));
+        }
+    }
 }
