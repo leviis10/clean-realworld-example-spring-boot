@@ -19,6 +19,8 @@ import jakarta.persistence.Table;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,6 +30,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 @NoArgsConstructor
@@ -78,7 +81,9 @@ public final class ArticleEntity {
     @OneToMany(mappedBy = "article")
     private List<CommentEntity> comments;
 
-    public static ArticleEntity from(final Article article, @Nullable final Map<Long, Tag> tagMap) {
+    public static @NonNull ArticleEntity from(@NonNull final Article article, @Nullable final Map<Long, Tag> tagMap) {
+        Objects.requireNonNull(article);
+
         return ArticleEntity.builder()
                 .id(article.id())
                 .slug(article.slug().value())
@@ -93,22 +98,12 @@ public final class ArticleEntity {
                 .build();
     }
 
-    public static ArticleEntity from(final Article article) {
+    public static @NonNull ArticleEntity from(@NonNull final Article article) {
         return from(article, null);
     }
 
     public static ArticleEntity from(final Long articleId) {
         return ArticleEntity.builder().id(articleId).build();
-    }
-
-    private static List<ArticleTagEntity> getTags(final Article article, @Nullable final Map<Long, Tag> tagMap) {
-        if (tagMap == null) {
-            return List.of();
-        }
-
-        return article.tagIds().stream()
-                .map(tagId -> ArticleTagEntity.from(tagId, tagMap))
-                .toList();
     }
 
     @SuppressWarnings("unchecked")
@@ -120,7 +115,13 @@ public final class ArticleEntity {
         throw new IllegalArgumentException("Cast to " + target + " is not supported");
     }
 
-    public Article intoArticleDomain() {
+    private static List<ArticleTagEntity> getTags(final Article article, @Nullable final Map<Long, Tag> tagMap) {
+        return Optional.ofNullable(tagMap)
+                .map(tm -> ArticleTagEntity.from(article.tagIds(), tm))
+                .orElse(List.of());
+    }
+
+    private Article intoArticleDomain() {
         final List<Long> tagIds =
                 this.tags.stream().map(tag -> tag.getId().getTagId()).toList();
 

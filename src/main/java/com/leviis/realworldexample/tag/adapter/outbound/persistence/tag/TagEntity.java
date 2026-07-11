@@ -18,6 +18,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 @NoArgsConstructor
@@ -46,7 +47,16 @@ public final class TagEntity {
     @OneToMany(mappedBy = "tag")
     private List<ArticleTagEntity> articles;
 
-    public static TagEntity from(@Nullable final Tag tag) {
+    @SuppressWarnings("unchecked")
+    public <T> T into(final Class<T> target) {
+        if (target == Tag.class) {
+            return (T) Tag.builder().setId(this.id).setName(this.name).build();
+        }
+
+        throw new IllegalArgumentException(String.format("Cast to %s is not supported", target));
+    }
+
+    public static @NonNull TagEntity from(@Nullable final Tag tag) {
         return TagEntity.builder().id(getId(tag)).name(getName(tag)).build();
     }
 
@@ -56,9 +66,5 @@ public final class TagEntity {
 
     private static @Nullable Long getId(@Nullable final Tag tag) {
         return Optional.ofNullable(tag).map(Tag::id).orElse(null);
-    }
-
-    public Tag intoTagDomain() {
-        return Tag.builder().setId(this.id).setName(this.name).build();
     }
 }

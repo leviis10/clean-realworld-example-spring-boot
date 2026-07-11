@@ -2,6 +2,7 @@ package com.leviis.realworldexample.article.domain;
 
 import java.util.Locale;
 import java.util.UUID;
+import org.jspecify.annotations.NonNull;
 
 public record Slug(String value, UUID id) {
     public static Slug from(final String title, final UUID id) {
@@ -16,6 +17,12 @@ public record Slug(String value, UUID id) {
     public static Slug from(final String title) {
         final UUID slugId = UUID.randomUUID();
         return from(title, slugId);
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return String.format("%s-%s", value, id);
     }
 
     private static String getSlug(final String title) {

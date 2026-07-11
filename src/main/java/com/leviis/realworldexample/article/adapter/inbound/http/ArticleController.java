@@ -15,6 +15,7 @@ import com.leviis.realworldexample.article.application.port.inbound.FindAllArtic
 import com.leviis.realworldexample.article.application.port.inbound.FindAllFeedArticleUseCase;
 import com.leviis.realworldexample.article.application.port.inbound.GetArticleUseCase;
 import com.leviis.realworldexample.article.application.port.inbound.UpdateArticleUseCase;
+import com.leviis.realworldexample.article.application.query.FindAllArticleQuery;
 import com.leviis.realworldexample.article.application.query.GetArticleQuery;
 import com.leviis.realworldexample.article.application.readmodel.ArticleWithAuthor;
 import com.leviis.realworldexample.article.application.readmodel.ArticleWithBodyAndAuthor;
@@ -56,8 +57,16 @@ public class ArticleController {
     public ResponseEntity<ResponseWrapper<FindAllArticleResponse>> findAll(
             @AuthenticationPrincipal @Nullable final UserContext userContext,
             final FindAllArticleQueryParameter queryParameter) {
-        final List<ArticleWithAuthor> foundArticles =
-                findAllArticleUseCase.execute(queryParameter.intoQuery(userContext));
+        final List<ArticleWithAuthor> foundArticles = findAllArticleUseCase.execute(FindAllArticleQuery.builder()
+                .setUser(Optional.ofNullable(userContext)
+                        .map(UserContext::intoUserDomain)
+                        .orElse(null))
+                .setTag(queryParameter.getTag())
+                .setAuthor(queryParameter.getAuthor())
+                .setFavoriteBy(queryParameter.getFavoriteBy())
+                .setLimit(queryParameter.getLimit())
+                .setOffset(queryParameter.getOffset())
+                .build());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ResponseWrapper<>(

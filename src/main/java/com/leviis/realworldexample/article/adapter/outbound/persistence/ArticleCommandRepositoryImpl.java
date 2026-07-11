@@ -26,14 +26,14 @@ public class ArticleCommandRepositoryImpl implements ArticleCommandRepository {
     public Article create(final Article article, final Map<Long, Tag> tagMap) {
         final ArticleEntity newArticle = jpaArticleRepository.save(ArticleEntity.from(article, tagMap));
         jpaArticleTagRepository.saveAll(getArticleTags(newArticle, tagMap));
-        return newArticle.intoArticleDomain();
+        return newArticle.into(Article.class);
     }
 
     @Override
     @Transactional
     public Article save(final Article article) {
         final ArticleEntity savedArticle = jpaArticleRepository.save(ArticleEntity.from(article));
-        return savedArticle.intoArticleDomain();
+        return savedArticle.into(Article.class);
     }
 
     @Override

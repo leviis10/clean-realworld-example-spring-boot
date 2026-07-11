@@ -1,52 +1,31 @@
 package com.leviis.realworldexample.article.application.query;
 
+import com.leviis.realworldexample.infrastructure.constants.PaginationConstants;
 import com.leviis.realworldexample.user.domain.User;
+import java.util.Optional;
+import lombok.Builder;
+import org.jspecify.annotations.Nullable;
 
-public record FindAllArticleQuery(User user, String tag, String author, String favoriteBy, int limit, int offset) {
-    public static FindAllArticleQueryBuilder builder() {
-        return new FindAllArticleQueryBuilder();
-    }
-
-    public static final class FindAllArticleQueryBuilder {
-        private User user;
-        private String tag;
-        private String author;
-        private String favoriteBy;
-        private int limit;
-        private int offset;
-
-        public FindAllArticleQueryBuilder setUser(final User user) {
-            this.user = user;
-            return this;
-        }
-
-        public FindAllArticleQueryBuilder setTag(final String tag) {
-            this.tag = tag;
-            return this;
-        }
-
-        public FindAllArticleQueryBuilder setAuthor(final String author) {
-            this.author = author;
-            return this;
-        }
-
-        public FindAllArticleQueryBuilder setFavoriteBy(final String favoriteBy) {
-            this.favoriteBy = favoriteBy;
-            return this;
-        }
-
-        public FindAllArticleQueryBuilder setLimit(final int limit) {
-            this.limit = limit;
-            return this;
-        }
-
-        public FindAllArticleQueryBuilder setOffset(final int offset) {
-            this.offset = offset;
-            return this;
-        }
-
-        public FindAllArticleQuery build() {
-            return new FindAllArticleQuery(this.user, this.tag, this.author, this.favoriteBy, this.limit, this.offset);
-        }
+@Builder(setterPrefix = "set")
+public record FindAllArticleQuery(
+        @Nullable User user,
+        @Nullable String tag,
+        @Nullable String author,
+        @Nullable String favoriteBy,
+        Integer limit,
+        Integer offset) {
+    public FindAllArticleQuery(
+            @Nullable final User user,
+            @Nullable final String tag,
+            @Nullable final String author,
+            @Nullable final String favoriteBy,
+            @Nullable final Integer limit,
+            @Nullable final Integer offset) {
+        this.user = user;
+        this.tag = tag;
+        this.author = author;
+        this.favoriteBy = favoriteBy;
+        this.limit = Optional.ofNullable(limit).orElse(PaginationConstants.DEFAULT_LIMIT);
+        this.offset = Optional.ofNullable(offset).orElse(PaginationConstants.DEFAULT_OFFSET);
     }
 }

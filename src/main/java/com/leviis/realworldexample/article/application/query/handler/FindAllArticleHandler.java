@@ -12,28 +12,23 @@ import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepos
 import com.leviis.realworldexample.user.domain.User;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 
+@RequiredArgsConstructor
 public final class FindAllArticleHandler implements FindAllArticleUseCase {
     private final ArticleQueryRepository articleQueryRepository;
     private final TagQueryRepository tagQueryRepository;
     private final UserQueryRepository userQueryRepository;
     private final UserFavoriteArticleQueryRepository userFavoriteArticleQueryRepository;
 
-    public FindAllArticleHandler(
-            final ArticleQueryRepository articleQueryRepository,
-            final TagQueryRepository tagQueryRepository,
-            final UserQueryRepository userQueryRepository,
-            final UserFavoriteArticleQueryRepository userFavoriteArticleQueryRepository) {
-        this.articleQueryRepository = articleQueryRepository;
-        this.tagQueryRepository = tagQueryRepository;
-        this.userQueryRepository = userQueryRepository;
-        this.userFavoriteArticleQueryRepository = userFavoriteArticleQueryRepository;
-    }
-
     @Override
-    public List<ArticleWithAuthor> execute(final FindAllArticleQuery query) {
+    public List<ArticleWithAuthor> execute(@NonNull final FindAllArticleQuery query) {
+        Objects.requireNonNull(query);
+
         final List<Article> foundArticles = articleQueryRepository.findAll(
                 query.tag(), query.author(), query.favoriteBy(), query.limit(), query.offset());
         final List<Tag> foundTags = tagQueryRepository.findAllByIdIn(getTagIdFrom(foundArticles));
@@ -44,13 +39,7 @@ public final class FindAllArticleHandler implements FindAllArticleUseCase {
         final List<Long> foundIsFollowingAuthors = userQueryRepository.findIsFollowingIn(query.user(), foundAuthors);
 
         return ArticleWithAuthor.from(
-                foundArticles,
-                foundTags,
-                favoriteArticleId,
-                getFavoriteCount,
-                foundAuthors,
-                query.user(),
-                foundIsFollowingAuthors);
+                foundArticles, foundTags, favoriteArticleId, getFavoriteCount, foundAuthors, foundIsFollowingAuthors);
     }
 
     private Set<Long> getTagIdFrom(final List<Article> articles) {

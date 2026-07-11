@@ -53,7 +53,7 @@ public final class UpdateArticleHandler implements UpdateArticleUseCase {
     }
 
     private Article updateArticle(final Article article, final UpdateArticleCommand.UpdateDataDto updateData) {
-        final Article.ArticleBuilder articleBuilder = article.intoBuilder()
+        final Article.ArticleBuilder articleBuilder = article.toBuilder()
                 .setDescription(updateData.description())
                 .setBody(updateData.body())
                 .setUpdatedAt(OffsetDateTime.now());

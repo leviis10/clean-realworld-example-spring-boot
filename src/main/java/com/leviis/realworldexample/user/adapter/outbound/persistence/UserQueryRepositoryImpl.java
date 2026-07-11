@@ -62,11 +62,11 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
     @Override
     public List<Long> findIsFollowingIn(@Nullable final User follower, final List<User> followings) {
         return Optional.ofNullable(follower)
-                .map(f -> {
+                .map(follow -> {
                     final List<UserEntity> followingEntity =
                             followings.stream().map(UserEntity::from).toList();
                     final List<FollowEntity> followData =
-                            jpaFollowRepository.findByFollowerAndFollowingIn(UserEntity.from(f), followingEntity);
+                            jpaFollowRepository.findByFollowerAndFollowingIn(UserEntity.from(follow), followingEntity);
 
                     return followData.stream()
                             .map(data -> data.getId().getFollowingId())

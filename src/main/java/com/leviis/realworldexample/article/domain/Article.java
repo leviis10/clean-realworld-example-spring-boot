@@ -2,8 +2,13 @@ package com.leviis.realworldexample.article.domain;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import lombok.Builder;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
+@Builder(setterPrefix = "set", toBuilder = true)
 public record Article(
         Long id,
         Slug slug,
@@ -16,109 +21,29 @@ public record Article(
         OffsetDateTime updatedAt) {
     public Article(
             final Long id,
-            final Slug slug,
-            final String title,
+            @Nullable final Slug slug,
+            @NonNull final String title,
             final String description,
             final String body,
             final Long authorId,
-            final List<Long> tagIds,
+            @Nullable final List<Long> tagIds,
             final OffsetDateTime createdAt,
             final OffsetDateTime updatedAt) {
+        Objects.requireNonNull(title);
+
         this.id = id;
         this.slug = Optional.ofNullable(slug).orElse(Slug.from(title));
         this.title = title;
         this.description = description;
         this.body = body;
         this.authorId = authorId;
-        this.tagIds = List.copyOf(tagIds);
+        this.tagIds = Optional.ofNullable(tagIds).map(List::copyOf).orElse(List.of());
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
-    public ArticleBuilder intoBuilder() {
-        return new ArticleBuilder()
-                .setId(this.id)
-                .setSlug(this.slug)
-                .setTitle(this.title)
-                .setDescription(this.description)
-                .setBody(this.body)
-                .setAuthorId(this.authorId)
-                .setTagIds(this.tagIds)
-                .setCreatedAt(this.createdAt)
-                .setUpdatedAt(this.updatedAt);
-    }
-
-    public static ArticleBuilder builder() {
-        return new ArticleBuilder();
-    }
-
-    public static final class ArticleBuilder {
-        private Long id;
-        private Slug slug;
-        private String title;
-        private String description;
-        private String body;
-        private Long authorId;
-        private List<Long> tagIds;
-        private OffsetDateTime createdAt;
-        private OffsetDateTime updatedAt;
-
-        public ArticleBuilder setId(final Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public ArticleBuilder setSlug(final Slug slug) {
-            this.slug = slug;
-            return this;
-        }
-
-        public ArticleBuilder setTitle(final String title) {
-            this.title = title;
-            return this;
-        }
-
-        public ArticleBuilder setDescription(final String description) {
-            this.description = description;
-            return this;
-        }
-
-        public ArticleBuilder setBody(final String body) {
-            this.body = body;
-            return this;
-        }
-
-        public ArticleBuilder setAuthorId(final Long authorId) {
-            this.authorId = authorId;
-            return this;
-        }
-
-        public ArticleBuilder setTagIds(final List<Long> tagIds) {
-            this.tagIds = List.copyOf(tagIds);
-            return this;
-        }
-
-        public ArticleBuilder setCreatedAt(final OffsetDateTime createdAt) {
-            this.createdAt = createdAt;
-            return this;
-        }
-
-        public ArticleBuilder setUpdatedAt(final OffsetDateTime updatedAt) {
-            this.updatedAt = updatedAt;
-            return this;
-        }
-
-        public Article build() {
-            return new Article(
-                    this.id,
-                    this.slug,
-                    this.title,
-                    this.description,
-                    this.body,
-                    this.authorId,
-                    this.tagIds,
-                    this.createdAt,
-                    this.updatedAt);
-        }
+    @Override
+    public List<Long> tagIds() {
+        return List.copyOf(this.tagIds);
     }
 }

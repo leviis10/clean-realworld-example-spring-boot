@@ -7,6 +7,7 @@ import com.leviis.realworldexample.tag.domain.Tag;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
@@ -17,18 +18,18 @@ public class TagQueryRepositoryImpl implements TagQueryRepository {
     @Override
     public List<Tag> findAll() {
         final List<TagEntity> foundTags = jpaTagRepository.findAll();
-        return foundTags.stream().map(TagEntity::intoTagDomain).toList();
+        return foundTags.stream().map(tag -> tag.into(Tag.class)).toList();
     }
 
     @Override
-    public List<Tag> findAllByIdIn(final Set<Long> ids) {
+    public @NonNull List<Tag> findAllByIdIn(final Set<Long> ids) {
         final List<TagEntity> foundTags = jpaTagRepository.findAllById(ids);
-        return foundTags.stream().map(TagEntity::intoTagDomain).toList();
+        return foundTags.stream().map(tag -> tag.into(Tag.class)).toList();
     }
 
     @Override
     public List<Tag> findAllByNameIn(final Set<String> tagNames) {
         final List<TagEntity> foundTags = jpaTagRepository.findAllByNameIn(tagNames);
-        return foundTags.stream().map(TagEntity::intoTagDomain).toList();
+        return foundTags.stream().map(tag -> tag.into(Tag.class)).toList();
     }
 }

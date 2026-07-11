@@ -1,8 +1,11 @@
 package com.leviis.realworldexample.user.adapter.outbound.persistence;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.Mockito.when;
 
 import com.leviis.realworldexample.user.adapter.outbound.persistence.follow.FollowEntity;
@@ -12,7 +15,9 @@ import com.leviis.realworldexample.user.adapter.outbound.persistence.user.JpaUse
 import com.leviis.realworldexample.user.adapter.outbound.persistence.user.UserEntity;
 import com.leviis.realworldexample.user.domain.Email;
 import com.leviis.realworldexample.user.domain.User;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -109,6 +114,106 @@ public class UserQueryRepositoryImplTest {
             var response = userQueryRepository.getIsFollowing(followingId, followerId);
 
             assertFalse(response);
+        }
+    }
+
+    @Nested
+    class FindByIds {
+        @Test
+        public void findByIds_positiveCase_returnListOfUsers() {
+            long user1Id = 1L;
+            long user2Id = 2L;
+            when(jpaUserRepository.findAllById(anySet()))
+                    .thenReturn(List.of(
+                            UserEntity.builder()
+                                    .id(user1Id)
+                                    .email("user1@example.com")
+                                    .username("user1")
+                                    .build(),
+                            UserEntity.builder()
+                                    .id(user2Id)
+                                    .email("user2@example.com")
+                                    .username("user2")
+                                    .build()));
+
+            List<User> response = userQueryRepository.findByIds(Set.of(1L, 2L));
+
+            assertFalse(response.isEmpty());
+            assertEquals(2, response.size());
+            assertEquals(user1Id, response.get(0).id());
+            assertEquals(user2Id, response.get(1).id());
+        }
+    }
+
+    @Nested
+    class FindIsFollowingIn {
+        @Test
+        public void findIsFollowingIn_positiveCase_returnListOfUserFollowingId() {
+            long followingId1 = 2L;
+            long followingId2 = 3L;
+            long followingId3 = 4L;
+            FollowEntity followEntity1 = FollowEntity.builder()
+                    .id(FollowId.builder().followingId(followingId1).build())
+                    .build();
+            FollowEntity followEntity2 = FollowEntity.builder()
+                    .id(FollowId.builder().followingId(followingId2).build())
+                    .build();
+            when(jpaFollowRepository.findByFollowerAndFollowingIn(any(UserEntity.class), anyList()))
+                    .thenReturn(List.of(followEntity1, followEntity2));
+
+            User follower = User.builder()
+                    .setId(1L)
+                    .setEmail(new Email("user1@example.com"))
+                    .setUsername("user1")
+                    .build();
+            User following1 = User.builder()
+                    .setId(followingId1)
+                    .setEmail(new Email("following1@example.com"))
+                    .setUsername("following1")
+                    .build();
+            User following2 = User.builder()
+                    .setId(followingId2)
+                    .setEmail(new Email("following2@example.com"))
+                    .setUsername("following2")
+                    .build();
+            User following3 = User.builder()
+                    .setId(followingId3)
+                    .setEmail(new Email("following3@example.com"))
+                    .setUsername("following3")
+                    .build();
+            List<User> followings = List.of(following1, following2, following3);
+            List<Long> response = userQueryRepository.findIsFollowingIn(follower, followings);
+
+            assertFalse(response.isEmpty());
+            assertTrue(response.containsAll(List.of(followingId1, followingId2)));
+            assertFalse(response.contains(followingId3));
+        }
+
+        @Test
+        public void findIsFollowingIn_followerIsNull_returnEmptyList() {
+            long followingId1 = 2L;
+            long followingId2 = 3L;
+            long followingId3 = 4L;
+            User follower = null;
+            User following1 = User.builder()
+                    .setId(followingId1)
+                    .setEmail(new Email("following1@example.com"))
+                    .setUsername("following1")
+                    .build();
+            User following2 = User.builder()
+                    .setId(followingId2)
+                    .setEmail(new Email("following2@example.com"))
+                    .setUsername("following2")
+                    .build();
+            User following3 = User.builder()
+                    .setId(followingId3)
+                    .setEmail(new Email("following3@example.com"))
+                    .setUsername("following3")
+                    .build();
+            List<User> followings = List.of(following1, following2, following3);
+            List<Long> response = userQueryRepository.findIsFollowingIn(follower, followings);
+
+            assertTrue(response.isEmpty());
         }
     }
 }

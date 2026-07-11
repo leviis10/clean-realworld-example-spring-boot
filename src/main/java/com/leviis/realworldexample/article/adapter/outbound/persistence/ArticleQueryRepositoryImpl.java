@@ -31,7 +31,9 @@ public class ArticleQueryRepositoryImpl implements ArticleQueryRepository {
         final PageRequest pageable =
                 PageRequest.of(offset, limit, Sort.by("createdAt").descending());
         final Page<ArticleEntity> foundArticles = jpaArticleRepository.findAll(spec, pageable);
-        return foundArticles.map(ArticleEntity::intoArticleDomain).toList();
+        return foundArticles
+                .map(articleEntity -> articleEntity.into(Article.class))
+                .toList();
     }
 
     @Override
@@ -43,14 +45,16 @@ public class ArticleQueryRepositoryImpl implements ArticleQueryRepository {
         final PageRequest pageable =
                 PageRequest.of(offset, limit, Sort.by("createdAt").descending());
         final Page<ArticleEntity> foundArticles = jpaArticleRepository.findAllByAuthorIn(authors, pageable);
-        return foundArticles.map(ArticleEntity::intoArticleDomain).toList();
+        return foundArticles
+                .map(articleEntity -> articleEntity.into(Article.class))
+                .toList();
     }
 
     @Override
     @Transactional
     public Optional<Article> getBySlug(final Slug slug) {
         final Optional<ArticleEntity> foundArticle = jpaArticleRepository.getBySlugAndSlugId(slug.value(), slug.id());
-        return foundArticle.map(ArticleEntity::intoArticleDomain);
+        return foundArticle.map(articleEntity -> articleEntity.into(Article.class));
     }
 
     @Override
@@ -59,6 +63,6 @@ public class ArticleQueryRepositoryImpl implements ArticleQueryRepository {
         final Optional<ArticleEntity> foundArticle =
                 jpaArticleRepository.getByAuthorAndSlugAndSlugId(UserEntity.from(author), slug.value(), slug.id());
 
-        return foundArticle.map(ArticleEntity::intoArticleDomain);
+        return foundArticle.map(articleEntity -> articleEntity.into(Article.class));
     }
 }

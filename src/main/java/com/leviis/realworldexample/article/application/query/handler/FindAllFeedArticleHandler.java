@@ -50,13 +50,7 @@ public final class FindAllFeedArticleHandler implements FindAllFeedArticleUseCas
         final List<Long> foundIsFollowingAuthors = userQueryRepository.findIsFollowingIn(query.user(), foundAuthors);
 
         return ArticleWithAuthor.from(
-                foundArticles,
-                foundTags,
-                favoriteArticleId,
-                getFavoriteCount,
-                foundAuthors,
-                query.user(),
-                foundIsFollowingAuthors);
+                foundArticles, foundTags, favoriteArticleId, getFavoriteCount, foundAuthors, foundIsFollowingAuthors);
     }
 
     private Set<Long> getTagIdFrom(final List<Article> articles) {

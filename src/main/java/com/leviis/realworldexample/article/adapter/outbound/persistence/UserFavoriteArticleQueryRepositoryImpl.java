@@ -24,11 +24,11 @@ public class UserFavoriteArticleQueryRepositoryImpl implements UserFavoriteArtic
     @Override
     public List<Long> findUserArticleFavoriteIn(final @Nullable User user, final List<Article> articles) {
         return Optional.ofNullable(user)
-                .map(user1 -> {
+                .map(u -> {
                     final List<ArticleEntity> articlesEntity =
                             articles.stream().map(ArticleEntity::from).toList();
                     return jpaUserFavoriteArticleRepository
-                            .findByUserAndArticleIn(UserEntity.from(user1), articlesEntity)
+                            .findByUserAndArticleIn(UserEntity.from(u), articlesEntity)
                             .stream()
                             .map(entity -> entity.getId().getArticleId())
                             .toList();
@@ -37,21 +37,15 @@ public class UserFavoriteArticleQueryRepositoryImpl implements UserFavoriteArtic
     }
 
     @Override
-    public Map<Long, Long> getFavoriteCount(final List<Article> articles) {
-        final Map<Long, Long> result = new ConcurrentHashMap<>();
-
-        for (final Article article : articles) {
-            final long getArticleFavoriteCount =
-                    jpaUserFavoriteArticleRepository.countByArticle(ArticleEntity.from(article));
-            result.put(article.id(), getArticleFavoriteCount);
-        }
-
-        return result;
+    public long getFavoriteCount(final Article article) {
+        return jpaUserFavoriteArticleRepository.countByArticle(ArticleEntity.from(article));
     }
 
     @Override
-    public long getFavoriteCount(final Article article) {
-        return jpaUserFavoriteArticleRepository.countByArticle(ArticleEntity.from(article));
+    public Map<Long, Long> getFavoriteCount(final List<Article> articles) {
+        final Map<Long, Long> result = new ConcurrentHashMap<>();
+        articles.forEach(article -> result.put(article.id(), getFavoriteCount(article)));
+        return result;
     }
 
     @Override

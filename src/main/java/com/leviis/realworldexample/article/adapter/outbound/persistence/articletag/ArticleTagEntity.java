@@ -10,6 +10,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 @NoArgsConstructor
@@ -42,29 +44,34 @@ public class ArticleTagEntity {
     @CreationTimestamp
     private OffsetDateTime createdAt;
 
-    public static ArticleTagEntity from(@Nullable final ArticleEntity articleEntity, @Nullable final Tag tag) {
+    public static @NonNull ArticleTagEntity from(@Nullable final ArticleEntity articleEntity, @Nullable final Tag tag) {
+        if (articleEntity == null && tag == null) {
+            throw new IllegalArgumentException("articleEntity and tag cannot be null at the same time");
+        }
+
+        final Long articleId =
+                Optional.ofNullable(articleEntity).map(ArticleEntity::getId).orElse(null);
+        final Long tagId = Optional.ofNullable(tag).map(Tag::id).orElse(null);
+
         return ArticleTagEntity.builder()
-                .id(ArticleTagId.from(getArticleId(articleEntity), getTagId(tag)))
+                .id(ArticleTagId.from(articleId, tagId))
                 .article(articleEntity)
                 .tag(TagEntity.from(tag))
                 .build();
     }
 
-    private static @Nullable Long getTagId(@Nullable final Tag tag) {
-        return Optional.ofNullable(tag).map(Tag::id).orElse(null);
+    public static @NonNull ArticleTagEntity from(@NonNull final Long tagId, @NonNull final Map<Long, Tag> tagMap) {
+        final Tag tag = getTag(tagId, tagMap).orElse(null);
+
+        return from(null, tag);
     }
 
-    private static @Nullable Long getArticleId(@Nullable final ArticleEntity articleEntity) {
-        return Optional.ofNullable(articleEntity).map(ArticleEntity::getId).orElse(null);
+    public static @NonNull List<ArticleTagEntity> from(
+            @NonNull final List<Long> tagIds, @NonNull final Map<Long, Tag> tagMap) {
+        return tagIds.stream().map(tagId -> from(tagId, tagMap)).toList();
     }
 
-    public static ArticleTagEntity from(final Long tagId, @Nullable final Map<Long, Tag> tagMap) {
-        return from(null, getTag(tagId, tagMap));
-    }
-
-    private static @Nullable Tag getTag(final Long tagId, @Nullable final Map<Long, Tag> tagMap) {
-        return Optional.ofNullable(tagMap)
-                .map(map -> map.getOrDefault(tagId, null))
-                .orElse(null);
+    private static Optional<Tag> getTag(final Long tagId, @Nullable final Map<Long, Tag> tagMap) {
+        return Optional.ofNullable(tagMap).map(map -> map.getOrDefault(tagId, null));
     }
 }
