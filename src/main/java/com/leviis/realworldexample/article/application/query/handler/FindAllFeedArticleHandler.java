@@ -11,11 +11,16 @@ import com.leviis.realworldexample.tag.domain.Tag;
 import com.leviis.realworldexample.user.application.port.outbound.FollowQueryRepository;
 import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepository;
 import com.leviis.realworldexample.user.domain.User;
+import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
+
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 public final class FindAllFeedArticleHandler implements FindAllFeedArticleUseCase {
     private final ArticleQueryRepository articleQueryRepository;
     private final FollowQueryRepository followQueryRepository;
@@ -23,21 +28,10 @@ public final class FindAllFeedArticleHandler implements FindAllFeedArticleUseCas
     private final UserFavoriteArticleQueryRepository userFavoriteArticleQueryRepository;
     private final UserQueryRepository userQueryRepository;
 
-    public FindAllFeedArticleHandler(
-            final ArticleQueryRepository articleQueryRepository,
-            final FollowQueryRepository followQueryRepository,
-            final TagQueryRepository tagQueryRepository,
-            final UserFavoriteArticleQueryRepository userFavoriteArticleQueryRepository,
-            final UserQueryRepository userQueryRepository) {
-        this.articleQueryRepository = articleQueryRepository;
-        this.followQueryRepository = followQueryRepository;
-        this.tagQueryRepository = tagQueryRepository;
-        this.userFavoriteArticleQueryRepository = userFavoriteArticleQueryRepository;
-        this.userQueryRepository = userQueryRepository;
-    }
-
     @Override
-    public List<ArticleWithAuthor> execute(final FindAllFeedArticleQuery query) {
+    public List<ArticleWithAuthor> execute(@NonNull final FindAllFeedArticleQuery query) {
+        Objects.requireNonNull(query);
+
         final List<Long> followingIds = followQueryRepository.findAllFollowingIdByFollowerId(
                 query.user().id());
         final List<Article> foundArticles =

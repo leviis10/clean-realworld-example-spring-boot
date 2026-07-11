@@ -1,34 +1,22 @@
 package com.leviis.realworldexample.article.application.query;
 
 import com.leviis.realworldexample.user.domain.User;
+import lombok.Builder;
+import lombok.NonNull;
 
-public record FindAllFeedArticleQuery(User user, int limit, int offset) {
-    public static FindAllFeedArticleQueryBuilder builder() {
-        return new FindAllFeedArticleQueryBuilder();
-    }
+import java.util.Objects;
 
-    public static final class FindAllFeedArticleQueryBuilder {
-        private User user;
-        private int limit;
-        private int offset;
+@Builder(setterPrefix = "set")
+public record FindAllFeedArticleQuery(@NonNull User user, int limit, int offset) {
+    public FindAllFeedArticleQuery {
+        Objects.requireNonNull(user);
 
-        public FindAllFeedArticleQueryBuilder setUser(final User user) {
-            this.user = user;
-            return this;
+        if (limit < 1) {
+            throw new IllegalArgumentException("Invalid `limit` value. Value must greater than 0");
         }
 
-        public FindAllFeedArticleQueryBuilder setLimit(final int limit) {
-            this.limit = limit;
-            return this;
-        }
-
-        public FindAllFeedArticleQueryBuilder setOffset(final int offset) {
-            this.offset = offset;
-            return this;
-        }
-
-        public FindAllFeedArticleQuery build() {
-            return new FindAllFeedArticleQuery(this.user, this.limit, this.offset);
+        if (offset < 0) {
+            throw new IllegalArgumentException("Invalid `offset` value. Value must be 0 or a positive number");
         }
     }
 }
