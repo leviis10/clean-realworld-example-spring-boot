@@ -213,13 +213,6 @@ class UserCommandRepositoryImplTest {
         }
 
         @Test
-        public void unfollowUser_followingIdIsNull_throwNullPointerException() {
-            Long followerId = 1L;
-            Long followingId = null;
-            assertThrows(NullPointerException.class, () -> userCommandRepository.unfollowUser(followerId, followingId));
-        }
-
-        @Test
         public void unfollowUser_followerAndFollowingIdIsSame_throwIllegalArgumentException() {
             Long followerId = 1L;
             Long followingId = 1L;

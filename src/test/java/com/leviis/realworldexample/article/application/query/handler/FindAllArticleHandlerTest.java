@@ -131,4 +131,9 @@ class FindAllArticleHandlerTest {
         assertEquals(author2.username(), articleResponse2.author().username());
         assertFalse(articleResponse2.author().isFollowing());
     }
+
+    @Test
+    public void execute_queryIsNull_throwNullPointerException() {
+        assertThrows(NullPointerException.class, () -> findAllArticleHandler.execute(null));
+    }
 }

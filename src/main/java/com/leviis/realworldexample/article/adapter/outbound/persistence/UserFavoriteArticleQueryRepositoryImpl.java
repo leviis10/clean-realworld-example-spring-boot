@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Repository;
 
@@ -37,12 +38,12 @@ public class UserFavoriteArticleQueryRepositoryImpl implements UserFavoriteArtic
     }
 
     @Override
-    public long getFavoriteCount(final Article article) {
+    public long getFavoriteCount(@NonNull final Article article) {
         return jpaUserFavoriteArticleRepository.countByArticle(ArticleEntity.from(article));
     }
 
     @Override
-    public Map<Long, Long> getFavoriteCount(final List<Article> articles) {
+    public Map<Long, Long> getFavoriteCount(@NonNull final List<Article> articles) {
         final Map<Long, Long> result = new ConcurrentHashMap<>();
         articles.forEach(article -> result.put(article.id(), getFavoriteCount(article)));
         return result;

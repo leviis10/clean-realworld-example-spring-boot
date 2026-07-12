@@ -15,7 +15,11 @@ import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepos
 import com.leviis.realworldexample.user.domain.User;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 
+@RequiredArgsConstructor
 public final class GetArticleHandler implements GetArticleUseCase {
     private final ArticleQueryRepository articleQueryRepository;
     private final TagQueryRepository tagQueryRepository;
@@ -23,21 +27,10 @@ public final class GetArticleHandler implements GetArticleUseCase {
     private final UserQueryRepository userQueryRepository;
     private final FollowQueryRepository followQueryRepository;
 
-    public GetArticleHandler(
-            final ArticleQueryRepository articleQueryRepository,
-            final TagQueryRepository tagQueryRepository,
-            final UserFavoriteArticleQueryRepository userFavoriteArticleQueryRepository,
-            final UserQueryRepository userQueryRepository,
-            final FollowQueryRepository followQueryRepository) {
-        this.articleQueryRepository = articleQueryRepository;
-        this.tagQueryRepository = tagQueryRepository;
-        this.userFavoriteArticleQueryRepository = userFavoriteArticleQueryRepository;
-        this.userQueryRepository = userQueryRepository;
-        this.followQueryRepository = followQueryRepository;
-    }
-
     @Override
-    public ArticleWithBodyAndAuthor execute(final GetArticleQuery query) {
+    public ArticleWithBodyAndAuthor execute(@NonNull final GetArticleQuery query) {
+        Objects.requireNonNull(query);
+
         final Slug articleSlug = new Slug(query.slug(), query.slugId());
         final Article foundArticle = articleQueryRepository
                 .getBySlug(articleSlug)

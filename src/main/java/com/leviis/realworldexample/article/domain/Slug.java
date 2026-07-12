@@ -1,10 +1,16 @@
 package com.leviis.realworldexample.article.domain;
 
 import java.util.Locale;
+import java.util.Objects;
 import java.util.UUID;
 import org.jspecify.annotations.NonNull;
 
-public record Slug(String value, UUID id) {
+public record Slug(@NonNull String value, @NonNull UUID id) {
+    public Slug {
+        Objects.requireNonNull(value);
+        Objects.requireNonNull(id);
+    }
+
     public static Slug from(final String title, final UUID id) {
         if (id == null) {
             return from(title);

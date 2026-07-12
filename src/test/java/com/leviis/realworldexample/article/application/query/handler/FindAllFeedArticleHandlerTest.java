@@ -1,5 +1,16 @@
 package com.leviis.realworldexample.article.application.query.handler;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anySet;
+import static org.mockito.Mockito.when;
+
 import com.leviis.realworldexample.article.application.port.outbound.ArticleQueryRepository;
 import com.leviis.realworldexample.article.application.port.outbound.UserFavoriteArticleQueryRepository;
 import com.leviis.realworldexample.article.application.query.FindAllFeedArticleQuery;
@@ -11,24 +22,13 @@ import com.leviis.realworldexample.user.application.port.outbound.FollowQueryRep
 import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepository;
 import com.leviis.realworldexample.user.domain.Email;
 import com.leviis.realworldexample.user.domain.User;
+import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.List;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anySet;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class FindAllFeedArticleHandlerTest {
@@ -126,5 +126,10 @@ class FindAllFeedArticleHandlerTest {
         assertEquals(20L, response2.favoriteCount());
         assertEquals(author2.username(), response2.author().username());
         assertFalse(response2.author().isFollowing());
+    }
+
+    @Test
+    public void execute_queryIsNull_throwNullPointerException() {
+        assertThrows(NullPointerException.class, () -> findAllFeedArticleHandler.execute(null));
     }
 }

@@ -14,6 +14,7 @@ import com.leviis.realworldexample.user.domain.Email;
 import com.leviis.realworldexample.user.domain.User;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -93,6 +94,51 @@ class UserFavoriteArticleQueryRepositoryImplTest {
             assertNull(response.get(3L));
             assertEquals(article1FavoriteCount, response.get(article1Id));
             assertEquals(article2FavoriteCount, response.get(article2Id));
+        }
+
+        @Test
+        public void getFavoriteCount_articleIsNull_throwNullPointerException() {
+            assertThrows(
+                    NullPointerException.class,
+                    () -> userFavoriteArticleQueryRepository.getFavoriteCount((List<Article>) null));
+        }
+    }
+
+    @Nested
+    class GetIsFavoriteArticle {
+        @Test
+        public void getIsFavoriteArticle_foundFavoriteArticleData_returnTrue() {
+            when(jpaUserFavoriteArticleRepository.findById(any(UserFavoriteArticleId.class)))
+                    .thenReturn(Optional.of(UserFavoriteArticleEntity.builder().build()));
+
+            User user = User.builder()
+                    .setEmail(new Email("user@example.com"))
+                    .setUsername("user")
+                    .build();
+            boolean response = userFavoriteArticleQueryRepository.getIsFavoriteArticle(user, 1L);
+
+            assertTrue(response);
+        }
+
+        @Test
+        public void getIsFavoriteArticle_userIsNull_returnFalse() {
+            boolean response = userFavoriteArticleQueryRepository.getIsFavoriteArticle(null, 1L);
+
+            assertFalse(response);
+        }
+
+        @Test
+        public void getIsFavoriteArticle_favoriteArticleDataNotFound_returnFalse() {
+            when(jpaUserFavoriteArticleRepository.findById(any(UserFavoriteArticleId.class)))
+                    .thenReturn(Optional.empty());
+
+            User user = User.builder()
+                    .setEmail(new Email("user@example.com"))
+                    .setUsername("user")
+                    .build();
+            boolean response = userFavoriteArticleQueryRepository.getIsFavoriteArticle(user, 1L);
+
+            assertFalse(response);
         }
     }
 }

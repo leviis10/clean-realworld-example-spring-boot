@@ -11,6 +11,7 @@ import com.leviis.realworldexample.user.domain.User;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -52,7 +53,7 @@ public class ArticleQueryRepositoryImpl implements ArticleQueryRepository {
 
     @Override
     @Transactional
-    public Optional<Article> getBySlug(final Slug slug) {
+    public Optional<Article> getBySlug(@NonNull final Slug slug) {
         final Optional<ArticleEntity> foundArticle = jpaArticleRepository.getBySlugAndSlugId(slug.value(), slug.id());
         return foundArticle.map(articleEntity -> articleEntity.into(Article.class));
     }

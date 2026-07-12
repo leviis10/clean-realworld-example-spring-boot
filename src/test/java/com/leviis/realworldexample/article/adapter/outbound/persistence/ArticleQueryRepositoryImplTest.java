@@ -1,15 +1,21 @@
 package com.leviis.realworldexample.article.adapter.outbound.persistence;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import com.leviis.realworldexample.article.adapter.outbound.persistence.article.ArticleEntity;
 import com.leviis.realworldexample.article.adapter.outbound.persistence.article.JpaArticleRepository;
 import com.leviis.realworldexample.article.domain.Article;
+import com.leviis.realworldexample.article.domain.Slug;
 import com.leviis.realworldexample.user.adapter.outbound.persistence.user.UserEntity;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,18 +44,24 @@ class ArticleQueryRepositoryImplTest {
                     .tags(List.of())
                     .author(UserEntity.builder().build())
                     .title("test-title")
+                    .slug("article1-slug")
+                    .slugId(UUID.randomUUID())
                     .build();
             ArticleEntity articleEntity2 = ArticleEntity.builder()
                     .id(2L)
                     .tags(List.of())
                     .author(UserEntity.builder().build())
                     .title("test-title")
+                    .slug("article2-slug")
+                    .slugId(UUID.randomUUID())
                     .build();
             ArticleEntity articleEntity3 = ArticleEntity.builder()
                     .id(3L)
                     .tags(List.of())
                     .author(UserEntity.builder().build())
                     .title("test-title")
+                    .slug("article3-slug")
+                    .slugId(UUID.randomUUID())
                     .build();
             List<ArticleEntity> content = List.of(articleEntity1, articleEntity2, articleEntity3);
             int searchLimit = 10;
@@ -79,11 +91,15 @@ class ArticleQueryRepositoryImplTest {
                     .title("article 1")
                     .tags(List.of())
                     .author(UserEntity.builder().id(1L).build())
+                    .slug("article1-slug")
+                    .slugId(UUID.randomUUID())
                     .build();
             ArticleEntity articleEntity2 = ArticleEntity.builder()
                     .title("article 2")
                     .tags(List.of())
                     .author(UserEntity.builder().id(2L).build())
+                    .slug("article2-slug")
+                    .slugId(UUID.randomUUID())
                     .build();
             List<ArticleEntity> content = List.of(articleEntity1, articleEntity2);
             int offset = 0;
@@ -95,6 +111,43 @@ class ArticleQueryRepositoryImplTest {
             List<Article> response = articleQueryRepository.findAllByAuthorIdIn(authorIds, offset, limit);
 
             assertEquals(2, response.size());
+        }
+    }
+
+    @Nested
+    class GetBySlug {
+        @Test
+        public void getBySlug_positiveCase_returnArticle() {
+            String slugValue = "slug";
+            UUID slugId = UUID.randomUUID();
+            UserEntity author = UserEntity.builder()
+                    .email("author@example.com")
+                    .username("author")
+                    .build();
+            ArticleEntity article = ArticleEntity.builder()
+                    .title("article")
+                    .slug(slugValue)
+                    .slugId(slugId)
+                    .tags(List.of())
+                    .author(author)
+                    .build();
+            when(jpaArticleRepository.getBySlugAndSlugId(anyString(), any(UUID.class)))
+                    .thenReturn(Optional.of(article));
+
+            Slug slug = new Slug(slugValue, slugId);
+            Optional<Article> responseOpt = articleQueryRepository.getBySlug(slug);
+
+            assertTrue(responseOpt.isPresent());
+
+            Article response = responseOpt.get();
+            assertEquals(article.getTitle(), response.title());
+            assertEquals(article.getSlug(), response.slug().value());
+            assertEquals(article.getSlugId(), response.slug().id());
+        }
+
+        @Test
+        public void getBySlug_slugIsNull_throwNullPointerException() {
+            assertThrows(NullPointerException.class, () -> articleQueryRepository.getBySlug(null));
         }
     }
 }

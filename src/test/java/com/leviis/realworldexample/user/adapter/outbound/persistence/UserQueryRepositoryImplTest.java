@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.Mockito.when;
 
@@ -212,6 +213,33 @@ public class UserQueryRepositoryImplTest {
                     .build();
             List<User> followings = List.of(following1, following2, following3);
             List<Long> response = userQueryRepository.findIsFollowingIn(follower, followings);
+
+            assertTrue(response.isEmpty());
+        }
+    }
+
+    @Nested
+    class FindById {
+        @Test
+        public void findById_foundUser_returnUser() {
+            UserEntity value = UserEntity.builder()
+                    .email("founduser@example.com")
+                    .username("founduser")
+                    .build();
+            when(jpaUserRepository.findById(anyLong())).thenReturn(Optional.of(value));
+
+            long id = 1L;
+            Optional<User> response = userQueryRepository.findById(id);
+
+            assertTrue(response.isPresent());
+        }
+
+        @Test
+        public void findById_foundUser_returnEmpty() {
+            when(jpaUserRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+            long id = 1L;
+            Optional<User> response = userQueryRepository.findById(id);
 
             assertTrue(response.isEmpty());
         }

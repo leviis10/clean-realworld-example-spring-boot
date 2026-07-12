@@ -1,7 +1,7 @@
 package com.leviis.realworldexample.tag.adapter.outbound.persistence;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.Mockito.when;
 
 import com.leviis.realworldexample.tag.adapter.outbound.persistence.tag.JpaTagRepository;
@@ -27,7 +27,7 @@ class TagQueryRepositoryImplTest {
     class FindAllByIdIn {
         @Test
         public void findAllByIdIn_positiveCase_returnListOfTag() {
-            when(jpaTagRepository.findAllById(any(Set.class))).thenReturn(List.of());
+            when(jpaTagRepository.findAllById(anySet())).thenReturn(List.of());
 
             Set<Long> tagIds = Set.of(1L, 2L, 3L);
             List<Tag> response = tagQueryRepository.findAllByIdIn(tagIds);

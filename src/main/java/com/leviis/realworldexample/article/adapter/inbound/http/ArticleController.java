@@ -91,8 +91,11 @@ public class ArticleController {
         final User authenticatedUser = Optional.ofNullable(userContext)
                 .map(UserContext::intoUserDomain)
                 .orElse(null);
-        final ArticleWithBodyAndAuthor foundArticle =
-                getArticleUseCase.execute(GetArticleQuery.from(authenticatedUser, slug));
+        final ArticleWithBodyAndAuthor foundArticle = getArticleUseCase.execute(GetArticleQuery.builder()
+                .setAuthenticatedUser(authenticatedUser)
+                .setSlug(SlugUtils.getTitleFrom(slug))
+                .setSlugId(SlugUtils.getIdFrom(slug))
+                .build());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ResponseWrapper<>("Successfully retrieved an article", ArticleResponse.from(foundArticle)));

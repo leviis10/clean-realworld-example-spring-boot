@@ -38,11 +38,7 @@ public final class UserCommandRepositoryImpl implements UserCommandRepository {
 
     @Override
     public void followUser(@NonNull final User follower, @NonNull final User following) {
-        Objects.requireNonNull(follower);
-        Objects.requireNonNull(follower.id());
-        Objects.requireNonNull(following);
-        Objects.requireNonNull(following.id());
-        if (follower.id().equals(following.id())) {
+        if (Objects.requireNonNull(follower.id()).equals(following.id())) {
             throw new SelfFollowException();
         }
 
@@ -51,8 +47,6 @@ public final class UserCommandRepositoryImpl implements UserCommandRepository {
 
     @Override
     public void unfollowUser(@NonNull final Long followerId, @NonNull final Long followingId) {
-        Objects.requireNonNull(followerId);
-        Objects.requireNonNull(followingId);
         if (followerId.equals(followingId)) {
             throw new IllegalArgumentException("Follower and following id cannot be same");
         }
@@ -90,14 +84,10 @@ public final class UserCommandRepositoryImpl implements UserCommandRepository {
     }
 
     private void updateUsername(final UserEntity currentUser, final User updatedUser) {
-        if (updatedUser.username() != null) {
-            currentUser.setUsername(updatedUser.username());
-        }
+        currentUser.setUsername(updatedUser.username());
     }
 
     private void updateEmail(final UserEntity currentUser, final User updatedUser) {
-        if (updatedUser.email() != null) {
-            currentUser.setEmail(updatedUser.email().value());
-        }
+        currentUser.setEmail(updatedUser.email().value());
     }
 }

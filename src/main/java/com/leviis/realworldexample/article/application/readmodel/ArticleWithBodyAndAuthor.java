@@ -6,7 +6,9 @@ import com.leviis.realworldexample.tag.domain.Tag;
 import com.leviis.realworldexample.user.domain.User;
 import java.time.OffsetDateTime;
 import java.util.List;
+import lombok.Builder;
 
+@Builder(setterPrefix = "set")
 public record ArticleWithBodyAndAuthor(
         String slug,
         String title,
@@ -41,11 +43,8 @@ public record ArticleWithBodyAndAuthor(
         this.author = author;
     }
 
+    @Builder(setterPrefix = "set")
     public record Author(String username, String bio, String image, boolean isFollowing) {
-        public static AuthorBuilder builder() {
-            return new AuthorBuilder();
-        }
-
         public static Author from(final User author, final boolean isFollowingAuthor) {
             return builder()
                     .setUsername(author.username())
@@ -53,118 +52,6 @@ public record ArticleWithBodyAndAuthor(
                     .setImage(author.image())
                     .setIsFollowing(isFollowingAuthor)
                     .build();
-        }
-
-        public static final class AuthorBuilder {
-            private String username;
-            private String bio;
-            private String image;
-            private boolean isFollowing;
-
-            public AuthorBuilder setUsername(final String username) {
-                this.username = username;
-                return this;
-            }
-
-            public AuthorBuilder setBio(final String bio) {
-                this.bio = bio;
-                return this;
-            }
-
-            public AuthorBuilder setImage(final String image) {
-                this.image = image;
-                return this;
-            }
-
-            public AuthorBuilder setIsFollowing(final boolean following) {
-                isFollowing = following;
-                return this;
-            }
-
-            public Author build() {
-                return new Author(this.username, this.bio, this.image, this.isFollowing);
-            }
-        }
-    }
-
-    public static ArticleWithBodyAndAuthorBuilder builder() {
-        return new ArticleWithBodyAndAuthorBuilder();
-    }
-
-    public static final class ArticleWithBodyAndAuthorBuilder {
-        private String slug;
-        private String title;
-        private String description;
-        private String body;
-        private List<String> tags;
-        private OffsetDateTime createdAt;
-        private OffsetDateTime updatedAt;
-        private boolean isFavorite;
-        private long favoritesCount;
-        private Author author;
-
-        public ArticleWithBodyAndAuthorBuilder setSlug(final String slug) {
-            this.slug = slug;
-            return this;
-        }
-
-        public ArticleWithBodyAndAuthorBuilder setTitle(final String title) {
-            this.title = title;
-            return this;
-        }
-
-        public ArticleWithBodyAndAuthorBuilder setDescription(final String description) {
-            this.description = description;
-            return this;
-        }
-
-        public ArticleWithBodyAndAuthorBuilder setBody(final String body) {
-            this.body = body;
-            return this;
-        }
-
-        public ArticleWithBodyAndAuthorBuilder setTags(final List<String> tags) {
-            this.tags = List.copyOf(tags);
-            return this;
-        }
-
-        public ArticleWithBodyAndAuthorBuilder setCreatedAt(final OffsetDateTime createdAt) {
-            this.createdAt = createdAt;
-            return this;
-        }
-
-        public ArticleWithBodyAndAuthorBuilder setUpdatedAt(final OffsetDateTime updatedAt) {
-            this.updatedAt = updatedAt;
-            return this;
-        }
-
-        public ArticleWithBodyAndAuthorBuilder setIsFavorite(final boolean favorite) {
-            isFavorite = favorite;
-            return this;
-        }
-
-        public ArticleWithBodyAndAuthorBuilder setFavoritesCount(final long favoritesCount) {
-            this.favoritesCount = favoritesCount;
-            return this;
-        }
-
-        public ArticleWithBodyAndAuthorBuilder setAuthor(final Author author) {
-            this.author = author;
-            return this;
-        }
-
-        public ArticleWithBodyAndAuthor build() {
-            return new ArticleWithBodyAndAuthor(
-                    this.slug,
-                    this.title,
-                    this.description,
-                    this.body,
-                    this.tags,
-                    this.createdAt,
-                    this.updatedAt,
-                    this.isFavorite,
-                    this.favoritesCount,
-                    this.author);
         }
     }
 

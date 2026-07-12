@@ -1,21 +1,23 @@
 package com.leviis.realworldexample.user.adapter.outbound.persistence;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import com.leviis.realworldexample.user.adapter.outbound.persistence.follow.FollowEntity;
 import com.leviis.realworldexample.user.adapter.outbound.persistence.follow.FollowId;
 import com.leviis.realworldexample.user.adapter.outbound.persistence.follow.JpaFollowRepository;
 import com.leviis.realworldexample.user.adapter.outbound.persistence.user.UserEntity;
+import com.leviis.realworldexample.user.domain.Email;
+import com.leviis.realworldexample.user.domain.User;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class FollowQueryRepositoryImplTest {
@@ -44,6 +46,66 @@ class FollowQueryRepositoryImplTest {
             assertEquals(2, response.size());
             assertEquals(followEntity1.getId().getFollowingId(), response.getFirst());
             assertEquals(followEntity2.getId().getFollowingId(), response.get(1));
+        }
+    }
+
+    @Nested
+    class FindIsFollowing {
+        @Test
+        public void findIsFollowing_foundFollowData_returnTrue() {
+            when(jpaFollowRepository.findById(any(FollowId.class)))
+                    .thenReturn(Optional.of(FollowEntity.builder().build()));
+
+            User follower = User.builder()
+                    .setEmail(new Email("follower@example.com"))
+                    .setUsername("follower")
+                    .build();
+            User following = User.builder()
+                    .setEmail(new Email("following@example.com"))
+                    .setUsername("following")
+                    .build();
+            boolean response = followQueryRepository.findIsFollowing(follower, following);
+
+            assertTrue(response);
+        }
+
+        @Test
+        public void findIsFollowing_followDataNotFound_returnFalse() {
+            when(jpaFollowRepository.findById(any(FollowId.class))).thenReturn(Optional.empty());
+
+            User follower = User.builder()
+                    .setEmail(new Email("follower@example.com"))
+                    .setUsername("follower")
+                    .build();
+            User following = User.builder()
+                    .setEmail(new Email("following@example.com"))
+                    .setUsername("following")
+                    .build();
+            boolean response = followQueryRepository.findIsFollowing(follower, following);
+
+            assertFalse(response);
+        }
+
+        @Test
+        public void findIsFollowing_followingIsNull_returnFalse() {
+            User follower = User.builder()
+                    .setEmail(new Email("follower@example.com"))
+                    .setUsername("follower")
+                    .build();
+            boolean response = followQueryRepository.findIsFollowing(follower, null);
+
+            assertFalse(response);
+        }
+
+        @Test
+        public void findIsFollowing_followerIsNull_returnFalse() {
+            User following = User.builder()
+                    .setEmail(new Email("following@example.com"))
+                    .setUsername("following")
+                    .build();
+            boolean response = followQueryRepository.findIsFollowing(null, following);
+
+            assertFalse(response);
         }
     }
 }

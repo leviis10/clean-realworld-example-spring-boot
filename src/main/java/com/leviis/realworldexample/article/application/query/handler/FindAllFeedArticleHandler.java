@@ -11,14 +11,13 @@ import com.leviis.realworldexample.tag.domain.Tag;
 import com.leviis.realworldexample.user.application.port.outbound.FollowQueryRepository;
 import com.leviis.realworldexample.user.application.port.outbound.UserQueryRepository;
 import com.leviis.realworldexample.user.domain.User;
-import lombok.RequiredArgsConstructor;
-import org.jspecify.annotations.NonNull;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 
 @RequiredArgsConstructor
 public final class FindAllFeedArticleHandler implements FindAllFeedArticleUseCase {
