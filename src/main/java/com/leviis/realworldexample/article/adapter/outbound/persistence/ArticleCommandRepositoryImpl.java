@@ -13,6 +13,7 @@ import com.leviis.realworldexample.user.domain.User;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +24,7 @@ public class ArticleCommandRepositoryImpl implements ArticleCommandRepository {
     private final JpaArticleTagRepository jpaArticleTagRepository;
 
     @Override
-    public Article create(final Article article, final Map<Long, Tag> tagMap) {
+    public Article create(@NonNull final Article article, @NonNull final Map<Long, Tag> tagMap) {
         final ArticleEntity newArticle = jpaArticleRepository.save(ArticleEntity.from(article, tagMap));
         jpaArticleTagRepository.saveAll(getArticleTags(newArticle, tagMap));
         return newArticle.into(Article.class);

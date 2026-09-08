@@ -10,25 +10,21 @@ import com.leviis.realworldexample.tag.domain.Tag;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import org.apache.logging.log4j.internal.annotation.SuppressFBWarnings;
+import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 
+@RequiredArgsConstructor
 public final class CreateArticleHandler implements CreateArticleUseCase {
     private final TagQueryRepository tagQueryRepository;
     private final ArticleCommandRepository articleCommandRepository;
 
-    @SuppressFBWarnings(
-            value = "EI_EXPOSE_REP2",
-            justification = "Repository interfaces are effectively immutable - no internal state is exposed")
-    public CreateArticleHandler(
-            final TagQueryRepository tagQueryRepository, final ArticleCommandRepository articleCommandRepository) {
-        this.tagQueryRepository = tagQueryRepository;
-        this.articleCommandRepository = articleCommandRepository;
-    }
-
     @Override
-    public ArticleWithBodyAndAuthor execute(final CreateArticleCommand command) {
+    public ArticleWithBodyAndAuthor execute(@NonNull final CreateArticleCommand command) {
+        Objects.requireNonNull(command);
+
         final Map<Long, Tag> tagMap = getTagMap(command.tags());
         final Article newArticle =
                 articleCommandRepository.create(command.intoArticleDomain(getTagIds(tagMap)), tagMap);

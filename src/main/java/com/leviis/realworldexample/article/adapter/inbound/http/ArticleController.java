@@ -7,6 +7,7 @@ import com.leviis.realworldexample.article.adapter.inbound.http.dto.request.Upda
 import com.leviis.realworldexample.article.adapter.inbound.http.dto.response.ArticleResponse;
 import com.leviis.realworldexample.article.adapter.inbound.http.dto.response.FindAllArticleResponse;
 import com.leviis.realworldexample.article.adapter.inbound.http.dto.response.FindAllFeedArticleResponse;
+import com.leviis.realworldexample.article.application.command.CreateArticleCommand;
 import com.leviis.realworldexample.article.application.command.DeleteArticleCommand;
 import com.leviis.realworldexample.article.application.command.UpdateArticleCommand;
 import com.leviis.realworldexample.article.application.port.inbound.CreateArticleUseCase;
@@ -106,8 +107,13 @@ public class ArticleController {
     public ResponseEntity<ResponseWrapper<ArticleResponse>> create(
             @AuthenticationPrincipal final UserContext userContext,
             @Valid @RequestBody final CreateArticleRequest request) {
-        final ArticleWithBodyAndAuthor newArticle =
-                createArticleUseCase.execute(request.intoCreateArticleCommand(userContext.intoUserDomain()));
+        final ArticleWithBodyAndAuthor newArticle = createArticleUseCase.execute(CreateArticleCommand.builder()
+                .setTitle(request.getTitle())
+                .setDescription(request.getDescription())
+                .setBody(request.getBody())
+                .setTags(request.getTags())
+                .setAuthor(userContext.intoUserDomain())
+                .build());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseWrapper<>("Successfully created new article", ArticleResponse.from(newArticle)));
     }
